@@ -1,1 +1,0 @@
-esto se creo para poder abrir el archivo en git hub 

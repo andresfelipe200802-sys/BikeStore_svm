@@ -1,0 +1,265 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1815" viewBox="0 0 1600 1815" font-family="DejaVu Sans, Arial, sans-serif" xmlns:c2pa="http://c2pa.org/manifest"><metadata><c2pa:manifest>AAAWgmp1bWIAAAAeanVtZGMycGEAEQAQgAAAqgA4m3EDYzJwYQAAABZcanVtYgAAAEdqdW1kYzJtYQARABCAAACqADibcQN1cm46YzJwYTozZjlmOTExNy1iNTEwLTQwNzYtOWQ0YS0wYTcxYjRmMWNiYmUAAAADl2p1bWIAAAApanVtZGMyYXMAEQAQgAAAqgA4m3EDYzJwYS5hc3NlcnRpb25zAAAAALxqdW1iAAAARGp1bWRjYm9yABEAEIAAAKoAOJtxE2MycGEuaW5ncmVkaWVudC52MwAAAAAYYzJzaPRi3wyuscUdto8Gj2BF50wAAABwY2JvcqNpZGM6Zm9ybWF0bWltYWdlL3N2Zyt4bWxqaW5zdGFuY2VJRHgseG1wOmlpZDo5YWRhMjA5Mi1jYmUyLTQ1ODItYjgzZi05ZGMzMmE1NjQ5OTNscmVsYXRpb25zaGlwaHBhcmVudE9mAAAB4mp1bWIAAABBanVtZGNib3IAEQAQgAAAqgA4m3ETYzJwYS5hY3Rpb25zLnYyAAAAABhjMnNoJ/urfjs4iTT8K+7sIOGZbgAAAZljYm9yomdhY3Rpb25zgqJmYWN0aW9ua2MycGEub3BlbmVkanBhcmFtZXRlcnOha2luZ3JlZGllbnRzgaJjdXJseC1zZWxmI2p1bWJmPWMycGEuYXNzZXJ0aW9ucy9jMnBhLmluZ3JlZGllbnQudjNkaGFzaFggl8Y+Cjv+dyucZ8FZzOEikGxUiobJWky5bBmjLEMoaaSkZmFjdGlvbngdY29tLmFudGhyb3BpYy5jbGF1ZGUucHJvdmlkZWRqcGFyYW1ldGVyc6F4H2NvbS5hbnRocm9waWMub3JpZ2luLWNvbmZpZGVuY2VndW5rbm93bmtkZXNjcmlwdGlvbnhmQ2xhdWRlIHByb3ZpZGVkIHRoaXMgZmlsZSBhdCB0aGUgcmVxdWVzdCBvZiBhIHVzZXIgYW5kIG1heSBoYXZlIGNyZWF0ZWQgb3IgbW9kaWZpZWQgdGhlIGZpbGUgY29udGVudHMubXNvZnR3YXJlQWdlbnShZG5hbWVmQ2xhdWRlcmFsbEFjdGlvbnNJbmNsdWRlZPUAAADIanVtYgAAAEBqdW1kY2JvcgARABCAAACqADibcRNjMnBhLmhhc2guZGF0YQAAAAAYYzJzaP3ZsIIOsHR9Qal/zU5cz1EAAACAY2JvcqVjYWxnZnNoYTI1NmNwYWRNAAAAAAAAAAAAAAAAAGRoYXNoWCAtKP8T36bPp+X1A4pFZG4FdFlnGby0ZTD/YHlKoHMG0mRuYW1lbmp1bWJmIG1hbmlmZXN0amV4Y2x1c2lvbnOBomVzdGFydBjHZmxlbmd0aBkeBAAAAj5qdW1iAAAAJ2p1bWRjMmNsABEAEIAAAKoAOJtxA2MycGEuY2xhaW0udjIAAAACD2Nib3KlY2FsZ2ZzaGEyNTZpc2lnbmF0dXJleE1zZWxmI2p1bWJmPS9jMnBhL3VybjpjMnBhOjNmOWY5MTE3LWI1MTAtNDA3Ni05ZDRhLTBhNzFiNGYxY2JiZS9jMnBhLnNpZ25hdHVyZWppbnN0YW5jZUlEeCx4bXA6aWlkOjZjMGIzZDY1LWExNTktNGRjYy04Nzc5LWExN2JjNTJhNzlkNXJjcmVhdGVkX2Fzc2VydGlvbnODomN1cmx4LXNlbGYjanVtYmY9YzJwYS5hc3NlcnRpb25zL2MycGEuaW5ncmVkaWVudC52M2RoYXNoWCCXxj4KO/53K5xnwVnM4SKQbFSKhslaTLlsGaMsQyhppKJjdXJseCpzZWxmI2p1bWJmPWMycGEuYXNzZXJ0aW9ucy9jMnBhLmFjdGlvbnMudjJkaGFzaFggt7xvzw/jnMdUa45abmolzoeZmeeYAOVeM0xYsiYyhOiiY3VybHgpc2VsZiNqdW1iZj1jMnBhLmFzc2VydGlvbnMvYzJwYS5oYXNoLmRhdGFkaGFzaFggbJ2p+PPfWaSHCOiDCJBcEVZUFLJylEb4tUbVFfZmgT90Y2xhaW1fZ2VuZXJhdG9yX2luZm+jZG5hbWVvQW50aHJvcGljIEZpbGVzZ3ZlcnNpb25lMS4wLjBrc3BlY1ZlcnNpb25lMi40LjAAABA4anVtYgAAAChqdW1kYzJjcwARABCAAACqADibcQNjMnBhLnNpZ25hdHVyZQAAABAIY2JvctKEWQISogEmGCFZAgowggIGMIIBjaADAgECAhRA5aAK7sI50L64g/oGQgU9Z1UTADAKBggqhkjOPQQDAzBJMRcwFQYDVQQKEw5BbnRocm9waWMsIFBCQzEuMCwGA1UEAxMlQW50aHJvcGljIENvbnRlbnQgQ3JlZGVudGlhbHMgUm9vdCBDQTAeFw0yNjA4MDcxODQzNTZaFw0yODA4MDYxOTQzNTZaMEQxFzAVBgNVBAoTDkFudGhyb3BpYywgUEJDMSkwJwYDVQQDEyBBbnRocm9waWMgQ2xhdWRlIENvbnRlbnQgU2lnbmluZzBZMBMGByqGSM49AgEGCCqGSM49AwEHA0IABJh6CmvLUBgFFNU0vUKlOVtE6djd17L5SuwX0LemFisBM3dkd/3cyjxFA3Qo5S46fX0/ihY0VZ7mfb9KF703t5OjWDBWMA4GA1UdDwEB/wQEAwIHgDAVBgNVHSUEDjAMBgorBgEEAYPoXgIBMAwGA1UdEwEB/wQCMAAwHwYDVR0jBBgwFoAUzlHiBIFOZFsj+OPEz5o+nMHXXMIwCgYIKoZIzj0EAwMDZwAwZAIwMXMdFJ4BetLLVY7ORuE9noqbbAZOZn/aArXyTwFAZfKrPzxF2vPoJNf1+UCdg1XGAjBwX1zd9WGqYkqmL5SFqw1QySjr1zJfpJM9+1rdDwSPLMOPOjKuiXjoU/pUUeG9RwmhY3BhZFkNngAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPZYQET7u/x+HZJ1i4aI2QM0tdJyfa5leo4lmbYGSn7OR0hJEYOta4jR1+8Z2oDU0LCrFfBv+g05TysWktD2WKJWNIw=</c2pa:manifest></metadata>
+<defs><marker id="ah" markerUnits="userSpaceOnUse" markerWidth="11" markerHeight="11" refX="10" refY="5.5" orient="auto"><path d="M0,0 L11,5.5 L0,11 z" fill="#222"/></marker></defs>
+<rect width="1600" height="1815" fill="#ffffff"/>
+<polygon points="30,140 46,124 1586,124 1570,140" fill="#c5dfee" stroke="#2e7da3" stroke-width="1.5"/>
+<polygon points="1570,140 1586,124 1586,422 1570,438" fill="#a9cde3" stroke="#2e7da3" stroke-width="1.5"/>
+<rect x="30" y="140" width="1540" height="298" fill="#e3f0f8" stroke="#2e7da3" stroke-width="1.5"/>
+<text x="46" y="167" font-size="17" font-weight="700" text-anchor="start" fill="#1a1a1a" text-decoration="underline">Capa de presentación</text>
+<rect x="1409.6" y="148" width="140.39999999999998" height="26" rx="13" fill="#2e7da3"/>
+<text x="1479.8" y="166" font-size="13" font-weight="700" text-anchor="middle" fill="#fff">React + Vite</text>
+<rect x="1365.6" y="144" width="34" height="34" rx="8" fill="#ffffff" stroke="#2e7da3" stroke-width="1.2"/>
+<g transform="translate(1369.6,148) scale(1.0)"><path d="m8.286 10.578.512-8.657a.306.306 0 0 1 .247-.282L17.377.006a.306.306 0 0 1 .353.385l-1.558 5.403a.306.306 0 0 0 .352.385l2.388-.46a.306.306 0 0 1 .332.438l-6.79 13.55-.123.19a.3.3 0 0 1-.252.14c-.177 0-.35-.152-.305-.369l1.095-5.301a.306.306 0 0 0-.388-.355l-1.433.435a.306.306 0 0 1-.389-.354l.69-3.375a.306.306 0 0 0-.37-.36l-2.32.536a.306.306 0 0 1-.374-.316zm14.976-7.926L17.284 3.74l-.544 1.887 2.077-.4a.8.8 0 0 1 .84.369.8.8 0 0 1 .034.783L12.9 19.93l-.013.025-.015.023-.122.19a.8.8 0 0 1-.672.37.83.83 0 0 1-.634-.302.8.8 0 0 1-.16-.67l1.029-4.981-1.12.34a.81.81 0 0 1-.86-.262.8.8 0 0 1-.165-.67l.63-3.08-2.027.468a.81.81 0 0 1-.768-.233.8.8 0 0 1-.217-.6l.389-6.57-7.44-1.33a.612.612 0 0 0-.64.906L11.58 23.691a.612.612 0 0 0 1.066-.004l11.26-20.135a.612.612 0 0 0-.644-.9" fill="#646CFF"/></g>
+<rect x="1323.6" y="144" width="34" height="34" rx="8" fill="#ffffff" stroke="#2e7da3" stroke-width="1.2"/>
+<g transform="translate(1327.6,148) scale(1.0)"><path d="M14.23 12.004a2.236 2.236 0 0 1-2.235 2.236 2.236 2.236 0 0 1-2.236-2.236 2.236 2.236 0 0 1 2.235-2.236 2.236 2.236 0 0 1 2.236 2.236m2.648-10.69c-1.346 0-3.107.96-4.888 2.622-1.78-1.653-3.542-2.602-4.887-2.602-.41 0-.783.093-1.106.278-1.375.793-1.683 3.264-.973 6.365C1.98 8.917 0 10.42 0 12.004c0 1.59 1.99 3.097 5.043 4.03-.704 3.113-.39 5.588.988 6.38.32.187.69.275 1.102.275 1.345 0 3.107-.96 4.888-2.624 1.78 1.654 3.542 2.603 4.887 2.603.41 0 .783-.09 1.106-.275 1.374-.792 1.683-3.263.973-6.365C22.02 15.096 24 13.59 24 12.004c0-1.59-1.99-3.097-5.043-4.032.704-3.11.39-5.587-.988-6.38a2.17 2.17 0 0 0-1.092-.278zm-.005 1.09v.006c.225 0 .406.044.558.127.666.382.955 1.835.73 3.704-.054.46-.142.945-.25 1.44a23.5 23.5 0 0 0-3.107-.534A24 24 0 0 0 12.769 4.7c1.592-1.48 3.087-2.292 4.105-2.295zm-9.77.02c1.012 0 2.514.808 4.11 2.28-.686.72-1.37 1.537-2.02 2.442a23 23 0 0 0-3.113.538 15 15 0 0 1-.254-1.42c-.23-1.868.054-3.32.714-3.707.19-.09.4-.127.563-.132zm4.882 3.05q.684.704 1.36 1.564c-.44-.02-.89-.034-1.345-.034q-.691-.001-1.36.034c.44-.572.895-1.096 1.345-1.565zM12 8.1c.74 0 1.477.034 2.202.093q.61.874 1.183 1.86.557.961 1.018 1.946c-.308.655-.646 1.31-1.013 1.95-.38.66-.773 1.288-1.18 1.87a25.6 25.6 0 0 1-4.412.005 27 27 0 0 1-1.183-1.86q-.557-.961-1.018-1.946a25 25 0 0 1 1.013-1.954c.38-.66.773-1.286 1.18-1.868A25 25 0 0 1 12 8.098zm-3.635.254c-.24.377-.48.763-.704 1.16q-.336.585-.635 1.174c-.265-.656-.49-1.31-.676-1.947.64-.15 1.315-.283 2.015-.386zm7.26 0q1.044.153 2.006.387c-.18.632-.405 1.282-.66 1.933a25.952 25.952 0 0 0-1.345-2.32zm3.063.675q.727.226 1.375.498c1.732.74 2.852 1.708 2.852 2.476-.005.768-1.125 1.74-2.857 2.475-.42.18-.88.342-1.355.493a24 24 0 0 0-1.1-2.98c.45-1.017.81-2.01 1.085-2.964zm-13.395.004c.278.96.645 1.957 1.1 2.98a23 23 0 0 0-1.086 2.964c-.484-.15-.944-.318-1.37-.5-1.732-.737-2.852-1.706-2.852-2.474s1.12-1.742 2.852-2.476c.42-.18.88-.342 1.356-.494m11.678 4.28c.265.657.49 1.312.676 1.948-.64.157-1.316.29-2.016.39a26 26 0 0 0 1.341-2.338zm-9.945.02c.2.392.41.783.64 1.175q.345.586.705 1.143a22 22 0 0 1-2.006-.386c.18-.63.406-1.282.66-1.933zM17.92 16.32c.112.493.2.968.254 1.423.23 1.868-.054 3.32-.714 3.708-.147.09-.338.128-.563.128-1.012 0-2.514-.807-4.11-2.28.686-.72 1.37-1.536 2.02-2.44 1.107-.118 2.154-.3 3.113-.54zm-11.83.01c.96.234 2.006.415 3.107.532.66.905 1.345 1.727 2.035 2.446-1.595 1.483-3.092 2.295-4.11 2.295a1.2 1.2 0 0 1-.553-.132c-.666-.38-.955-1.834-.73-3.703.054-.46.142-.944.25-1.438zm4.56.64q.661.032 1.345.034.691.001 1.36-.034c-.44.572-.895 1.095-1.345 1.565q-.684-.706-1.36-1.565" fill="#61DAFB"/></g>
+<rect x="60.0" y="186" width="278.4" height="232" fill="#ffffff" stroke="#2e7da3" stroke-width="1.4" rx="2"/>
+<rect x="49.0" y="200" width="22" height="10" fill="#ffffff" stroke="#2e7da3" stroke-width="1.4"/>
+<rect x="49.0" y="218" width="22" height="10" fill="#ffffff" stroke="#2e7da3" stroke-width="1.4"/>
+<text x="199.2" y="210" font-size="13.5" font-weight="700" text-anchor="middle" fill="#1a1a1a">Funcionalidades públicas</text>
+<text x="199.2" y="228" font-size="13.5" font-weight="700" text-anchor="middle" fill="#1a1a1a">(sin login)</text>
+<text x="84.0" y="268" font-size="12.2" font-weight="400" text-anchor="start" fill="#1a1a1a">Catálogo de productos</text>
+<text x="84.0" y="289" font-size="12.2" font-weight="400" text-anchor="start" fill="#1a1a1a">Detalle del producto</text>
+<text x="84.0" y="310" font-size="12.2" font-weight="400" text-anchor="start" fill="#1a1a1a">Registro de usuarios</text>
+<text x="84.0" y="331" font-size="12.2" font-weight="400" text-anchor="start" fill="#1a1a1a">Inicio de sesión</text>
+<text x="84.0" y="352" font-size="12.2" font-weight="400" text-anchor="start" fill="#1a1a1a">Recuperar contraseña</text>
+<rect x="356.4" y="186" width="278.4" height="232" fill="#ffffff" stroke="#2e7da3" stroke-width="1.4" rx="2"/>
+<rect x="345.4" y="200" width="22" height="10" fill="#ffffff" stroke="#2e7da3" stroke-width="1.4"/>
+<rect x="345.4" y="218" width="22" height="10" fill="#ffffff" stroke="#2e7da3" stroke-width="1.4"/>
+<text x="495.59999999999997" y="210" font-size="13.5" font-weight="700" text-anchor="middle" fill="#1a1a1a">Funcionalidades del cliente</text>
+<text x="495.59999999999997" y="228" font-size="13.5" font-weight="700" text-anchor="middle" fill="#1a1a1a">(autenticado)</text>
+<text x="380.4" y="268" font-size="12.2" font-weight="400" text-anchor="start" fill="#1a1a1a">Carrito de compras</text>
+<text x="380.4" y="289" font-size="12.2" font-weight="400" text-anchor="start" fill="#1a1a1a">Checkout / Realizar compra</text>
+<text x="380.4" y="310" font-size="12.2" font-weight="400" text-anchor="start" fill="#1a1a1a">Historial de pedidos</text>
+<text x="380.4" y="331" font-size="12.2" font-weight="400" text-anchor="start" fill="#1a1a1a">Perfil</text>
+<text x="380.4" y="352" font-size="12.2" font-weight="400" text-anchor="start" fill="#1a1a1a">Cierre de sesión</text>
+<rect x="652.8" y="186" width="278.4" height="232" fill="#ffffff" stroke="#2e7da3" stroke-width="1.4" rx="2"/>
+<rect x="641.8" y="200" width="22" height="10" fill="#ffffff" stroke="#2e7da3" stroke-width="1.4"/>
+<rect x="641.8" y="218" width="22" height="10" fill="#ffffff" stroke="#2e7da3" stroke-width="1.4"/>
+<text x="792.0" y="210" font-size="13.5" font-weight="700" text-anchor="middle" fill="#1a1a1a">Panel de administración</text>
+<text x="792.0" y="228" font-size="13.5" font-weight="700" text-anchor="middle" fill="#1a1a1a">(rol Administrador)</text>
+<text x="676.8" y="268" font-size="12.2" font-weight="400" text-anchor="start" fill="#1a1a1a">Gestión de productos</text>
+<text x="676.8" y="289" font-size="12.2" font-weight="400" text-anchor="start" fill="#1a1a1a">Gestión de usuarios</text>
+<text x="676.8" y="310" font-size="12.2" font-weight="400" text-anchor="start" fill="#1a1a1a">Gestión de pedidos</text>
+<text x="676.8" y="331" font-size="12.2" font-weight="400" text-anchor="start" fill="#1a1a1a">Gestión de roles y permisos</text>
+<text x="676.8" y="352" font-size="12.2" font-weight="400" text-anchor="start" fill="#1a1a1a">Dashboard e informes</text>
+<text x="676.8" y="373" font-size="12.2" font-weight="400" text-anchor="start" fill="#1a1a1a">Filtros y exportación PDF/Excel</text>
+<rect x="949.1999999999999" y="186" width="278.4" height="232" fill="#ffffff" stroke="#2e7da3" stroke-width="1.4" rx="2"/>
+<rect x="938.1999999999999" y="200" width="22" height="10" fill="#ffffff" stroke="#2e7da3" stroke-width="1.4"/>
+<rect x="938.1999999999999" y="218" width="22" height="10" fill="#ffffff" stroke="#2e7da3" stroke-width="1.4"/>
+<text x="1088.3999999999999" y="210" font-size="13.5" font-weight="700" text-anchor="middle" fill="#1a1a1a">Componentes reutilizables</text>
+<text x="973.1999999999999" y="268" font-size="12.2" font-weight="400" text-anchor="start" fill="#1a1a1a">Navbar</text>
+<text x="973.1999999999999" y="289" font-size="12.2" font-weight="400" text-anchor="start" fill="#1a1a1a">ProductCard</text>
+<text x="973.1999999999999" y="310" font-size="12.2" font-weight="400" text-anchor="start" fill="#1a1a1a">CartItem</text>
+<text x="973.1999999999999" y="331" font-size="12.2" font-weight="400" text-anchor="start" fill="#1a1a1a">Formularios</text>
+<text x="973.1999999999999" y="352" font-size="12.2" font-weight="400" text-anchor="start" fill="#1a1a1a">ProtectedRoute</text>
+<text x="973.1999999999999" y="373" font-size="12.2" font-weight="400" text-anchor="start" fill="#1a1a1a">Toast (notificaciones)</text>
+<rect x="1245.6" y="186" width="278.4" height="232" fill="#ffffff" stroke="#2e7da3" stroke-width="1.4" rx="2"/>
+<rect x="1234.6" y="200" width="22" height="10" fill="#ffffff" stroke="#2e7da3" stroke-width="1.4"/>
+<rect x="1234.6" y="218" width="22" height="10" fill="#ffffff" stroke="#2e7da3" stroke-width="1.4"/>
+<text x="1384.8" y="210" font-size="13.5" font-weight="700" text-anchor="middle" fill="#1a1a1a">Servicios de comunicación</text>
+<text x="1384.8" y="228" font-size="13.5" font-weight="700" text-anchor="middle" fill="#1a1a1a">con la API</text>
+<text x="1269.6" y="268" font-size="12.2" font-weight="400" text-anchor="start" fill="#1a1a1a">api.js</text>
+<text x="1269.6" y="289" font-size="12.2" font-weight="400" text-anchor="start" fill="#1a1a1a">auth.service.js</text>
+<text x="1269.6" y="310" font-size="12.2" font-weight="400" text-anchor="start" fill="#1a1a1a">productos.service.js</text>
+<text x="1269.6" y="331" font-size="12.2" font-weight="400" text-anchor="start" fill="#1a1a1a">carrito.service.js</text>
+<text x="1269.6" y="352" font-size="12.2" font-weight="400" text-anchor="start" fill="#1a1a1a">pedidos.service.js</text>
+<text x="1269.6" y="373" font-size="12.2" font-weight="400" text-anchor="start" fill="#1a1a1a">usuarios.service.js</text>
+<text x="1269.6" y="394" font-size="12.2" font-weight="400" text-anchor="start" fill="#1a1a1a">informes.service.js</text>
+<circle cx="300" cy="23" r="11" fill="#fff" stroke="#222" stroke-width="1.6"/>
+<path d="M300,34 V64 M280,44 H320 M300,64 L284,84 M300,64 L316,84" stroke="#222" stroke-width="1.6" fill="none"/>
+<text x="300" y="102" font-size="13.5" font-weight="700" text-anchor="middle" fill="#1a1a1a">Visitante</text>
+<line x1="293" y1="110" x2="293" y2="184" stroke="#222" stroke-width="2" marker-end="url(#ah)"/>
+<line x1="307" y1="184" x2="307" y2="112" stroke="#222" stroke-width="2" marker-end="url(#ah)"/>
+<circle cx="495" cy="23" r="11" fill="#fff" stroke="#222" stroke-width="1.6"/>
+<path d="M495,34 V64 M475,44 H515 M495,64 L479,84 M495,64 L511,84" stroke="#222" stroke-width="1.6" fill="none"/>
+<text x="495" y="102" font-size="13.5" font-weight="700" text-anchor="middle" fill="#1a1a1a">Cliente</text>
+<line x1="488" y1="110" x2="488" y2="184" stroke="#222" stroke-width="2" marker-end="url(#ah)"/>
+<line x1="502" y1="184" x2="502" y2="112" stroke="#222" stroke-width="2" marker-end="url(#ah)"/>
+<circle cx="791" cy="23" r="11" fill="#fff" stroke="#222" stroke-width="1.6"/>
+<path d="M791,34 V64 M771,44 H811 M791,64 L775,84 M791,64 L807,84" stroke="#222" stroke-width="1.6" fill="none"/>
+<text x="791" y="102" font-size="13.5" font-weight="700" text-anchor="middle" fill="#1a1a1a">Administrador</text>
+<line x1="784" y1="110" x2="784" y2="184" stroke="#222" stroke-width="2" marker-end="url(#ah)"/>
+<line x1="798" y1="184" x2="798" y2="112" stroke="#222" stroke-width="2" marker-end="url(#ah)"/>
+<polygon points="450,524 466,506 456,506 456,452 444,452 444,506 434,506" fill="#222"/>
+<text x="480" y="493.0" font-size="13" font-weight="700" text-anchor="start" fill="#1a1a1a">Petición HTTP · REST (JSON)</text>
+<polygon points="1000,452 1016,470 1006,470 1006,524 994,524 994,470 984,470" fill="#222"/>
+<text x="1030" y="493.0" font-size="13" font-weight="700" text-anchor="start" fill="#1a1a1a">Respuesta JSON (datos y estado HTTP)</text>
+<polygon points="30,540 46,524 1586,524 1570,540" fill="#e8eab8" stroke="#8a8a2e" stroke-width="1.5"/>
+<polygon points="1570,540 1586,524 1586,1081 1570,1097" fill="#d9dc9a" stroke="#8a8a2e" stroke-width="1.5"/>
+<rect x="30" y="540" width="1540" height="557" fill="#f6f7dc" stroke="#8a8a2e" stroke-width="1.5"/>
+<text x="46" y="567" font-size="17" font-weight="700" text-anchor="start" fill="#1a1a1a" text-decoration="underline">Capa de lógica de negocio</text>
+<rect x="1363.6" y="548" width="186.39999999999998" height="26" rx="13" fill="#8a8a2e"/>
+<text x="1456.8" y="566" font-size="13" font-weight="700" text-anchor="middle" fill="#fff">Node.js + Express</text>
+<rect x="1319.6" y="544" width="34" height="34" rx="8" fill="#ffffff" stroke="#8a8a2e" stroke-width="1.2"/>
+<g transform="translate(1323.6,548) scale(1.0)"><path d="M24 18.588a1.53 1.53 0 0 1-1.895-.72l-3.45-4.771-.5-.667-4.003 5.444a1.466 1.466 0 0 1-1.802.708l5.158-6.92-4.798-6.251a1.595 1.595 0 0 1 1.9.666l3.576 4.83 3.596-4.81a1.435 1.435 0 0 1 1.788-.668L21.708 7.9l-2.522 3.283a.666.666 0 0 0 0 .994l4.804 6.412zM.002 11.576l.42-2.075c1.154-4.103 5.858-5.81 9.094-3.27 1.895 1.489 2.368 3.597 2.275 5.973H1.116C.943 16.447 4.005 19.009 7.92 17.7a4.08 4.08 0 0 0 2.582-2.876c.207-.666.548-.78 1.174-.588a5.42 5.42 0 0 1-2.589 3.957 6.27 6.27 0 0 1-7.306-.933 6.58 6.58 0 0 1-1.64-3.858c0-.235-.08-.455-.134-.666A88 88 0 0 1 0 11.577zm1.127-.286h9.654c-.06-3.076-2.001-5.258-4.59-5.278-2.882-.04-4.944 2.094-5.071 5.264z" fill="#333333"/></g>
+<rect x="1277.6" y="544" width="34" height="34" rx="8" fill="#ffffff" stroke="#8a8a2e" stroke-width="1.2"/>
+<g transform="translate(1281.6,548) scale(1.0)"><path d="M11.998 24c-.321 0-.641-.084-.922-.247L8.14 22.016c-.438-.245-.224-.332-.08-.383.585-.203.703-.25 1.328-.604.065-.037.151-.023.218.017l2.256 1.339a.29.29 0 0 0 .272 0l8.795-5.076a.28.28 0 0 0 .134-.238V6.921a.28.28 0 0 0-.137-.242l-8.791-5.072a.28.28 0 0 0-.271 0L3.075 6.68a.28.28 0 0 0-.139.241v10.15a.27.27 0 0 0 .139.235l2.409 1.392c1.307.654 2.108-.116 2.108-.89V7.787c0-.142.114-.253.256-.253h1.115c.139 0 .255.112.255.253v10.021c0 1.745-.95 2.745-2.604 2.745-.508 0-.909 0-2.026-.551L2.28 18.675a1.86 1.86 0 0 1-.922-1.604V6.921c0-.659.353-1.275.922-1.603L11.075.236a1.93 1.93 0 0 1 1.848 0l8.794 5.082c.57.329.924.944.924 1.603v10.15a1.86 1.86 0 0 1-.924 1.604l-8.794 5.078c-.28.163-.599.247-.925.247m7.101-10.007c0-1.9-1.284-2.406-3.987-2.763-2.731-.361-3.009-.548-3.009-1.187 0-.528.235-1.233 2.258-1.233 1.807 0 2.473.389 2.747 1.607a.254.254 0 0 0 .247.199h1.141a.26.26 0 0 0 .186-.081.26.26 0 0 0 .067-.196c-.177-2.098-1.571-3.076-4.388-3.076-2.508 0-4.004 1.058-4.004 2.833 0 1.925 1.488 2.457 3.895 2.695 2.88.282 3.103.703 3.103 1.269 0 .983-.789 1.402-2.642 1.402-2.327 0-2.839-.584-3.011-1.742a.255.255 0 0 0-.253-.215h-1.137a.25.25 0 0 0-.254.253c0 1.482.806 3.248 4.655 3.248 2.788.001 4.386-1.096 4.386-3.013" fill="#5FA04E"/></g>
+<rect x="60" y="588" width="620" height="235" fill="#ffffff" stroke="#8a8a2e" stroke-width="1.4" rx="2"/>
+<rect x="49" y="602" width="22" height="10" fill="#ffffff" stroke="#8a8a2e" stroke-width="1.4"/>
+<rect x="49" y="620" width="22" height="10" fill="#ffffff" stroke="#8a8a2e" stroke-width="1.4"/>
+<text x="370.0" y="612" font-size="13.5" font-weight="700" text-anchor="middle" fill="#1a1a1a">1 · Rutas (Routes)</text>
+<text x="84" y="644" font-size="12.5" font-weight="700" text-anchor="start" fill="#1a1a1a">Públicas</text>
+<text x="84" y="664" font-size="12" font-weight="400" text-anchor="start" fill="#1a1a1a">GET /api/productos</text>
+<text x="84" y="683" font-size="12" font-weight="400" text-anchor="start" fill="#1a1a1a">GET /api/productos/:id</text>
+<text x="84" y="702" font-size="12" font-weight="400" text-anchor="start" fill="#1a1a1a">POST /api/auth/registro</text>
+<text x="84" y="721" font-size="12" font-weight="400" text-anchor="start" fill="#1a1a1a">POST /api/auth/login</text>
+<text x="84" y="740" font-size="12" font-weight="400" text-anchor="start" fill="#1a1a1a">POST /api/auth/recuperar</text>
+<text x="274" y="644" font-size="12.5" font-weight="700" text-anchor="start" fill="#1a1a1a">Cliente  (JWT)</text>
+<text x="274" y="664" font-size="12" font-weight="400" text-anchor="start" fill="#1a1a1a">GET /api/carrito</text>
+<text x="274" y="683" font-size="12" font-weight="400" text-anchor="start" fill="#1a1a1a">POST /api/carrito</text>
+<text x="274" y="702" font-size="12" font-weight="400" text-anchor="start" fill="#1a1a1a">PUT /api/carrito/:productoId</text>
+<text x="274" y="721" font-size="12" font-weight="400" text-anchor="start" fill="#1a1a1a">DELETE /api/carrito/:productoId</text>
+<text x="274" y="740" font-size="12" font-weight="400" text-anchor="start" fill="#1a1a1a">GET/POST /api/pedidos</text>
+<text x="274" y="759" font-size="12" font-weight="400" text-anchor="start" fill="#1a1a1a">POST /api/compras</text>
+<text x="274" y="778" font-size="12" font-weight="400" text-anchor="start" fill="#1a1a1a">GET/PUT /api/usuarios/perfil</text>
+<text x="499" y="644" font-size="12.5" font-weight="700" text-anchor="start" fill="#1a1a1a">Admin  (JWT + rol)</text>
+<text x="499" y="664" font-size="12" font-weight="400" text-anchor="start" fill="#1a1a1a">/api/admin/productos</text>
+<text x="499" y="683" font-size="12" font-weight="400" text-anchor="start" fill="#1a1a1a">/api/admin/usuarios</text>
+<text x="499" y="702" font-size="12" font-weight="400" text-anchor="start" fill="#1a1a1a">/api/admin/roles</text>
+<text x="499" y="721" font-size="12" font-weight="400" text-anchor="start" fill="#1a1a1a">/api/admin/pedidos</text>
+<text x="499" y="740" font-size="12" font-weight="400" text-anchor="start" fill="#1a1a1a">/api/admin/informes</text>
+<rect x="710" y="588" width="255" height="235" fill="#ffffff" stroke="#8a8a2e" stroke-width="1.4" rx="2"/>
+<rect x="699" y="602" width="22" height="10" fill="#ffffff" stroke="#8a8a2e" stroke-width="1.4"/>
+<rect x="699" y="620" width="22" height="10" fill="#ffffff" stroke="#8a8a2e" stroke-width="1.4"/>
+<text x="837.5" y="612" font-size="13.5" font-weight="700" text-anchor="middle" fill="#1a1a1a">2 · Middlewares</text>
+<text x="734" y="654" font-size="12.2" font-weight="400" text-anchor="start" fill="#1a1a1a">Autenticación · verifica JWT</text>
+<text x="734" y="680" font-size="12.2" font-weight="400" text-anchor="start" fill="#1a1a1a">Autorización · rol y permisos</text>
+<text x="734" y="706" font-size="12.2" font-weight="400" text-anchor="start" fill="#1a1a1a">Validación de datos</text>
+<text x="734" y="732" font-size="12.2" font-weight="400" text-anchor="start" fill="#1a1a1a">Manejo de errores · AppError.js</text>
+<text x="734" y="758" font-size="12.2" font-weight="400" text-anchor="start" fill="#1a1a1a">Upload · imágenes</text>
+<rect x="995" y="588" width="190" height="235" fill="#ffffff" stroke="#8a8a2e" stroke-width="1.4" rx="2"/>
+<rect x="984" y="602" width="22" height="10" fill="#ffffff" stroke="#8a8a2e" stroke-width="1.4"/>
+<rect x="984" y="620" width="22" height="10" fill="#ffffff" stroke="#8a8a2e" stroke-width="1.4"/>
+<text x="1090.0" y="612" font-size="13.5" font-weight="700" text-anchor="middle" fill="#1a1a1a">3 · Controladores</text>
+<text x="1019" y="654" font-size="12.2" font-weight="400" text-anchor="start" fill="#1a1a1a">auth</text>
+<text x="1019" y="678" font-size="12.2" font-weight="400" text-anchor="start" fill="#1a1a1a">productos</text>
+<text x="1019" y="702" font-size="12.2" font-weight="400" text-anchor="start" fill="#1a1a1a">usuarios</text>
+<text x="1019" y="726" font-size="12.2" font-weight="400" text-anchor="start" fill="#1a1a1a">carrito</text>
+<text x="1019" y="750" font-size="12.2" font-weight="400" text-anchor="start" fill="#1a1a1a">pedidos</text>
+<text x="1019" y="774" font-size="12.2" font-weight="400" text-anchor="start" fill="#1a1a1a">pagos</text>
+<text x="1019" y="798" font-size="12.2" font-weight="400" text-anchor="start" fill="#1a1a1a">informes</text>
+<rect x="1215" y="588" width="309" height="235" fill="#ffffff" stroke="#8a8a2e" stroke-width="1.4" rx="2"/>
+<rect x="1204" y="602" width="22" height="10" fill="#ffffff" stroke="#8a8a2e" stroke-width="1.4"/>
+<rect x="1204" y="620" width="22" height="10" fill="#ffffff" stroke="#8a8a2e" stroke-width="1.4"/>
+<text x="1369.5" y="612" font-size="13.5" font-weight="700" text-anchor="middle" fill="#1a1a1a">Seguridad y utilidades</text>
+<text x="1239" y="644" font-size="12.5" font-weight="700" text-anchor="start" fill="#1a1a1a">Seguridad</text>
+<text x="1239" y="664" font-size="12.2" font-weight="400" text-anchor="start" fill="#1a1a1a">bcrypt · hash de contraseñas</text>
+<text x="1239" y="683" font-size="12.2" font-weight="400" text-anchor="start" fill="#1a1a1a">JWT · tokens de autenticación</text>
+<text x="1239" y="702" font-size="12.2" font-weight="400" text-anchor="start" fill="#1a1a1a">Autenticación y autorización por roles</text>
+<text x="1239" y="748" font-size="12.5" font-weight="700" text-anchor="start" fill="#1a1a1a">Utilidades y configuración</text>
+<text x="1239" y="768" font-size="12.2" font-weight="400" text-anchor="start" fill="#1a1a1a">AppError.js</text>
+<text x="1239" y="787" font-size="12.2" font-weight="400" text-anchor="start" fill="#1a1a1a">Variables de entorno (.env)</text>
+<line x1="680" y1="705.5" x2="710" y2="705.5" stroke="#222" stroke-width="2" marker-end="url(#ah)"/>
+<line x1="965" y1="705.5" x2="995" y2="705.5" stroke="#222" stroke-width="2" marker-end="url(#ah)"/>
+<rect x="60" y="849" width="1464" height="228" fill="#fcfcee" stroke="#8a8a2e" stroke-width="1.4" rx="2"/>
+<rect x="49" y="863" width="22" height="10" fill="#fcfcee" stroke="#8a8a2e" stroke-width="1.4"/>
+<rect x="49" y="881" width="22" height="10" fill="#fcfcee" stroke="#8a8a2e" stroke-width="1.4"/>
+<text x="84" y="873" font-size="13.5" font-weight="700" text-anchor="start" fill="#1a1a1a">4 · Servicios (Services)</text>
+<line x1="1090.0" y1="823" x2="1090.0" y2="849" stroke="#222" stroke-width="2" marker-end="url(#ah)"/>
+<rect x="80.0" y="885" width="225.66666666666666" height="180" fill="#ffffff" stroke="#8a8a2e" stroke-width="1.4" rx="2"/>
+<rect x="69.0" y="899" width="22" height="10" fill="#ffffff" stroke="#8a8a2e" stroke-width="1.4"/>
+<rect x="69.0" y="917" width="22" height="10" fill="#ffffff" stroke="#8a8a2e" stroke-width="1.4"/>
+<text x="192.83333333333331" y="909" font-size="13" font-weight="700" text-anchor="middle" fill="#1a1a1a">Gestión de usuarios</text>
+<text x="104.0" y="937" font-size="12.2" font-weight="400" text-anchor="start" fill="#1a1a1a">Autenticación</text>
+<text x="104.0" y="956" font-size="12.2" font-weight="400" text-anchor="start" fill="#1a1a1a">Validaciones</text>
+<text x="104.0" y="975" font-size="12.2" font-weight="400" text-anchor="start" fill="#1a1a1a">Asignación de roles</text>
+<text x="104.0" y="994" font-size="12.2" font-weight="400" text-anchor="start" fill="#1a1a1a">Permisos por rol</text>
+<text x="104.0" y="1013" font-size="12.2" font-weight="400" text-anchor="start" fill="#1a1a1a">Administrador principal</text>
+<text x="104.0" y="1032" font-size="12.2" font-weight="400" text-anchor="start" fill="#1a1a1a">Activar / desactivar</text>
+<text x="104.0" y="1051" font-size="12.2" font-weight="400" text-anchor="start" fill="#1a1a1a">Búsqueda de usuarios</text>
+<rect x="319.66666666666663" y="885" width="225.66666666666666" height="180" fill="#ffffff" stroke="#8a8a2e" stroke-width="1.4" rx="2"/>
+<rect x="308.66666666666663" y="899" width="22" height="10" fill="#ffffff" stroke="#8a8a2e" stroke-width="1.4"/>
+<rect x="308.66666666666663" y="917" width="22" height="10" fill="#ffffff" stroke="#8a8a2e" stroke-width="1.4"/>
+<text x="432.49999999999994" y="909" font-size="13" font-weight="700" text-anchor="middle" fill="#1a1a1a">Gestión de productos</text>
+<text x="343.66666666666663" y="937" font-size="12.2" font-weight="400" text-anchor="start" fill="#1a1a1a">Catálogo y detalle</text>
+<text x="343.66666666666663" y="956" font-size="12.2" font-weight="400" text-anchor="start" fill="#1a1a1a">Alta y edición (admin)</text>
+<text x="343.66666666666663" y="975" font-size="12.2" font-weight="400" text-anchor="start" fill="#1a1a1a">Inactivación</text>
+<text x="343.66666666666663" y="994" font-size="12.2" font-weight="400" text-anchor="start" fill="#1a1a1a">Control de stock</text>
+<rect x="559.3333333333333" y="885" width="225.66666666666666" height="180" fill="#ffffff" stroke="#8a8a2e" stroke-width="1.4" rx="2"/>
+<rect x="548.3333333333333" y="899" width="22" height="10" fill="#ffffff" stroke="#8a8a2e" stroke-width="1.4"/>
+<rect x="548.3333333333333" y="917" width="22" height="10" fill="#ffffff" stroke="#8a8a2e" stroke-width="1.4"/>
+<text x="672.1666666666666" y="909" font-size="13" font-weight="700" text-anchor="middle" fill="#1a1a1a">Gestión del carrito</text>
+<text x="583.3333333333333" y="937" font-size="12.2" font-weight="400" text-anchor="start" fill="#1a1a1a">Agregar y quitar productos</text>
+<text x="583.3333333333333" y="956" font-size="12.2" font-weight="400" text-anchor="start" fill="#1a1a1a">Cantidad por producto</text>
+<text x="583.3333333333333" y="975" font-size="12.2" font-weight="400" text-anchor="start" fill="#1a1a1a">Cálculo de totales</text>
+<rect x="799.0" y="885" width="225.66666666666666" height="180" fill="#ffffff" stroke="#8a8a2e" stroke-width="1.4" rx="2"/>
+<rect x="788.0" y="899" width="22" height="10" fill="#ffffff" stroke="#8a8a2e" stroke-width="1.4"/>
+<rect x="788.0" y="917" width="22" height="10" fill="#ffffff" stroke="#8a8a2e" stroke-width="1.4"/>
+<text x="911.8333333333334" y="909" font-size="13" font-weight="700" text-anchor="middle" fill="#1a1a1a">Gestión de pedidos</text>
+<text x="823.0" y="937" font-size="12.2" font-weight="400" text-anchor="start" fill="#1a1a1a">Número único de pedido</text>
+<text x="823.0" y="956" font-size="12.2" font-weight="400" text-anchor="start" fill="#1a1a1a">Creación del pedido</text>
+<text x="823.0" y="975" font-size="12.2" font-weight="400" text-anchor="start" fill="#1a1a1a">Historial de pedidos</text>
+<rect x="1038.6666666666665" y="885" width="225.66666666666666" height="180" fill="#ffffff" stroke="#8a8a2e" stroke-width="1.4" rx="2"/>
+<rect x="1027.6666666666665" y="899" width="22" height="10" fill="#ffffff" stroke="#8a8a2e" stroke-width="1.4"/>
+<rect x="1027.6666666666665" y="917" width="22" height="10" fill="#ffffff" stroke="#8a8a2e" stroke-width="1.4"/>
+<text x="1151.4999999999998" y="909" font-size="13" font-weight="700" text-anchor="middle" fill="#1a1a1a">Pagos</text>
+<text x="1062.6666666666665" y="937" font-size="12.2" font-weight="400" text-anchor="start" fill="#1a1a1a">Pago simulado</text>
+<text x="1062.6666666666665" y="956" font-size="12.2" font-weight="400" text-anchor="start" fill="#1a1a1a">Confirmación del pago</text>
+<rect x="1278.3333333333333" y="885" width="225.66666666666666" height="180" fill="#ffffff" stroke="#8a8a2e" stroke-width="1.4" rx="2"/>
+<rect x="1267.3333333333333" y="899" width="22" height="10" fill="#ffffff" stroke="#8a8a2e" stroke-width="1.4"/>
+<rect x="1267.3333333333333" y="917" width="22" height="10" fill="#ffffff" stroke="#8a8a2e" stroke-width="1.4"/>
+<text x="1391.1666666666665" y="909" font-size="13" font-weight="700" text-anchor="middle" fill="#1a1a1a">Informes</text>
+<text x="1302.3333333333333" y="937" font-size="12.2" font-weight="400" text-anchor="start" fill="#1a1a1a">Ventas</text>
+<text x="1302.3333333333333" y="956" font-size="12.2" font-weight="400" text-anchor="start" fill="#1a1a1a">Productos más vendidos</text>
+<text x="1302.3333333333333" y="975" font-size="12.2" font-weight="400" text-anchor="start" fill="#1a1a1a">Cantidad de pedidos</text>
+<text x="1302.3333333333333" y="994" font-size="12.2" font-weight="400" text-anchor="start" fill="#1a1a1a">Filtros</text>
+<text x="1302.3333333333333" y="1013" font-size="12.2" font-weight="400" text-anchor="start" fill="#1a1a1a">Exportar PDF / Excel</text>
+<text x="1302.3333333333333" y="1032" font-size="12.2" font-weight="400" text-anchor="start" fill="#1a1a1a">Procesa datos del dashboard</text>
+<polygon points="450,1171 466,1153 456,1153 456,1111 444,1111 444,1153 434,1153" fill="#222"/>
+<text x="480" y="1146" font-size="13" font-weight="700" text-anchor="start" fill="#1a1a1a">Consultas SQL</text>
+<polygon points="1000,1111 1016,1129 1006,1129 1006,1171 994,1171 994,1129 984,1129" fill="#222"/>
+<text x="1030" y="1146" font-size="13" font-weight="700" text-anchor="start" fill="#1a1a1a">Resultados (filas)</text>
+<polygon points="30,1187 46,1171 1586,1171 1570,1187" fill="#cfe6bf" stroke="#5c9a3c" stroke-width="1.5"/>
+<polygon points="1570,1187 1586,1171 1586,1769 1570,1785" fill="#b7d7a2" stroke="#5c9a3c" stroke-width="1.5"/>
+<rect x="30" y="1187" width="1540" height="598" fill="#e6f3dc" stroke="#5c9a3c" stroke-width="1.5"/>
+<text x="46" y="1214" font-size="17" font-weight="700" text-anchor="start" fill="#1a1a1a" text-decoration="underline">Capa de base de datos</text>
+<rect x="60" y="1233" width="1464" height="148" fill="#f1f8ea" stroke="#5c9a3c" stroke-width="1.4" rx="2"/>
+<rect x="49" y="1247" width="22" height="10" fill="#f1f8ea" stroke="#5c9a3c" stroke-width="1.4"/>
+<rect x="49" y="1265" width="22" height="10" fill="#f1f8ea" stroke="#5c9a3c" stroke-width="1.4"/>
+<text x="84" y="1257" font-size="13.5" font-weight="700" text-anchor="start" fill="#1a1a1a">5 · Acceso a datos (Data Access)</text>
+<rect x="80" y="1269" width="380" height="104" fill="#ffffff" stroke="#5c9a3c" stroke-width="1.4" rx="2"/>
+<rect x="69" y="1283" width="22" height="10" fill="#ffffff" stroke="#5c9a3c" stroke-width="1.4"/>
+<rect x="69" y="1301" width="22" height="10" fill="#ffffff" stroke="#5c9a3c" stroke-width="1.4"/>
+<text x="270.0" y="1293" font-size="13" font-weight="700" text-anchor="middle" fill="#1a1a1a">db.js</text>
+<text x="104" y="1321" font-size="12.2" font-weight="400" text-anchor="start" fill="#1a1a1a">Pool de conexiones MySQL</text>
+<rect x="492.0" y="1269" width="500" height="104" fill="#ffffff" stroke="#5c9a3c" stroke-width="1.4" rx="2"/>
+<rect x="481.0" y="1283" width="22" height="10" fill="#ffffff" stroke="#5c9a3c" stroke-width="1.4"/>
+<rect x="481.0" y="1301" width="22" height="10" fill="#ffffff" stroke="#5c9a3c" stroke-width="1.4"/>
+<text x="742.0" y="1293" font-size="13" font-weight="700" text-anchor="middle" fill="#1a1a1a">Consultas SQL / Acceso a datos</text>
+<text x="516.0" y="1321" font-size="12.2" font-weight="400" text-anchor="start" fill="#1a1a1a">usuarios, productos, categorías,</text>
+<text x="516.0" y="1340" font-size="12.2" font-weight="400" text-anchor="start" fill="#1a1a1a">carrito, pedidos y pagos</text>
+<rect x="1024.0" y="1269" width="480" height="104" fill="#ffffff" stroke="#5c9a3c" stroke-width="1.4" rx="2"/>
+<rect x="1013.0" y="1283" width="22" height="10" fill="#ffffff" stroke="#5c9a3c" stroke-width="1.4"/>
+<rect x="1013.0" y="1301" width="22" height="10" fill="#ffffff" stroke="#5c9a3c" stroke-width="1.4"/>
+<text x="1264.0" y="1293" font-size="13" font-weight="700" text-anchor="middle" fill="#1a1a1a">Consultas SQL para informes</text>
+<text x="1048.0" y="1321" font-size="12.2" font-weight="400" text-anchor="start" fill="#1a1a1a">Ventas totales</text>
+<text x="1048.0" y="1340" font-size="12.2" font-weight="400" text-anchor="start" fill="#1a1a1a">Productos más vendidos</text>
+<text x="1048.0" y="1359" font-size="12.2" font-weight="400" text-anchor="start" fill="#1a1a1a">Cantidad de pedidos</text>
+<rect x="60" y="1407" width="1110" height="354" fill="#ffffff" stroke="#5c9a3c" stroke-width="1.4" rx="2"/>
+<rect x="49" y="1421" width="22" height="10" fill="#ffffff" stroke="#5c9a3c" stroke-width="1.4"/>
+<rect x="49" y="1439" width="22" height="10" fill="#ffffff" stroke="#5c9a3c" stroke-width="1.4"/>
+<text x="84" y="1431" font-size="13.5" font-weight="700" text-anchor="start" fill="#1a1a1a">6 · Modelo de datos: tablas</text>
+<rect x="93.75" y="1492" width="210" height="44" rx="6" fill="#d9eccb" stroke="#5c9a3c" stroke-width="1.6"/>
+<text x="198.75" y="1519.0" font-size="13.5" font-weight="700" text-anchor="middle" fill="#1a1a1a">Usuario</text>
+<rect x="371.25" y="1492" width="210" height="44" rx="6" fill="#d9eccb" stroke="#5c9a3c" stroke-width="1.6"/>
+<text x="476.25" y="1519.0" font-size="13.5" font-weight="700" text-anchor="middle" fill="#1a1a1a">Rol</text>
+<rect x="648.75" y="1492" width="210" height="44" rx="6" fill="#d9eccb" stroke="#5c9a3c" stroke-width="1.6"/>
+<text x="753.75" y="1519.0" font-size="13.5" font-weight="700" text-anchor="middle" fill="#1a1a1a">Usuario_Rol</text>
+<rect x="926.25" y="1492" width="210" height="44" rx="6" fill="#d9eccb" stroke="#5c9a3c" stroke-width="1.6"/>
+<text x="1031.25" y="1519.0" font-size="13.5" font-weight="700" text-anchor="middle" fill="#1a1a1a">Token_Recuperacion</text>
+<rect x="93.75" y="1577" width="210" height="44" rx="6" fill="#d9eccb" stroke="#5c9a3c" stroke-width="1.6"/>
+<text x="198.75" y="1604.0" font-size="13.5" font-weight="700" text-anchor="middle" fill="#1a1a1a">Categoria</text>
+<rect x="371.25" y="1577" width="210" height="44" rx="6" fill="#d9eccb" stroke="#5c9a3c" stroke-width="1.6"/>
+<text x="476.25" y="1604.0" font-size="13.5" font-weight="700" text-anchor="middle" fill="#1a1a1a">Producto</text>
+<rect x="648.75" y="1577" width="210" height="44" rx="6" fill="#d9eccb" stroke="#5c9a3c" stroke-width="1.6"/>
+<text x="753.75" y="1604.0" font-size="13.5" font-weight="700" text-anchor="middle" fill="#1a1a1a">Carrito</text>
+<rect x="926.25" y="1577" width="210" height="44" rx="6" fill="#d9eccb" stroke="#5c9a3c" stroke-width="1.6"/>
+<text x="1031.25" y="1604.0" font-size="13.5" font-weight="700" text-anchor="middle" fill="#1a1a1a">Detalle_Carrito</text>
+<rect x="93.75" y="1662" width="210" height="44" rx="6" fill="#d9eccb" stroke="#5c9a3c" stroke-width="1.6"/>
+<text x="198.75" y="1689.0" font-size="13.5" font-weight="700" text-anchor="middle" fill="#1a1a1a">Pedido</text>
+<rect x="371.25" y="1662" width="210" height="44" rx="6" fill="#d9eccb" stroke="#5c9a3c" stroke-width="1.6"/>
+<text x="476.25" y="1689.0" font-size="13.5" font-weight="700" text-anchor="middle" fill="#1a1a1a">Detalle_Pedido</text>
+<rect x="648.75" y="1662" width="210" height="44" rx="6" fill="#d9eccb" stroke="#5c9a3c" stroke-width="1.6"/>
+<text x="753.75" y="1689.0" font-size="13.5" font-weight="700" text-anchor="middle" fill="#1a1a1a">Pago</text>
+<rect x="1200" y="1407" width="324" height="354" rx="4" fill="#ffffff" stroke="#5c9a3c" stroke-width="1.4"/>
+<g transform="translate(1230.0,1459.7) scale(11.0)"><path d="M16.405 5.501c-.115 0-.193.014-.274.033v.013h.014c.054.104.146.18.214.273.054.107.1.214.154.32l.014-.015c.094-.066.14-.172.14-.333-.04-.047-.046-.094-.08-.14-.04-.067-.126-.1-.18-.153zM5.77 18.695h-.927a51 51 0 0 0-.27-4.41h-.008l-1.41 4.41H2.45l-1.4-4.41h-.01a73 73 0 0 0-.195 4.41H0q.083-2.95.41-5.53h1.15l1.335 4.064h.008l1.347-4.064h1.095q.363 3.024.428 5.53zm4.017-4.08q-.567 3.069-1.492 4.46-.723 1.074-1.583 1.073-.228 0-.566-.138v-.494q.166.026.386.026.402 0 .647-.222.295-.27.295-.605 0-.233-.23-.944L6.23 14.615h.91l.727 2.36q.247.804.205 1.123.6-1.598.835-3.483zm12.325 4.08h-2.63v-5.53h.885v4.85h1.745zm-3.32.135-1.016-.5q.136-.113.255-.25.649-.76.648-2.253 0-2.745-2.155-2.746-1.056 0-1.65.697-.646.762-.646 2.245-.001 1.459.574 2.14.524.615 1.583.615.396 0 .725-.098l1.325.772.36-.622zM15.5 17.588q-.337-.541-.337-1.736 0-2.09 1.27-2.09.666 0 .977.5.336.543.336 1.723 0 2.107-1.27 2.108-.667 0-.978-.5zm-1.658-.425q0 .706-.516 1.156-.514.45-1.384.45c-.543 0-1.064-.172-1.573-.515l.237-.476q.656.329 1.19.328.498 0 .783-.22a.75.75 0 0 0 .3-.615c0-.33-.23-.61-.648-.845-.388-.213-1.163-.657-1.163-.657-.422-.307-.632-.636-.632-1.177q0-.674.47-1.085.471-.416 1.22-.415.769 0 1.4.41l-.213.476a2.7 2.7 0 0 0-1.064-.23q-.425 0-.654.206a.69.69 0 0 0-.248.524c0 .328.234.61.666.85.393.215 1.187.67 1.187.67.433.305.648.63.648 1.168zm9.382-5.852c-.535-.014-.95.04-1.297.188-.1.04-.26.04-.274.167.055.053.063.14.11.214.08.134.218.313.346.407q.208.167.427.31c.26.16.555.255.81.416.145.094.293.213.44.313.073.05.12.14.214.172v-.02c-.046-.06-.06-.147-.105-.214-.067-.067-.134-.127-.2-.193a3.2 3.2 0 0 0-.695-.675c-.214-.146-.682-.35-.77-.595l-.013-.014c.146-.013.32-.066.46-.106.227-.06.435-.047.67-.106q.16-.042.32-.094v-.06c-.12-.12-.21-.283-.334-.395a9 9 0 0 0-1.104-.823c-.21-.134-.476-.22-.697-.334-.08-.04-.214-.06-.26-.127-.12-.146-.19-.34-.275-.514a18 18 0 0 1-.547-1.163c-.12-.262-.193-.523-.34-.763-.69-1.137-1.437-1.826-2.586-2.5-.247-.14-.543-.2-.856-.274-.167-.008-.334-.02-.5-.027-.11-.047-.216-.174-.31-.235-.38-.24-1.364-.76-1.644-.072-.18.434.267.862.422 1.082.115.153.26.328.34.5.047.116.06.235.107.356.106.294.207.622.347.897.073.14.153.287.247.413.054.073.146.107.167.227-.094.136-.1.334-.154.5-.24.757-.146 1.693.194 2.25.107.166.362.534.703.393.3-.12.234-.5.32-.835.02-.08.007-.133.048-.187v.015c.094.188.188.367.274.555.206.328.566.668.867.895.16.12.287.328.487.402v-.02h-.015c-.043-.058-.1-.086-.154-.133a3.5 3.5 0 0 1-.35-.4 9 9 0 0 1-.747-1.218c-.11-.21-.202-.436-.29-.643-.04-.08-.04-.2-.107-.24-.1.146-.247.273-.32.453-.127.288-.14.642-.188 1.01-.027.007-.014 0-.027.014-.214-.052-.287-.274-.367-.46-.2-.475-.233-1.238-.06-1.785.047-.14.247-.582.167-.716-.042-.127-.174-.2-.247-.303a2.5 2.5 0 0 1-.24-.427c-.16-.374-.24-.788-.414-1.162-.08-.173-.22-.354-.334-.513-.127-.18-.267-.307-.368-.52-.033-.073-.08-.194-.027-.274.014-.054.042-.075.094-.09.088-.072.335.022.422.062.247.1.455.194.662.334.094.066.195.193.315.226h.14c.214.047.455.014.655.073.355.114.675.28.962.46a5.95 5.95 0 0 1 2.085 2.286c.08.154.115.295.188.455.14.33.313.663.455.982.14.315.275.636.476.897.1.14.502.213.682.286.133.06.34.115.46.188.23.14.454.3.67.454.11.076.443.243.463.378" fill="#4479A1"/></g>
+</svg>
