@@ -1,0 +1,183 @@
+### Variables de colección REST Client (VS Code)
+@baseUrl = http://localhost:3000/api
+@tokenCliente = REEMPLAZAR_CON_JWT_CLIENTE
+@tokenAdmin = REEMPLAZAR_CON_JWT_ADMIN
+
+### 1. Health Check (esperado: HTTP 200)
+GET {{baseUrl}}/health
+
+### 2. Registro de cliente (esperado: HTTP 201)
+POST {{baseUrl}}/auth/registro
+Content-Type: application/json
+
+{
+  "tipo_documento": "CC",
+  "numero_documento": "1020304050",
+  "nombre": "Laura",
+  "primer_apellido": "Gómez",
+  "segundo_apellido": "Pérez",
+  "telefono": "3001234567",
+  "correo": "laura.gomez@example.com",
+  "contrasena": "Password2026!"
+}
+
+### 3. Login cliente (esperado: HTTP 200)
+POST {{baseUrl}}/auth/login
+Content-Type: application/json
+
+{
+  "correo": "laura.gomez@example.com",
+  "contrasena": "Password2026!"
+}
+
+### 4. Recuperación de contraseña neutra (esperado: HTTP 200 inmediato)
+POST {{baseUrl}}/auth/recuperar
+Content-Type: application/json
+
+{
+  "correo": "laura.gomez@example.com"
+}
+
+### 5. Catálogo paginado público (esperado: HTTP 200)
+GET {{baseUrl}}/categorias
+
+###
+GET {{baseUrl}}/productos?page=1&limit=12&orden_precio=asc
+
+### 6. Fusión de carrito visitante al autenticarse (esperado: HTTP 200)
+POST {{baseUrl}}/carrito/fusionar
+Authorization: Bearer {{tokenCliente}}
+Idempotency-Key: fusion-demo-001
+Content-Type: application/json
+
+{
+  "schema_version": 1,
+  "items": [
+    { "id_producto": 1, "cantidad": 1 }
+  ]
+}
+
+### 7. Checkout / crear pedido con reserva de 15 min (esperado: HTTP 201 o HTTP 409 PRECIO_ACTUALIZADO)
+POST {{baseUrl}}/pedidos
+Authorization: Bearer {{tokenCliente}}
+Content-Type: application/json
+
+{
+  "direccion_envio": "Calle 45 # 12-34, Cali, Valle del Cauca"
+}
+
+### 8. Intento de pago rechazado por backend (referencia terminada en '00' -> HTTP 201 estado RECHAZADO)
+POST {{baseUrl}}/pedidos/1/pagos
+Authorization: Bearer {{tokenCliente}}
+Idempotency-Key: pago-intento-1
+Content-Type: application/json
+
+{
+  "metodo_pago": "TARJETA",
+  "referencia_simulada": "VISA-445500"
+}
+
+### 9. Reintento de pago aprobado (referencia válida -> HTTP 201 estado APROBADO)
+POST {{baseUrl}}/pedidos/1/pagos
+Authorization: Bearer {{tokenCliente}}
+Idempotency-Key: pago-intento-2
+Content-Type: application/json
+
+{
+  "metodo_pago": "PSE",
+  "referencia_simulada": "PSE-998811"
+}
+
+### 10. Cancelación pre-envío por cliente (esperado: HTTP 200)
+POST {{baseUrl}}/pedidos/1/cancelar
+Authorization: Bearer {{tokenCliente}}
+Content-Type: application/json
+
+{
+  "motivo_cancelacion": "Cambio de talla de bicicleta",
+  "datos_reembolso": "Cuenta Ahorros Bancolombia terminada en 4321 - Laura Gómez"
+}
+
+### 11. Volver al carrito desde pedido cancelado (esperado: HTTP 200)
+POST {{baseUrl}}/pedidos/1/volver-al-carrito
+Authorization: Bearer {{tokenCliente}}
+Idempotency-Key: volver-demo-001
+
+### 12. Confirmación administrativa de reembolso pre-envío (esperado: HTTP 200)
+PATCH {{baseUrl}}/admin/pedidos/1/reembolso
+Authorization: Bearer {{tokenAdmin}}
+Content-Type: application/json
+
+{
+  "observacion": "Transferencia de reembolso verificada"
+}
+
+### 13. Flujo RETRACTO_LEGAL (cliente solicita -> admin decide -> inspecciona por cantidad -> reembolsa)
+POST {{baseUrl}}/pedidos/2/retractos
+Authorization: Bearer {{tokenCliente}}
+Content-Type: application/json
+
+{
+  "motivo": "Ejerzo derecho de retracto dentro de los 5 días hábiles",
+  "datos_reembolso": "Nequi 3001234567 - Laura Gómez",
+  "items": [
+    { "id_detalle_pedido": 2, "cantidad": 2 }
+  ]
+}
+
+###
+PATCH {{baseUrl}}/admin/retractos/1/decision
+Authorization: Bearer {{tokenAdmin}}
+Content-Type: application/json
+
+{
+  "decision": "APROBAR",
+  "observacion_admin": "Dentro de los 5 días hábiles legales; habilitado para recepción"
+}
+
+###
+PATCH {{baseUrl}}/admin/retractos/1/recepcion
+Authorization: Bearer {{tokenAdmin}}
+Content-Type: application/json
+
+{
+  "observacion_admin": "1 unidad en perfecto estado y 1 unidad con rayón severo en marco",
+  "items": [
+    {
+      "id_detalle_retracto": 1,
+      "cantidad_buen_estado": 1,
+      "cantidad_danada": 1,
+      "observacion_inspeccion": "Embalaje parcial aceptado solo para 1 unidad"
+    }
+  ]
+}
+
+###
+PATCH {{baseUrl}}/admin/retractos/1/reembolso
+Authorization: Bearer {{tokenAdmin}}
+Content-Type: application/json
+
+{
+  "observacion_admin": "Reembolso parcial aplicado por 1 unidad aprobada"
+}
+
+### 14. Administración de rol único RF-28 y reportes netos (esperado: HTTP 200)
+PATCH {{baseUrl}}/admin/usuarios/2/rol
+Authorization: Bearer {{tokenAdmin}}
+Content-Type: application/json
+
+{
+  "rol": "CLIENTE"
+}
+
+###
+GET {{baseUrl}}/admin/reportes/resumen?desde=2026-11-01&hasta=2026-11-30
+Authorization: Bearer {{tokenAdmin}}
+
+###
+GET {{baseUrl}}/admin/reportes/ventas?desde=2026-11-01&hasta=2026-11-30
+Authorization: Bearer {{tokenAdmin}}
+
+### 15. Cierre de sesión revocando JWT via token_version (esperado: HTTP 200)
+POST {{baseUrl}}/auth/logout
+Authorization: Bearer {{tokenCliente}}

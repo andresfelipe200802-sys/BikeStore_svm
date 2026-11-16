@@ -1,0 +1,17 @@
+# Entorno y secretos
+.env
+.env.local
+.env.*.local
+
+# Dependencias y artefactos de compilación
+node_modules/
+coverage/
+frontend/dist/
+
+# Logs
+*.log
+npm-debug.log*
+
+# Sistema operativo
+.DS_Store
+Thumbs.db

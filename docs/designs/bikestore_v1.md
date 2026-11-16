@@ -463,7 +463,7 @@ Este plan sigue estrictamente la secuencia **`Orden 0 (Respaldo) → Fase 1 (HU 
 ### Fase 5: Frontend — Etapa 2 posterior (BLOQUEADA hasta aprobar Fase 4 y realizar 2.ª revisión)
 
 > [!NOTE]
-> **Compuerta obligatoria:** Los pasos de Fase 5 permanecen bloqueados durante Etapa 1. Al superar los 8 puntos del *Verification Plan* de Fase 4, el equipo creará `frontend/docs/PLAN_FRONTEND_V1.md` (fijando `react-router-dom`, librería Excel/PDF y listado exacto de páginas y componentes) y ejecutará una **segunda auditoría de preparación para implementación** antes de abrir el Paso `5.1`.
+> **Compuerta obligatoria:** Los pasos de Fase 5 permanecen bloqueados durante Etapa 1. Al superar los 8 puntos del *Verification Plan* de Fase 4, el equipo creará `frontend/docs/PLAN_FRONTEND_V1.md` (fijando `react-router-dom`, librería Excel/PDF, política de **interfaz íntegramente en español** salvo términos técnicos imprescindibles, y listado exacto de páginas y componentes) y ejecutará una **segunda auditoría de preparación para implementación** antes de abrir el Paso `5.1`.
 
 | Nombre y ubicación | Formato actual | Acción | Cambios específicos | Dependencias | Orden | Criterio de terminado (DoD) |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
