@@ -1,0 +1,83 @@
+/* =============================================================
+   BikeStore — Tokens de diseño (regla de color 60 – 30 – 10)
+   60 % dominante claro · 30 % carbón de marca · 10 % acento lima
+   ============================================================= */
+:root {
+  color-scheme: light;
+
+  /* ---------- 60 % Dominante: lienzo claro de compra ---------- */
+  --bg-canvas: #F4F5F6;
+  --bg-surface: #FFFFFF;
+  --bg-subtle: #EAECEF;
+  --text-primary: #141414;
+  --text-secondary: #4B5563;
+  --border-ui: #6B7280;      /* Bordes de inputs y controles (>= 3:1) */
+  --border-subtle: #D1D5DB;  /* Divisores y contorno de tarjetas */
+
+  /* ---------- 30 % Secundario: carbón mecánico/editorial ---------- */
+  --bg-brand-dark: #141414;
+  --bg-brand-panel: #1F2124;
+  --bg-brand-hover: #2A2D31;
+  --bg-nav-blur: rgb(20 20 20 / 0.88);
+  --text-on-dark: #F5F5F2;
+  --text-muted-dark: #B5B5AE;
+  --border-on-dark: rgb(245 245 242 / 0.16);
+
+  /* ---------- 10 % Acento: verde lima eléctrico ---------- */
+  --accent-neon: #B8FF67;          /* Solo sobre fondo oscuro */
+  --accent-neon-hover: #A3F047;
+  --accent-on-neon: #111111;
+  --accent-brand: #3F6212;         /* Acento legible sobre fondo claro */
+  --accent-brand-hover: #365314;
+  --accent-soft: #ECFCCB;
+  --accent-border: #65A30D;
+  --accent-cyan: #67E8F9;          /* Brillo sutil del Hero (decorativo) */
+
+  /* ---------- Estados semánticos (siempre con icono + texto) ---------- */
+  --estado-exito-texto: #166534;
+  --estado-exito-fondo: #DCFCE7;
+  --estado-exito-borde: #16A34A;
+  --estado-alerta-texto: #92400E;
+  --estado-alerta-fondo: #FEF3C7;
+  --estado-alerta-borde: #D97706;
+  --estado-error-texto: #991B1B;
+  --estado-error-fondo: #FEE2E2;
+  --estado-error-borde: #DC2626;
+  --estado-info-texto: #1E3A8A;
+  --estado-info-fondo: #DBEAFE;
+  --estado-info-borde: #2563EB;
+  --estado-neutro-texto: #374151;
+  --estado-neutro-fondo: #F3F4F6;
+  --estado-neutro-borde: #9CA3AF;
+
+  /* ---------- Tipografía auto-hospedada ---------- */
+  --font-display: "Instrument Sans Variable", "Segoe UI", system-ui, Arial, sans-serif;
+  --font-sans: "Manrope Variable", "Segoe UI", system-ui, Arial, sans-serif;
+
+  /* ---------- Forma, espacio y profundidad ---------- */
+  --radio-sm: 6px;
+  --radio-md: 10px;
+  --radio-lg: 16px;
+  --radio-pill: 999px;
+  --ancho-contenido: 76rem;
+  --altura-header: 4.25rem;
+  --sombra-tarjeta: 0 1px 2px rgb(20 20 20 / 0.06), 0 8px 24px rgb(20 20 20 / 0.08);
+  --sombra-elevada: 0 12px 40px rgb(20 20 20 / 0.22);
+
+  /* ---------- Movimiento ---------- */
+  --duracion-rapida: 0.18s;
+  --duracion-media: 0.25s;
+  --curva: cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+/* Modo de alto contraste de Windows: palabras clave del sistema */
+@media (forced-colors: active) {
+  :root {
+    --border-ui: CanvasText;
+    --border-subtle: CanvasText;
+    --border-on-dark: CanvasText;
+    --accent-neon: Highlight;
+    --accent-brand: Highlight;
+    --accent-border: Highlight;
+  }
+}

@@ -1,0 +1,126 @@
+/* =============================================================
+   BikeStore — Movimiento (inspirado en dinamosites.com)
+   Regla: estado base estático; el movimiento solo se activa con
+   prefers-reduced-motion: no-preference. Sin destellos.
+   ============================================================= */
+
+/* ---------- Línea de corriente luminosa bajo el titular ---------- */
+.titular-corriente {
+  position: relative;
+  display: inline-block;
+  padding-block-end: 0.12em;
+  overflow: clip;
+}
+
+/* Trazo base estático (visible siempre) */
+.titular-corriente::before {
+  content: "";
+  position: absolute;
+  inset-inline: 0;
+  inset-block-end: 0;
+  block-size: 0.06em;
+  border-radius: var(--radio-pill);
+  background: rgb(184 255 103 / 0.35);
+}
+
+/* Destello que recorre el trazo (solo transform: hilo compositor) */
+.titular-corriente::after {
+  content: "";
+  position: absolute;
+  inset-inline-start: 0;
+  inset-block-end: 0;
+  inline-size: 35%;
+  block-size: 0.06em;
+  border-radius: var(--radio-pill);
+  background: linear-gradient(90deg, transparent, var(--accent-neon) 45%, #E9FFD0 55%, transparent);
+  transform: translateX(-110%);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .titular-corriente::after {
+    animation: heroCurrent 3.6s var(--curva) infinite;
+  }
+}
+
+@keyframes heroCurrent {
+  from {
+    transform: translateX(-110%);
+  }
+
+  to {
+    transform: translateX(300%);
+  }
+}
+
+/* ---------- Aparición progresiva al hacer scroll ----------
+   Mejora progresiva decorativa: sin soporte nativo el contenido
+   permanece visible y estático (no se añade fallback por script). */
+@media (prefers-reduced-motion: no-preference) {
+  @supports ((animation-timeline: view()) and (animation-range: entry)) {
+    @keyframes revelarEntrada {
+      from {
+        opacity: 0.35;
+        translate: 0 1.75rem;
+        scale: 0.98;
+      }
+    }
+
+    .revelar {
+      animation: revelarEntrada auto linear backwards;
+      /* Declarados después del shorthand para que no se reinicien */
+      animation-timeline: view();
+      animation-range: entry 0% entry 75%;
+    }
+  }
+}
+
+/* ---------- Menú móvil (popover) ---------- */
+@media (prefers-reduced-motion: no-preference) {
+  .site-header:not(.is-wide) .site-menu {
+    transition:
+      opacity var(--duracion-media) ease,
+      translate var(--duracion-media) var(--curva),
+      display var(--duracion-media),
+      overlay var(--duracion-media);
+    transition-behavior: allow-discrete;
+  }
+
+  .site-header:not(.is-wide) .site-menu:not(:is(:popover-open, .\:popover-open)) {
+    opacity: 0;
+    translate: 0 -0.5rem;
+  }
+
+  @starting-style {
+    .site-header:not(.is-wide) .site-menu:is(:popover-open, .\:popover-open) {
+      opacity: 0;
+      translate: 0 -0.5rem;
+    }
+  }
+}
+
+/* ---------- Notificaciones ---------- */
+@media (prefers-reduced-motion: no-preference) {
+  .notificacion {
+    animation: entradaNotificacion var(--duracion-media) var(--curva);
+  }
+
+  @keyframes entradaNotificacion {
+    from {
+      opacity: 0;
+      translate: 0 0.75rem;
+    }
+  }
+}
+
+/* ---------- Esqueletos de carga: pulso lento, sin destellos ---------- */
+@media (prefers-reduced-motion: no-preference) {
+  .esqueleto {
+    animation: pulsoEsqueleto 1.8s ease-in-out infinite;
+  }
+
+  @keyframes pulsoEsqueleto {
+    50% {
+      opacity: 0.55;
+    }
+  }
+}

@@ -3,7 +3,7 @@
 * **Proyecto:** BikeStore (`Web_BikeStore_svm`)
 * **Autores:** Andrés Felipe – Juan Sánchez
 * **Fecha de apertura (Orden 0):** 2026-11-15
-* **Última actualización (Orden 0 y Fases 1–4 completadas):** 2026-11-15
+* **Última actualización (Orden 0 y Fases 1–5 ejecutadas):** 2026-11-16
 * **Referencia de diseño:** [docs/designs/bikestore_v1.md](file:///c:/Users/Andr%C3%A9s/OneDrive/Desktop/Web_BikeStore_svm/docs/designs/bikestore_v1.md)
 
 ---
@@ -101,3 +101,14 @@
 * **`4.3 – 4.6`:** Implementados `env.js`, `db.js` (`options: '-c timezone=UTC'` + `withTransaction`), middlewares (`auth`, `role`, `validate` con `Zod`, `rateLimit`, `error`), utilidades (`password`, `jwt`, `documento`, `decimal`, `festivos`, `mailer`), scripts (`migrate.js`, `seedAdmin.js`, `checkFestivos.js`), job (`expiracionReservas.job.js`), módulos REST (`auth`, `perfil`, `catalogo`, `carrito`, `pedidos`, `retractos`, `admin`), `app.js` y `server.js`.
 * **`4.7` Compuerta *Verification Plan*:** Ejecutada suite `npm test` (`node --test --test-concurrency=1`) contra PostgreSQL real (`TEST_DATABASE_URL`): **`21/21`** pruebas aprobadas en **`8`** suites (`0` fallos, `0` omitidas).
 * **Compuerta hacia Fase 5:** Habilitada redacción de `frontend/docs/PLAN_FRONTEND_V1.md` y segunda revisión formal de preparación antes del Paso `5.1` (sin subidas remotas a GitHub).
+
+### Fase 5 (`Plan + Pasos 5.1 – 5.3`) — **IMPLEMENTADO Y VERIFICADO POR COMPILACIÓN/TESTS** (`2026-11-16`)
+* **Auditoría y Planificación (`PLAN_FRONTEND_V1.md`):** Inspección visual previa de 5 sitios de referencia (`dinamosites.com`, `bicistore.com.co`, `bmw.com.co`, `auteco.com.co/kawasaki`, `ferrari.com/en-EN/formula1`), adopción de paleta **60 – 30 – 10**, animaciones nativas ligeras (`<HeroCanvas />`, `@keyframes heroCurrent`, scroll-driven CSS), tipografía auto-hospedada (`Instrument Sans` + `Manrope`), interfaz 100 % en español y revisión dual previa (`egm-codebase-details` + `egm-implementation-readiness`) con reporte `frontend_readiness_report.md`.
+* **`5.1` Base Vite 8 y sistema accesible:** Creados `frontend/package.json`, `frontend/vite.config.js` (`proxy /api -> :3000`, `rolldownOptions.external`, `test.environment: 'jsdom'`), `frontend/index.html`, `src/styles/{tokens,global,components,motion}.css`, `src/main.jsx`, `src/utils/formato.js` y componentes accesibles (`Navbar`, `Footer`, `HeroCanvas`, `ProductCard`, `StatusBadge`, `ConfirmDialog`, `ToastRegion`, `ProtectedRoute`, `AdminNav`, `Iconos`, `NoEncontradoPage`).
+* **`5.2` Utilidades puras, API y pruebas:** Implementados `src/utils/{documentos,visitorCart,exportadores}.js`, `src/api/client.js` (limpieza recursiva `.strict()`, discriminador `401/403`, `Idempotency-Key`), `src/context/AuthContext.jsx` (auto-login en registro, fusión condicionada a `CLIENTE`, revocación tras cambio de contraseña) y suites en `frontend/tests/` (`visitorCart.test.js`, `exportadores.test.js`, `ProductCard.test.jsx`, `documentosYCliente.test.jsx`).
+* **`5.3` Vistas completas (`public/`, `shared/`, `client/`, `admin/`):** Implementadas las 19 rutas completas conectadas a `/api/...`, incluyendo `InicioPage`, `CatalogoPage`, `ProductoDetallePage`, `CarritoPage`, `LoginPage`, `RegistroPage`, `RecuperarPage`, `RestablecerPage`, `PerfilPage`, `CheckoutPage` (`409 PRECIO_ACTUALIZADO` + `409 PEDIDO_PENDIENTE_ACTIVO`), `PagoPedidoPage` (`1:N`, cuenta regresiva 15 min, `Idempotency-Key`), `MisPedidosPage`, `DetallePedidoPage`, `MisRetractosPage`, `RetractoDetallePage`, `SolicitarRetractoPage` y módulo `ADMIN` completo con carga dinámica de exportación `.xlsx`/`.pdf` en español.
+* **Verificaciones ejecutadas tras el cierre de `5.3`:**
+  * `frontend`: `npm test` (`vitest run`) **`16/16`** pruebas aprobadas en `4` archivos (`0` fallos, `0` omitidas); `npm run build` (`vite build`) en **`0`** (`181` módulos, bundle inicial `423.74 kB` + chunk diferido `exportadores` `499.89 kB`).
+  * `backend`: `npm test` contra PostgreSQL real: **`21/21`** pruebas aprobadas en `8` suites.
+  * Proxy Vite (`http://localhost:5173/api`) -> Express `:3000` -> PostgreSQL `bikestore_test`: comprobado flujo real (`health=UP`, `categorias`, `registro`, `login`, `perfil`, `carrito/fusionar`).
+  * **Pendiente opcional de usuario:** Verificación visual interactiva en Google Chrome (`1440×900` / `390×844`), no ejecutada por encontrarse desactivado `DevToolsActivePort` (`chrome://inspect/#remote-debugging`); subida remota a GitHub reservada al propietario.
