@@ -34,7 +34,11 @@ export function ProductCard({ producto, onAgregar, priority = false }) {
             onError={() => setErrorImagen(true)}
           />
         ) : (
-          <div className="tarjeta-sin-imagen" aria-label={`Sin imagen disponible para ${producto.nombre}`}>
+          <div
+            className="tarjeta-sin-imagen"
+            role="img"
+            aria-label={`Sin imagen disponible para ${producto.nombre}`}
+          >
             <IlustracionBicicletaFallback />
           </div>
         )}

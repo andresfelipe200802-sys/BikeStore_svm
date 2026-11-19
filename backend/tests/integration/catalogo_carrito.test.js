@@ -6,7 +6,6 @@ import { closePool, query } from '../../src/config/db.js';
 import { resetRateLimiters } from '../../src/middlewares/rateLimit.middleware.js';
 import { runMigrations } from '../../src/scripts/migrate.js';
 import { seedInitialAdmin } from '../../src/scripts/seedAdmin.js';
-import { clearCarritoIdempotencyCache } from '../../src/services/carrito.service.js';
 
 describe('Integración Catálogo y Fusión de Carrito', () => {
   before(async () => {
@@ -17,7 +16,6 @@ describe('Integración Catálogo y Fusión de Carrito', () => {
     await query('TRUNCATE TABLE usuario, categoria, producto, carrito, pedido, pago, retracto RESTART IDENTITY CASCADE');
     await query(`INSERT INTO categoria (nombre, descripcion) VALUES ('Ruta', 'Bicis ruta'), ('Cascos', 'Protección')`);
     resetRateLimiters();
-    clearCarritoIdempotencyCache();
     await seedInitialAdmin();
   });
 
@@ -105,6 +103,7 @@ describe('Integración Catálogo y Fusión de Carrito', () => {
 
   it('fusiona carrito visitante idempotentemente aplicando tope de existencias y ajustes[]', async () => {
     const { clientToken, p1Id, p2Id } = await setupUsersAndProducts();
+    const idemUuid = '11111111-1111-4111-8111-111111111111';
 
     const payload = {
       schema_version: 1,
@@ -117,9 +116,10 @@ describe('Integración Catálogo y Fusión de Carrito', () => {
     const f1 = await request(app)
       .post('/api/carrito/fusionar')
       .set('Authorization', `Bearer ${clientToken}`)
-      .set('Idempotency-Key', 'fus-001')
+      .set('Idempotency-Key', idemUuid)
       .send(payload);
     assert.equal(f1.status, 200);
+    assert.equal(f1.body.datos.replayed, false);
     assert.equal(f1.body.datos.items.length, 1);
     assert.equal(f1.body.datos.items[0].cantidad, 3);
     assert.equal(f1.body.datos.ajustes.length, 2);
@@ -128,16 +128,17 @@ describe('Integración Catálogo y Fusión de Carrito', () => {
     const f2 = await request(app)
       .post('/api/carrito/fusionar')
       .set('Authorization', `Bearer ${clientToken}`)
-      .set('Idempotency-Key', 'fus-001')
+      .set('Idempotency-Key', idemUuid)
       .send(payload);
     assert.equal(f2.status, 200);
+    assert.equal(f2.body.datos.replayed, true);
     assert.equal(f2.body.datos.items[0].cantidad, 3);
 
     // Reutilizar misma clave con distinto payload retorna 409 IDEMPOTENCY_CONFLICT
     const fConflict = await request(app)
       .post('/api/carrito/fusionar')
       .set('Authorization', `Bearer ${clientToken}`)
-      .set('Idempotency-Key', 'fus-001')
+      .set('Idempotency-Key', idemUuid)
       .send({ schema_version: 1, items: [{ id_producto: p1Id, cantidad: 1 }] });
     assert.equal(fConflict.status, 409);
     assert.equal(fConflict.body.codigo, 'IDEMPOTENCY_CONFLICT');

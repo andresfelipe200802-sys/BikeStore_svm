@@ -16,26 +16,46 @@ export async function query(text, params = []) {
   return pool.query(text, params);
 }
 
+const RETRYABLE_PG_CODES = new Set(['40P01', '40001']);
+
+function sleep(ms) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
 /**
- * Ejecuta fn(client) dentro de una transacción PostgreSQL en UTC con ROLLBACK automático ante fallo.
+ * Ejecuta fn(client) dentro de una transacción PostgreSQL en UTC con ROLLBACK automático
+ * y reintentos con backoff + jitter ante errores transitorios 40P01 / 40001.
+ * IMPORTANTE: no ejecutar efectos secundarios externos dentro de fn(client).
  */
-export async function withTransaction(fn) {
-  const client = await pool.connect();
-  try {
-    await client.query("SET TIME ZONE 'UTC'");
-    await client.query('BEGIN');
-    const result = await fn(client);
-    await client.query('COMMIT');
-    return result;
-  } catch (err) {
+export async function withTransaction(fn, { maxRetries = 3 } = {}) {
+  for (let attempt = 0; attempt <= maxRetries; attempt += 1) {
+    let client = null;
     try {
-      await client.query('ROLLBACK');
-    } catch (rbErr) {
-      console.error('Error ejecutando ROLLBACK:', rbErr.message);
+      client = await pool.connect();
+      await client.query("SET TIME ZONE 'UTC'");
+      await client.query('BEGIN');
+      const result = await fn(client);
+      await client.query('COMMIT');
+      return result;
+    } catch (err) {
+      if (client) {
+        try {
+          await client.query('ROLLBACK');
+        } catch (rbErr) {
+          console.error('Error ejecutando ROLLBACK:', rbErr.message);
+        }
+      }
+      if (RETRYABLE_PG_CODES.has(err?.code) && attempt < maxRetries) {
+        const delayMs = 15 * 2 ** attempt + Math.floor(Math.random() * 20);
+        await sleep(delayMs);
+        continue;
+      }
+      throw err;
+    } finally {
+      if (client) {
+        client.release();
+      }
     }
-    throw err;
-  } finally {
-    client.release();
   }
 }
 

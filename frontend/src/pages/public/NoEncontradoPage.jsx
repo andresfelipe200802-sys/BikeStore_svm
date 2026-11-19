@@ -1,6 +1,11 @@
 import { Link } from 'react-router-dom';
+import { useTituloPagina } from '../../hooks/useTituloPagina.js';
 
 export function NoEncontradoPage() {
+  useTituloPagina('Página no encontrada', {
+    descripcion: 'La ruta solicitada no existe en BikeStore.',
+    noIndex: true,
+  });
   return (
     <section className="contenedor pagina-estado">
       <div className="pagina-estado-contenido">

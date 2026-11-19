@@ -10,7 +10,19 @@
 html {
   -webkit-text-size-adjust: 100%;
   text-size-adjust: 100%;
-  scroll-padding-block-start: calc(var(--altura-header) + 1rem);
+  scroll-padding-top: 5.5rem;
+  overflow-x: clip;
+}
+
+a,
+button,
+input,
+select,
+textarea,
+summary,
+[tabindex],
+[id] {
+  scroll-margin-top: 5.5rem;
 }
 
 body {
@@ -24,6 +36,7 @@ body {
   /* Mantiene estable el tamaño visual si la fuente de respaldo se muestra antes */
   font-size-adjust: from-font;
   overflow-wrap: break-word;
+  overflow-x: clip;
 }
 
 #root {

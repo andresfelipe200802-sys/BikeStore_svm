@@ -5,7 +5,10 @@ import { Icono } from '../../components/Iconos.jsx';
 import { useTituloPagina } from '../../hooks/useTituloPagina.js';
 
 export function RecuperarPage() {
-  useTituloPagina('Recuperar contraseña');
+  useTituloPagina('Recuperar contraseña', {
+    descripcion: 'Solicita el restablecimiento de acceso a tu cuenta BikeStore.',
+    noIndex: true,
+  });
   const [correo, setCorreo] = useState('');
   const [errorCampo, setErrorCampo] = useState('');
   const [mensajeRespuesta, setMensajeRespuesta] = useState('');
@@ -43,7 +46,7 @@ export function RecuperarPage() {
         <p className="antetitulo">Soporte de acceso</p>
         <h1>Recuperar contraseña</h1>
         <p className="campo-ayuda" style={{ marginBottom: '1.25rem' }}>
-          Por seguridad, siempre respondemos con un mensaje neutro sin revelar si el correo existe.
+          Ingresa el correo asociado a tu cuenta y te enviaremos las instrucciones para restablecer tu contraseña.
         </p>
 
         {mensajeRespuesta && (
@@ -52,7 +55,7 @@ export function RecuperarPage() {
             <div>
               <p>{mensajeRespuesta}</p>
               <Link to="/restablecer-contrasena" style={{ display: 'inline-block', marginTop: '0.5rem' }}>
-                ¿Ya tienes tu token? Restablecer contraseña
+                ¿Ya tienes tu código de recuperación? Restablecer contraseña
               </Link>
             </div>
           </div>

@@ -6,7 +6,10 @@ import { Icono } from '../../components/Iconos.jsx';
 import { useTituloPagina } from '../../hooks/useTituloPagina.js';
 
 export function RestablecerPage({ onNotificar }) {
-  useTituloPagina('Restablecer contraseña');
+  useTituloPagina('Restablecer contraseña', {
+    descripcion: 'Define una nueva contraseña segura para tu cuenta en BikeStore.',
+    noIndex: true,
+  });
   const [searchParams] = useSearchParams();
   const [token, setToken] = useState(searchParams.get('token') || '');
   const [nuevaContrasena, setNuevaContrasena] = useState('');
@@ -23,7 +26,10 @@ export function RestablecerPage({ onNotificar }) {
     setErrorServidor('');
 
     const tokenLimpio = token.trim();
-    const errToken = tokenLimpio.length >= 32 ? '' : 'El token de recuperación debe tener al menos 32 caracteres.';
+    const errToken =
+      tokenLimpio.length >= 32
+        ? ''
+        : 'El código de recuperación debe tener al menos 32 caracteres.';
     const errPass =
       nuevaContrasena.length >= 8 ? '' : 'La nueva contraseña debe tener mínimo 8 caracteres.';
     setErrores({ token: errToken, nuevaContrasena: errPass });
@@ -77,7 +83,7 @@ export function RestablecerPage({ onNotificar }) {
             <form className="formulario" onSubmit={manejarSubmit} noValidate>
               <div className="campo">
                 <label htmlFor="rest-token">
-                  Token de recuperación <span aria-hidden="true">*</span>
+                  Código de recuperación <span aria-hidden="true">*</span>
                 </label>
                 <span id="rest-token-ayuda" className="campo-ayuda">
                   Se completa automáticamente desde el enlace enviado a tu correo.

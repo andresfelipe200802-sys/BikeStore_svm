@@ -1,217 +1,213 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1480" height="1460" viewBox="0 0 1480 1460" style="background:#ffffff;font-family:Arial,Segoe UI,sans-serif;">
+<svg xmlns="http://www.w3.org/2000/svg" width="1480" height="1580" viewBox="0 0 1480 1580" style="background:#ffffff;font-family:Arial,Segoe UI,sans-serif;">
 <defs><marker id="arr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M 0 1 L 10 5 L 0 9 z" fill="#1e293b"/></marker></defs>
-<text x="740" y="28" text-anchor="middle" font-size="18" font-weight="bold" fill="#0f172a">Arquitectura en Capas v1 — BikeStore (Web_BikeStore_svm)</text>
-<circle cx="240" cy="52" r="8" fill="#fff" stroke="#1e293b" stroke-width="1.8"/>
-<line x1="240" y1="60" x2="240" y2="78" stroke="#1e293b" stroke-width="1.8"/>
-<line x1="229" y1="66" x2="251" y2="66" stroke="#1e293b" stroke-width="1.8"/>
-<line x1="240" y1="78" x2="231" y2="91" stroke="#1e293b" stroke-width="1.8"/>
-<line x1="240" y1="78" x2="249" y2="91" stroke="#1e293b" stroke-width="1.8"/>
-<text x="240" y="106" text-anchor="middle" font-size="11" font-weight="bold" fill="#0f172a">Visitante</text>
-<circle cx="560" cy="52" r="8" fill="#fff" stroke="#1e293b" stroke-width="1.8"/>
-<line x1="560" y1="60" x2="560" y2="78" stroke="#1e293b" stroke-width="1.8"/>
-<line x1="549" y1="66" x2="571" y2="66" stroke="#1e293b" stroke-width="1.8"/>
-<line x1="560" y1="78" x2="551" y2="91" stroke="#1e293b" stroke-width="1.8"/>
-<line x1="560" y1="78" x2="569" y2="91" stroke="#1e293b" stroke-width="1.8"/>
-<text x="560" y="106" text-anchor="middle" font-size="11" font-weight="bold" fill="#0f172a">CLIENTE</text>
-<circle cx="920" cy="52" r="8" fill="#fff" stroke="#1e293b" stroke-width="1.8"/>
-<line x1="920" y1="60" x2="920" y2="78" stroke="#1e293b" stroke-width="1.8"/>
-<line x1="909" y1="66" x2="931" y2="66" stroke="#1e293b" stroke-width="1.8"/>
-<line x1="920" y1="78" x2="911" y2="91" stroke="#1e293b" stroke-width="1.8"/>
-<line x1="920" y1="78" x2="929" y2="91" stroke="#1e293b" stroke-width="1.8"/>
-<text x="920" y="106" text-anchor="middle" font-size="11" font-weight="bold" fill="#0f172a">ADMIN</text>
+<text x="740" y="28" text-anchor="middle" font-size="18" font-weight="bold" fill="#0f172a">Arquitectura en Capas v1 — BikeStore (Web_BikeStore_svm · 16 Tablas + A1/B1 + CSP/SEO)</text>
+<circle cx="240" cy="52" r="8" fill="#fff" stroke="#1e293b" stroke-width="1.8"/><line x1="240" y1="60" x2="240" y2="78" stroke="#1e293b" stroke-width="1.8"/><line x1="229" y1="66" x2="251" y2="66" stroke="#1e293b" stroke-width="1.8"/><line x1="240" y1="78" x2="231" y2="91" stroke="#1e293b" stroke-width="1.8"/><line x1="240" y1="78" x2="249" y2="91" stroke="#1e293b" stroke-width="1.8"/><text x="240" y="106" text-anchor="middle" font-size="11" font-weight="bold" fill="#0f172a">Visitante</text>
+<circle cx="560" cy="52" r="8" fill="#fff" stroke="#1e293b" stroke-width="1.8"/><line x1="560" y1="60" x2="560" y2="78" stroke="#1e293b" stroke-width="1.8"/><line x1="549" y1="66" x2="571" y2="66" stroke="#1e293b" stroke-width="1.8"/><line x1="560" y1="78" x2="551" y2="91" stroke="#1e293b" stroke-width="1.8"/><line x1="560" y1="78" x2="569" y2="91" stroke="#1e293b" stroke-width="1.8"/><text x="560" y="106" text-anchor="middle" font-size="11" font-weight="bold" fill="#0f172a">CLIENTE</text>
+<circle cx="920" cy="52" r="8" fill="#fff" stroke="#1e293b" stroke-width="1.8"/><line x1="920" y1="60" x2="920" y2="78" stroke="#1e293b" stroke-width="1.8"/><line x1="909" y1="66" x2="931" y2="66" stroke="#1e293b" stroke-width="1.8"/><line x1="920" y1="78" x2="911" y2="91" stroke="#1e293b" stroke-width="1.8"/><line x1="920" y1="78" x2="929" y2="91" stroke="#1e293b" stroke-width="1.8"/><text x="920" y="106" text-anchor="middle" font-size="11" font-weight="bold" fill="#0f172a">ADMIN</text>
 <line x1="240" y1="112" x2="240" y2="132" stroke="#1e293b" stroke-width="2" marker-end="url(#arr)"/>
 <line x1="560" y1="112" x2="560" y2="132" stroke="#1e293b" stroke-width="2" marker-end="url(#arr)"/>
 <line x1="920" y1="112" x2="920" y2="132" stroke="#1e293b" stroke-width="2" marker-end="url(#arr)"/>
-<rect x="30" y="136" width="1420" height="285" rx="8" fill="#eff6ff" stroke="#3b82f6" stroke-width="2"/>
+<rect x="30" y="136" width="1420" height="305" rx="8" fill="#eff6ff" stroke="#3b82f6" stroke-width="2"/>
 <rect x="30" y="136" width="1420" height="32" rx="8" fill="#dbeafe" stroke="#3b82f6" stroke-width="2"/>
-<text x="50" y="157" font-size="14" font-weight="bold" fill="#1e3a8a">Capa de presentación (Etapa 2 — Textos de interfaz en español)</text>
-<rect x="1230" y="141" width="200" height="22" rx="4" fill="#1d4ed8"/>
-<text x="1330" y="156" text-anchor="middle" font-size="11.5" font-weight="bold" fill="#ffffff">React + Vite (localhost:5173)</text>
-<rect x="48" y="182" width="260" height="222" rx="6" fill="#ffffff" stroke="#60a5fa" stroke-width="1.5"/>
-<rect x="48" y="182" width="260" height="24" rx="6" fill="#dbeafe" stroke="#60a5fa" stroke-width="1.2"/>
-<text x="178.0" y="198" text-anchor="middle" font-size="11.5" font-weight="bold" fill="#0f172a">Vistas públicas (sin login)</text>
-<text x="58" y="223" font-size="10.5" fill="#1e293b">• Catálogo paginado (12/50) y detalle</text>
-<text x="58" y="239" font-size="10.5" fill="#1e293b">• Filtro por categoría activa y precio</text>
-<text x="58" y="255" font-size="10.5" fill="#1e293b">• Registro (CC/TI/CE/PASAPORTE/PPT)</text>
-<text x="58" y="271" font-size="10.5" fill="#1e293b">• Inicio de sesión (JWT 15m)</text>
-<text x="58" y="287" font-size="10.5" fill="#1e293b">• Recuperar y restablecer clave</text>
-<text x="58" y="303" font-size="10.5" fill="#1e293b">• Carrito localStorage (schema_version: 1)</text>
-<text x="58" y="319" font-size="10.5" fill="#1e293b">• Productos agotados (&#x27;Agotado&#x27;)</text>
-<rect x="322" y="182" width="290" height="222" rx="6" fill="#ffffff" stroke="#60a5fa" stroke-width="1.5"/>
-<rect x="322" y="182" width="290" height="24" rx="6" fill="#dbeafe" stroke="#60a5fa" stroke-width="1.2"/>
-<text x="467.0" y="198" text-anchor="middle" font-size="11.5" font-weight="bold" fill="#0f172a">Vistas del CLIENTE (JWT + BD)</text>
-<text x="332" y="223" font-size="10.5" fill="#1e293b">• Fusión carrito (/api/carrito/fusionar)</text>
-<text x="332" y="239" font-size="10.5" fill="#1e293b">• Carrito persistente en PostgreSQL</text>
-<text x="332" y="255" font-size="10.5" fill="#1e293b">• Checkout (409 PRECIO_ACTUALIZADO)</text>
-<text x="332" y="271" font-size="10.5" fill="#1e293b">• Pago simulado 1:N (TARJETA/PSE/TRANSF.)</text>
-<text x="332" y="287" font-size="10.5" fill="#1e293b">• Historial, cancelación y volver al carrito</text>
-<text x="332" y="303" font-size="10.5" fill="#1e293b">• Solicitud RETRACTO_LEGAL (5 días hábiles)</text>
-<text x="332" y="319" font-size="10.5" fill="#1e293b">• Perfil personal, clave y cierre de sesión</text>
-<rect x="626" y="182" width="320" height="222" rx="6" fill="#ffffff" stroke="#60a5fa" stroke-width="1.5"/>
-<rect x="626" y="182" width="320" height="24" rx="6" fill="#dbeafe" stroke="#60a5fa" stroke-width="1.2"/>
-<text x="786.0" y="198" text-anchor="middle" font-size="11.5" font-weight="bold" fill="#0f172a">Panel ADMIN (rol único)</text>
-<text x="636" y="223" font-size="10.5" fill="#1e293b">• Gestión de categorías y productos (URL)</text>
-<text x="636" y="239" font-size="10.5" fill="#1e293b">• Ajuste transaccional de existencias</text>
-<text x="636" y="255" font-size="10.5" fill="#1e293b">• Usuarios: estado (ACTIVO/INACTIVO) y rol</text>
-<text x="636" y="271" font-size="10.5" fill="#1e293b">• Pedidos (PENDIENTE..CANCELADO) + reembolso</text>
-<text x="636" y="287" font-size="10.5" fill="#1e293b">• Retractos: decisión legal e inspección</text>
-<text x="636" y="303" font-size="10.5" fill="#1e293b">  por producto y cantidad + reembolso</text>
-<text x="636" y="319" font-size="10.5" fill="#1e293b">• Dashboard netos (90d/5000f) + Excel/PDF</text>
-<rect x="960" y="182" width="230" height="222" rx="6" fill="#ffffff" stroke="#60a5fa" stroke-width="1.5"/>
-<rect x="960" y="182" width="230" height="24" rx="6" fill="#dbeafe" stroke="#60a5fa" stroke-width="1.2"/>
-<text x="1075.0" y="198" text-anchor="middle" font-size="11.5" font-weight="bold" fill="#0f172a">Componentes compartidos</text>
-<text x="970" y="223" font-size="10.5" fill="#1e293b">• Barra de navegación y rutas privadas</text>
-<text x="970" y="239" font-size="10.5" fill="#1e293b">• Tarjetas de producto (imagen_url)</text>
-<text x="970" y="255" font-size="10.5" fill="#1e293b">• Carrito y sincronizador de ajustes</text>
-<text x="970" y="271" font-size="10.5" fill="#1e293b">• Alertas de precio / stock / expiración</text>
-<text x="970" y="287" font-size="10.5" fill="#1e293b">• Modales de confirmación y formularios</text>
-<text x="970" y="303" font-size="10.5" fill="#1e293b">• Exportación local Excel y PDF (cliente)</text>
-<text x="970" y="319" font-size="10.5" fill="#1e293b">• Mensajes y etiquetas en español</text>
-<rect x="1204" y="182" width="228" height="222" rx="6" fill="#ffffff" stroke="#60a5fa" stroke-width="1.5"/>
-<rect x="1204" y="182" width="228" height="24" rx="6" fill="#dbeafe" stroke="#60a5fa" stroke-width="1.2"/>
-<text x="1318.0" y="198" text-anchor="middle" font-size="11.5" font-weight="bold" fill="#0f172a">Cliente HTTP y utilidades FE</text>
-<text x="1214" y="223" font-size="10.5" fill="#1e293b">• frontend/src/api/client.js</text>
-<text x="1214" y="239" font-size="10.5" fill="#1e293b">• Manejo Idempotency-Key</text>
-<text x="1214" y="255" font-size="10.5" fill="#1e293b">• Manejo 401 SESION_REVOCADA</text>
-<text x="1214" y="271" font-size="10.5" fill="#1e293b">• Manejo 409 PRECIO_ACTUALIZADO</text>
-<text x="1214" y="287" font-size="10.5" fill="#1e293b">• frontend/src/utils/visitorCart.js</text>
-<text x="1214" y="303" font-size="10.5" fill="#1e293b">• frontend/src/utils/exportadores.js</text>
-<text x="1214" y="319" font-size="10.5" fill="#1e293b">• (Plan detallado previo al Paso 5.1)</text>
-<line x1="460" y1="421" x2="460" y2="466" stroke="#1e293b" stroke-width="2.5" marker-end="url(#arr)"/>
-<text x="475" y="448" font-size="11.5" font-weight="bold" fill="#0f172a">Petición HTTP(S) · REST / JSON + Bearer JWT + Idempotency-Key</text>
-<line x1="1040" y1="468" x2="1040" y2="423" stroke="#1e293b" stroke-width="2.5" marker-end="url(#arr)"/>
-<text x="1055" y="448" font-size="11.5" font-weight="bold" fill="#0f172a">{ ok: true, datos, meta? } / { ok: false, codigo, mensaje }</text>
-<rect x="30" y="470" width="1420" height="510" rx="8" fill="#fefce8" stroke="#ca8a04" stroke-width="2"/>
-<rect x="30" y="470" width="1420" height="32" rx="8" fill="#fef08a" stroke="#ca8a04" stroke-width="2"/>
-<text x="50" y="491" font-size="14" font-weight="bold" fill="#713f12">Capa de lógica de negocio (Etapa 1 — Backend autónomo)</text>
-<rect x="1165" y="475" width="265" height="22" rx="4" fill="#854d0e"/>
-<text x="1297" y="490" text-anchor="middle" font-size="11.5" font-weight="bold" fill="#ffffff">Node.js 26 LTS + Express (localhost:3000)</text>
-<rect x="48" y="514" width="595" height="224" rx="6" fill="#ffffff" stroke="#eab308" stroke-width="1.5"/>
-<rect x="48" y="514" width="595" height="24" rx="6" fill="#fef9c3" stroke="#eab308" stroke-width="1.2"/>
-<text x="345.5" y="530" text-anchor="middle" font-size="11.5" font-weight="bold" fill="#0f172a">1 · Rutas REST cerradas (backend/src/routes/)</text>
-<text x="58" y="555" font-size="10.5" fill="#1e293b">Públicas:  GET /api/health | GET /api/categorias | GET /api/productos(/,:id)</text>
-<text x="58" y="571" font-size="10.5" fill="#1e293b">Auth:      POST /api/auth/{registro, login, logout, recuperar, restablecer}</text>
-<text x="58" y="587" font-size="10.5" fill="#1e293b">Perfil:    GET/PUT /api/perfil | PATCH /api/perfil/contrasena</text>
-<text x="58" y="603" font-size="10.5" fill="#1e293b">Carrito:   GET /api/carrito | POST /api/carrito/fusionar | */api/carrito/items(/:id_producto)</text>
-<text x="58" y="619" font-size="10.5" fill="#1e293b">Pedidos:   GET/POST /api/pedidos | GET /api/pedidos/:id</text>
-<text x="58" y="635" font-size="10.5" fill="#1e293b">           POST /api/pedidos/:id/{pagos, cancelar, volver-al-carrito, retractos}</text>
-<text x="58" y="651" font-size="10.5" fill="#1e293b">Retracto:  GET /api/retractos(/:id)</text>
-<text x="58" y="667" font-size="10.5" fill="#1e293b">Admin Cat/Usu: /api/admin/{categorias*, productos*(/estado,/existencias), usuarios*(/estado,/rol)}</text>
-<text x="58" y="683" font-size="10.5" fill="#1e293b">Admin Posv: /api/admin/pedidos*(/estado,/reembolso) | /api/admin/retractos*(/decision,/recepcion,/reembolso)</text>
-<text x="58" y="699" font-size="10.5" fill="#1e293b">Reportes:  GET /api/admin/reportes/{resumen, ventas} (?desde, ?hasta, ?id_categoria | 90d / 5000f)</text>
-<rect x="658" y="514" width="275" height="224" rx="6" fill="#ffffff" stroke="#eab308" stroke-width="1.5"/>
-<rect x="658" y="514" width="275" height="24" rx="6" fill="#fef9c3" stroke="#eab308" stroke-width="1.2"/>
-<text x="795.5" y="530" text-anchor="middle" font-size="11.5" font-weight="bold" fill="#0f172a">2 · Middlewares (middlewares/)</text>
-<text x="668" y="555" font-size="10.5" fill="#1e293b">• auth.middleware.js: JWT HS256 (15m)</text>
-<text x="668" y="571" font-size="10.5" fill="#1e293b">  + valida BD ACTIVO y token_version</text>
-<text x="668" y="587" font-size="10.5" fill="#1e293b">• role.middleware.js: guard ADMIN/CLIENTE</text>
-<text x="668" y="603" font-size="10.5" fill="#1e293b">• validate.middleware.js: esquemas Zod</text>
-<text x="668" y="619" font-size="10.5" fill="#1e293b">  estrictos (allowlist DTO, 100kb máx)</text>
-<text x="668" y="635" font-size="10.5" fill="#1e293b">• rateLimit.middleware.js: /login,</text>
-<text x="668" y="651" font-size="10.5" fill="#1e293b">  /registro, /recuperar, /restablecer</text>
-<text x="668" y="667" font-size="10.5" fill="#1e293b">• error.middleware.js: salida homogénea</text>
-<text x="668" y="683" font-size="10.5" fill="#1e293b">• Solo imagen_url externa http(s)://</text>
-<rect x="948" y="514" width="200" height="224" rx="6" fill="#ffffff" stroke="#eab308" stroke-width="1.5"/>
-<rect x="948" y="514" width="200" height="24" rx="6" fill="#fef9c3" stroke="#eab308" stroke-width="1.2"/>
-<text x="1048.0" y="530" text-anchor="middle" font-size="11.5" font-weight="bold" fill="#0f172a">3 · Controladores</text>
-<text x="958" y="555" font-size="10.5" fill="#1e293b">• auth.controller.js</text>
-<text x="958" y="571" font-size="10.5" fill="#1e293b">• perfil.controller.js</text>
-<text x="958" y="587" font-size="10.5" fill="#1e293b">• catalogo.controller.js</text>
-<text x="958" y="603" font-size="10.5" fill="#1e293b">• carrito.controller.js</text>
-<text x="958" y="619" font-size="10.5" fill="#1e293b">• pedidos.controller.js</text>
-<text x="958" y="635" font-size="10.5" fill="#1e293b">• retractos.controller.js</text>
-<text x="958" y="651" font-size="10.5" fill="#1e293b">• admin.controller.js</text>
-<text x="958" y="667" font-size="10.5" fill="#1e293b">(Parseo HTTP y status codes)</text>
-<rect x="1162" y="514" width="270" height="224" rx="6" fill="#ffffff" stroke="#eab308" stroke-width="1.5"/>
-<rect x="1162" y="514" width="270" height="24" rx="6" fill="#fef9c3" stroke="#eab308" stroke-width="1.2"/>
-<text x="1297.0" y="530" text-anchor="middle" font-size="11.5" font-weight="bold" fill="#0f172a">4 · Utilidades y Jobs (utils/ &amp; jobs/)</text>
-<text x="1172" y="555" font-size="10.5" fill="#1e293b">• password.js (bcrypt &gt;=10 + dummy + SHA256)</text>
-<text x="1172" y="571" font-size="10.5" fill="#1e293b">• jwt.js (HS256 15m) &amp; documento.js (regex)</text>
-<text x="1172" y="587" font-size="10.5" fill="#1e293b">• decimal.js (aritmética exacta centavos)</text>
-<text x="1172" y="603" font-size="10.5" fill="#1e293b">• festivos.js (5 días hábiles America/Bogota)</text>
-<text x="1172" y="619" font-size="10.5" fill="#1e293b">• mailer.js (Nodemailer SMTP_TRANSPORT=</text>
-<text x="1172" y="635" font-size="10.5" fill="#1e293b">  json|smtp, cuota Mailtrap protegida)</text>
-<text x="1172" y="651" font-size="10.5" fill="#1e293b">• expiracionReservas.job.js (LIMIT 20,</text>
-<text x="1172" y="667" font-size="10.5" fill="#1e293b">  FOR UPDATE SKIP LOCKED configurable)</text>
-<rect x="48" y="750" width="1384" height="214" rx="6" fill="#ffffff" stroke="#eab308" stroke-width="1.5"/>
-<rect x="48" y="750" width="1384" height="24" rx="6" fill="#fef9c3" stroke="#eab308" stroke-width="1.2"/>
-<text x="740.0" y="766" text-anchor="middle" font-size="11.5" font-weight="bold" fill="#0f172a">5 · Servicios de negocio y transacciones (backend/src/services/ — acceso SQL parametrizado directo vía db.js)</text>
-<text x="58" y="791" font-size="10.5" fill="#1e293b">• auth.service.js / perfil.service.js: registro único CLIENTE, login constante, recuperación HTTP 200 inmediata + envío no bloqueante, incremento token_version.</text>
-<text x="58" y="807" font-size="10.5" fill="#1e293b">• catalogo.service.js / carrito.service.js: oculta productos o categorías inactivas, escape %/_ en ILIKE, fusión idempotente con ajustes[] y tope de stock.</text>
-<text x="58" y="823" font-size="10.5" fill="#1e293b">• pedidos.service.js: jerarquía de bloqueos carrito → pedido → detalle_pedido → producto ORDER BY id_producto ASC FOR UPDATE; 409 PRECIO_ACTUALIZADO;</text>
-<text x="58" y="839" font-size="10.5" fill="#1e293b">  reserva 15m; pago 1:N determinista solo en backend (&#x27;00&#x27; -&gt; RECHAZADO) + Idempotency-Key; cancelación pre-envío con reembolso en pedido; volver-al-carrito.</text>
-<text x="58" y="855" font-size="10.5" fill="#1e293b">• retractos.service.js: exclusivo RETRACTO_LEGAL (&lt; dia_habil_6 00:00:00-05:00 sobre festivo_colombia); detalle_pedido FOR UPDATE impide re-solicitar &#x27;DANADO&#x27;.</text>
-<text x="58" y="871" font-size="10.5" fill="#1e293b">• admin.service.js: CRUD categorías (409 CATEGORIA_CON_PRODUCTOS), productos vs PATCH /existencias separado, cambio estado/rol con 409 ULTIMO_ADMIN_ACTIVO,</text>
-<text x="58" y="887" font-size="10.5" fill="#1e293b">  revisión legal + inspección física por cantidad (BUEN_ESTADO/DANADO) + confirmación reembolsos y métricas netas (ventas brutas − reembolsos efectivos).</text>
-<text x="58" y="903" font-size="10.5" fill="#1e293b">• Verificación autónoma Etapa 1: node:test + supertest contra PostgreSQL real (TEST_DATABASE_URL) + scripts migrate.js, seedAdmin.js y checkFestivos.js.</text>
-<line x1="510" y1="980" x2="510" y2="1026" stroke="#1e293b" stroke-width="2.5" marker-end="url(#arr)"/>
-<text x="524" y="1008" font-size="11.5" font-weight="bold" fill="#0f172a">SQL parametrizado ($1, $2...) + withTransaction (READ COMMITTED)</text>
-<line x1="1040" y1="1028" x2="1040" y2="982" stroke="#1e293b" stroke-width="2.5" marker-end="url(#arr)"/>
-<text x="1054" y="1008" font-size="11.5" font-weight="bold" fill="#0f172a">Filas y restricciones CHECK / UNIQUE / ON DELETE</text>
-<rect x="30" y="1030" width="1420" height="400" rx="8" fill="#f0fdf4" stroke="#16a34a" stroke-width="2"/>
-<rect x="30" y="1030" width="1420" height="32" rx="8" fill="#bbf7d0" stroke="#16a34a" stroke-width="2"/>
-<text x="50" y="1051" font-size="14" font-weight="bold" fill="#14532d">Capa de persistencia y datos (PostgreSQL)</text>
-<rect x="1195" y="1035" width="235" height="22" rx="4" fill="#15803d"/>
-<text x="1312" y="1050" text-anchor="middle" font-size="11.5" font-weight="bold" fill="#ffffff">PostgreSQL (14 tablas exactas)</text>
-<rect x="48" y="1076" width="440" height="128" rx="6" fill="#ffffff" stroke="#22c55e" stroke-width="1.5"/>
-<rect x="48" y="1076" width="440" height="24" rx="6" fill="#dcfce7" stroke="#22c55e" stroke-width="1.2"/>
-<text x="268.0" y="1092" text-anchor="middle" font-size="11.5" font-weight="bold" fill="#0f172a">6 · Acceso a datos (backend/src/config/db.js)</text>
-<text x="58" y="1117" font-size="10.5" fill="#1e293b">• Pool de conexiones driver pg (max = DB_POOL_MAX, SSL opt)</text>
-<text x="58" y="1133" font-size="10.5" fill="#1e293b">• pool.on(&#x27;connect&#x27;): SET TIME ZONE &#x27;UTC&#x27;</text>
-<text x="58" y="1149" font-size="10.5" fill="#1e293b">• Helper transaccional withTransaction(fn) con ROLLBACK seguro</text>
-<text x="58" y="1165" font-size="10.5" fill="#1e293b">• Scripts SQL versionados: 001_schema_inicial.sql .. 004_festivos</text>
-<text x="58" y="1181" font-size="10.5" fill="#1e293b">• Arranque checkFestivos: fail-fast año actual / WARN año siguiente</text>
-<rect x="504" y="1076" width="450" height="128" rx="6" fill="#ffffff" stroke="#22c55e" stroke-width="1.5"/>
-<rect x="504" y="1076" width="450" height="24" rx="6" fill="#dcfce7" stroke="#22c55e" stroke-width="1.2"/>
-<text x="729.0" y="1092" text-anchor="middle" font-size="11.5" font-weight="bold" fill="#0f172a">Reglas de integridad y monetarias en BD</text>
-<text x="514" y="1117" font-size="10.5" fill="#1e293b">• Importes NUMERIC(12,2), fechas TIMESTAMPTZ, texto sin ñ en DDL</text>
-<text x="514" y="1133" font-size="10.5" fill="#1e293b">• Índices únicos parciales (ACTIVO, PENDIENTE, APROBADO|REEMBOLSADO)</text>
-<text x="514" y="1149" font-size="10.5" fill="#1e293b">• Rol único por usuario: UNIQUE (id_usuario) en usuario_rol</text>
-<text x="514" y="1165" font-size="10.5" fill="#1e293b">• Pagos 1:N con pedido + idempotencia (id_pedido, clave_idempotencia)</text>
-<text x="514" y="1181" font-size="10.5" fill="#1e293b">• Restricciones CHECK de estado e inspección por cantidad</text>
-<rect x="970" y="1076" width="462" height="128" rx="6" fill="#ffffff" stroke="#22c55e" stroke-width="1.5"/>
-<rect x="970" y="1076" width="462" height="24" rx="6" fill="#dcfce7" stroke="#22c55e" stroke-width="1.2"/>
-<text x="1201.0" y="1092" text-anchor="middle" font-size="11.5" font-weight="bold" fill="#0f172a">Servicios externos controlados (Cuota gratuita)</text>
-<text x="980" y="1117" font-size="10.5" fill="#1e293b">• Mailtrap Sandbox (~50 correos/mes): usado solo en demo/bikestore.http</text>
-<text x="980" y="1133" font-size="10.5" fill="#1e293b">• Entorno local y NODE_ENV=test: SMTP_TRANSPORT=json (Nodemailer)</text>
-<text x="980" y="1149" font-size="10.5" fill="#1e293b">• Despacho SMTP no bloqueante tras HTTP 200 en /recuperar</text>
-<text x="980" y="1165" font-size="10.5" fill="#1e293b">• Entorno local v1 (RNF-12): arquitectura autocontenida en localhost</text>
-<text x="980" y="1181" font-size="10.5" fill="#1e293b">• Reportes JSON acotados (exportación Excel/PDF en frontend)</text>
-<rect x="48" y="1218" width="1150" height="196" rx="6" fill="#ffffff" stroke="#22c55e" stroke-width="1.5"/>
-<rect x="48" y="1218" width="1150" height="24" rx="6" fill="#dcfce7" stroke="#22c55e" stroke-width="1.2"/>
-<text x="623" y="1234" text-anchor="middle" font-size="11.5" font-weight="bold" fill="#14532d">7 · Modelo de datos PostgreSQL actualizado (14 tablas exactas — revocación vía token_version)</text>
-<rect x="64" y="1254" width="212" height="38" rx="5" fill="#dcfce7" stroke="#16a34a" stroke-width="1.4"/>
-<text x="170" y="1277" text-anchor="middle" font-size="11" font-weight="bold" fill="#0f172a">1. rol (ADMIN, CLIENTE)</text>
-<rect x="288" y="1254" width="212" height="38" rx="5" fill="#dcfce7" stroke="#16a34a" stroke-width="1.4"/>
-<text x="394" y="1277" text-anchor="middle" font-size="11" font-weight="bold" fill="#0f172a">2. usuario (token_version)</text>
-<rect x="512" y="1254" width="212" height="38" rx="5" fill="#dcfce7" stroke="#16a34a" stroke-width="1.4"/>
-<text x="618" y="1277" text-anchor="middle" font-size="11" font-weight="bold" fill="#0f172a">3. usuario_rol (1:1 único)</text>
-<rect x="736" y="1254" width="212" height="38" rx="5" fill="#dcfce7" stroke="#16a34a" stroke-width="1.4"/>
-<text x="842" y="1277" text-anchor="middle" font-size="11" font-weight="bold" fill="#0f172a">4. token_recuperacion</text>
-<rect x="960" y="1254" width="212" height="38" rx="5" fill="#dcfce7" stroke="#16a34a" stroke-width="1.4"/>
-<text x="1066" y="1277" text-anchor="middle" font-size="11" font-weight="bold" fill="#0f172a">5. categoria</text>
-<rect x="64" y="1304" width="212" height="38" rx="5" fill="#dcfce7" stroke="#16a34a" stroke-width="1.4"/>
-<text x="170" y="1327" text-anchor="middle" font-size="11" font-weight="bold" fill="#0f172a">6. producto</text>
-<rect x="288" y="1304" width="212" height="38" rx="5" fill="#dcfce7" stroke="#16a34a" stroke-width="1.4"/>
-<text x="394" y="1327" text-anchor="middle" font-size="11" font-weight="bold" fill="#0f172a">7. carrito</text>
-<rect x="512" y="1304" width="212" height="38" rx="5" fill="#dcfce7" stroke="#16a34a" stroke-width="1.4"/>
-<text x="618" y="1327" text-anchor="middle" font-size="11" font-weight="bold" fill="#0f172a">8. detalle_carrito</text>
-<rect x="736" y="1304" width="212" height="38" rx="5" fill="#dcfce7" stroke="#16a34a" stroke-width="1.4"/>
-<text x="842" y="1327" text-anchor="middle" font-size="11" font-weight="bold" fill="#0f172a">9. pedido (+reembolso canc.)</text>
-<rect x="960" y="1304" width="212" height="38" rx="5" fill="#dcfce7" stroke="#16a34a" stroke-width="1.4"/>
-<text x="1066" y="1327" text-anchor="middle" font-size="11" font-weight="bold" fill="#0f172a">10. detalle_pedido</text>
-<rect x="64" y="1354" width="212" height="38" rx="5" fill="#dcfce7" stroke="#16a34a" stroke-width="1.4"/>
-<text x="170" y="1377" text-anchor="middle" font-size="11" font-weight="bold" fill="#0f172a">11. pago (1:N id_pedido)</text>
-<rect x="288" y="1354" width="212" height="38" rx="5" fill="#dbeafe" stroke="#2563eb" stroke-width="1.4"/>
-<text x="394" y="1377" text-anchor="middle" font-size="11" font-weight="bold" fill="#0f172a">12. retracto (RETRACTO_LEGAL)</text>
-<rect x="512" y="1354" width="212" height="38" rx="5" fill="#dbeafe" stroke="#2563eb" stroke-width="1.4"/>
-<text x="618" y="1377" text-anchor="middle" font-size="11" font-weight="bold" fill="#0f172a">13. detalle_retracto (cant.)</text>
-<rect x="736" y="1354" width="212" height="38" rx="5" fill="#dbeafe" stroke="#2563eb" stroke-width="1.4"/>
-<text x="842" y="1377" text-anchor="middle" font-size="11" font-weight="bold" fill="#0f172a">14. festivo_colombia (25-35)</text>
-<rect x="1214" y="1218" width="218" height="196" rx="8" fill="#1e3a8a" stroke="#1d4ed8" stroke-width="2"/>
-<ellipse cx="1323" cy="1272" rx="46" ry="15" fill="#60a5fa" stroke="#ffffff" stroke-width="2"/>
-<path d="M 1277 1272 L 1277 1326 A 46 15 0 0 0 1369 1326 L 1369 1272" fill="#3b82f6" stroke="#ffffff" stroke-width="2"/>
-<path d="M 1277 1298 A 46 15 0 0 0 1369 1298" fill="none" stroke="#dbeafe" stroke-width="1.5"/>
-<text x="1323" y="1370" text-anchor="middle" font-size="20" font-weight="bold" fill="#ffffff">PostgreSQL</text>
-<text x="1323" y="1392" text-anchor="middle" font-size="11" fill="#dbeafe">14 tablas · pg + UTC</text>
+<text x="50" y="157" font-size="14" font-weight="bold" fill="#1e3a8a">Capa de presentación (Frontend SPA — Textos en español, React.lazy + CSP + SEO + vitest-axe)</text>
+<rect x="1195" y="141" width="235" height="22" rx="4" fill="#1d4ed8"/>
+<text x="1312" y="156" text-anchor="middle" font-size="11.5" font-weight="bold" fill="#ffffff">React 19 + Vite 8 (localhost:5173)</text>
+<rect x="48" y="182" width="255" height="242" rx="6" fill="#ffffff" stroke="#60a5fa" stroke-width="1.5"/>
+<rect x="48" y="182" width="255" height="24" rx="6" fill="#dbeafe" stroke="#60a5fa" stroke-width="1.2"/>
+<text x="175.5" y="198" text-anchor="middle" font-size="11.5" font-weight="bold" fill="#0f172a">Vistas públicas &amp; SEO</text>
+<text x="58" y="223" font-size="10.2" fill="#1e293b">• InicioPage en bundle inicial (LCP)</text>
+<text x="58" y="239" font-size="10.2" fill="#1e293b">• Rutas secundarias con React.lazy</text>
+<text x="58" y="255" font-size="10.2" fill="#1e293b">• Catálogo paginado (12/50) y detalle</text>
+<text x="58" y="271" font-size="10.2" fill="#1e293b">• Registro (CC/TI/CE/PAS/PPT) + login</text>
+<text x="58" y="287" font-size="10.2" fill="#1e293b">• Carrito localStorage (schema_version: 1)</text>
+<text x="58" y="303" font-size="10.2" fill="#1e293b">• Open Graph, robots.txt, sitemap.xml</text>
+<text x="58" y="319" font-size="10.2" fill="#1e293b">• useTituloPagina (index vs noindex)</text>
+<text x="58" y="335" font-size="10.2" fill="#1e293b">• Productos agotados (&quot;Agotado&quot;)</text>
+<rect x="315" y="182" width="290" height="242" rx="6" fill="#ffffff" stroke="#60a5fa" stroke-width="1.5"/>
+<rect x="315" y="182" width="290" height="24" rx="6" fill="#dbeafe" stroke="#60a5fa" stroke-width="1.2"/>
+<text x="460" y="198" text-anchor="middle" font-size="11.5" font-weight="bold" fill="#0f172a">Vistas del CLIENTE (A1 + B1)</text>
+<text x="325" y="223" font-size="10.2" fill="#1e293b">• Fusión idempotente (UUID persistida)</text>
+<text x="325" y="239" font-size="10.2" fill="#1e293b">• Carrito persistente en PostgreSQL</text>
+<text x="325" y="255" font-size="10.2" fill="#1e293b">• Checkout (409 PRECIO_ACTUALIZADO)</text>
+<text x="325" y="271" font-size="10.2" fill="#1e293b">• Pago 1:N (guía prueba solo dev/admin)</text>
+<text x="325" y="287" font-size="10.2" fill="#1e293b">• Volver al carrito (useRef UUID + 2 fases)</text>
+<text x="325" y="303" font-size="10.2" fill="#1e293b">• Solicitud RETRACTO_LEGAL (5d hábiles)</text>
+<text x="325" y="319" font-size="10.2" fill="#1e293b">• Perfil personal y cierre sesión global</text>
+<text x="325" y="335" font-size="10.2" fill="#1e293b">• Rutas marcadas noindex, nofollow</text>
+<rect x="617" y="182" width="315" height="242" rx="6" fill="#ffffff" stroke="#60a5fa" stroke-width="1.5"/>
+<rect x="617" y="182" width="315" height="24" rx="6" fill="#dbeafe" stroke="#60a5fa" stroke-width="1.2"/>
+<text x="774.5" y="198" text-anchor="middle" font-size="11.5" font-weight="bold" fill="#0f172a">Panel ADMIN (rol único)</text>
+<text x="627" y="223" font-size="10.2" fill="#1e293b">• Categorías (DELETE 409 si hay productos)</text>
+<text x="627" y="239" font-size="10.2" fill="#1e293b">• Productos (imagen_url sin SVG/SSRF)</text>
+<text x="627" y="255" font-size="10.2" fill="#1e293b">• Ajuste transaccional de existencias</text>
+<text x="627" y="271" font-size="10.2" fill="#1e293b">• Usuarios: estado y rol (409 último ADMIN)</text>
+<text x="627" y="287" font-size="10.2" fill="#1e293b">• Pedidos + modal GET /admin/pedidos/:id</text>
+<text x="627" y="303" font-size="10.2" fill="#1e293b">• Retractos: decisión, recepción y reembolso</text>
+<text x="627" y="319" font-size="10.2" fill="#1e293b">• Dashboard netos (90d/5000f) + Excel/PDF</text>
+<text x="627" y="335" font-size="10.2" fill="#1e293b">• Rutas protegidas noindex, nofollow</text>
+<rect x="944" y="182" width="232" height="242" rx="6" fill="#ffffff" stroke="#60a5fa" stroke-width="1.5"/>
+<rect x="944" y="182" width="232" height="24" rx="6" fill="#dbeafe" stroke="#60a5fa" stroke-width="1.2"/>
+<text x="1060" y="198" text-anchor="middle" font-size="11.5" font-weight="bold" fill="#0f172a">Identidad, CSP y a11y</text>
+<text x="954" y="223" font-size="10.2" fill="#1e293b">• LogoMarcaBS + BIKESTORE + favicon</text>
+<text x="954" y="239" font-size="10.2" fill="#1e293b">• Paleta 60-30-10 + forced-colors</text>
+<text x="954" y="255" font-size="10.2" fill="#1e293b">• CSP build: script-src &apos;self&apos; estricto</text>
+<text x="954" y="271" font-size="10.2" fill="#1e293b">• Plugin HMR solo en modo dev (serve)</text>
+<text x="954" y="287" font-size="10.2" fill="#1e293b">• &lt;dialog&gt; nativo y Toast popover</text>
+<text x="954" y="303" font-size="10.2" fill="#1e293b">• Exportación local Excel/PDF (import)</text>
+<text x="954" y="319" font-size="10.2" fill="#1e293b">• Adaptabilidad 320px–1440px / zoom</text>
+<text x="954" y="335" font-size="10.2" fill="#1e293b">• Verificado Vitest + vitest-axe</text>
+<rect x="1188" y="182" width="244" height="242" rx="6" fill="#ffffff" stroke="#60a5fa" stroke-width="1.5"/>
+<rect x="1188" y="182" width="244" height="24" rx="6" fill="#dbeafe" stroke="#60a5fa" stroke-width="1.2"/>
+<text x="1310" y="198" text-anchor="middle" font-size="11.5" font-weight="bold" fill="#0f172a">Sesión A1 &amp; Cliente HTTP</text>
+<text x="1198" y="223" font-size="10.2" fill="#1e293b">• Access JWT SOLO en memoria React</text>
+<text x="1198" y="239" font-size="10.2" fill="#1e293b">• bs_client_secret + bs_refresh_uid (LS)</text>
+<text x="1198" y="255" font-size="10.2" fill="#1e293b">• refreshSync: Web Locks API (5s cache)</text>
+<text x="1198" y="271" font-size="10.2" fill="#1e293b">• BroadcastChannel + fallback storage</text>
+<text x="1198" y="287" font-size="10.2" fill="#1e293b">• UUIDv8 determinista (sin mutex LS)</text>
+<text x="1198" y="303" font-size="10.2" fill="#1e293b">• credentials: &apos;include&apos; + X-Requested-With</text>
+<text x="1198" y="319" font-size="10.2" fill="#1e293b">• Reintento único en 401 TOKEN_INVALIDO</text>
+<text x="1198" y="335" font-size="10.2" fill="#1e293b">• Rehidratación silenciosa si hay uid</text>
+<line x1="380" y1="441" x2="380" y2="486" stroke="#1e293b" stroke-width="2.5" marker-end="url(#arr)"/>
+<text x="394" y="468" font-size="11" font-weight="bold" fill="#0f172a">HTTP(S) · REST + Bearer JWT + Cookie bikestore_rt + Origin/X-Requested-With + UUID Idempotency-Key</text>
+<line x1="1080" y1="488" x2="1080" y2="443" stroke="#1e293b" stroke-width="2.5" marker-end="url(#arr)"/>
+<text x="1094" y="468" font-size="11" font-weight="bold" fill="#0f172a">{ ok: true, datos, meta? } / { ok: false, codigo, mensaje }</text>
+<rect x="30" y="490" width="1420" height="535" rx="8" fill="#fefce8" stroke="#ca8a04" stroke-width="2"/>
+<rect x="30" y="490" width="1420" height="32" rx="8" fill="#fef08a" stroke="#ca8a04" stroke-width="2"/>
+<text x="50" y="511" font-size="14" font-weight="bold" fill="#713f12">Capa de lógica de negocio (Backend REST — A1/B1, CSRF, SSRF/SVG y concurrencia)</text>
+<rect x="1165" y="495" width="265" height="22" rx="4" fill="#854d0e"/>
+<text x="1297" y="510" text-anchor="middle" font-size="11.5" font-weight="bold" fill="#ffffff">Node.js 26 LTS + Express (localhost:3000)</text>
+<rect x="48" y="534" width="565" height="236" rx="6" fill="#ffffff" stroke="#eab308" stroke-width="1.5"/>
+<rect x="48" y="534" width="565" height="24" rx="6" fill="#fef9c3" stroke="#eab308" stroke-width="1.2"/>
+<text x="330.5" y="550" text-anchor="middle" font-size="11.5" font-weight="bold" fill="#0f172a">1 · Rutas REST cerradas (backend/src/routes/)</text>
+<text x="58" y="575" font-size="10.2" fill="#1e293b">Públicas:  GET /api/health | GET /api/categorias | GET /api/productos(/,:id)</text>
+<text x="58" y="591" font-size="10.2" fill="#1e293b">Auth A1:   POST /api/auth/{registro, login, refresh, logout, recuperar, restablecer}</text>
+<text x="58" y="607" font-size="10.2" fill="#1e293b">Perfil:    GET/PUT /api/perfil | PATCH /api/perfil/contrasena</text>
+<text x="58" y="623" font-size="10.2" fill="#1e293b">Carrito:   GET /api/carrito | POST /api/carrito/fusionar (UUID) | */items(/:id_producto)</text>
+<text x="58" y="639" font-size="10.2" fill="#1e293b">Pedidos:   GET/POST /api/pedidos | GET /api/pedidos/:id</text>
+<text x="58" y="655" font-size="10.2" fill="#1e293b">           POST /api/pedidos/:id/{pagos, cancelar, volver-al-carrito (UUID), retractos}</text>
+<text x="58" y="671" font-size="10.2" fill="#1e293b">Retracto:  GET /api/retractos(/:id)</text>
+<text x="58" y="687" font-size="10.2" fill="#1e293b">Admin Cat: DELETE /api/admin/categorias/:id | /admin/{categorias*, productos*(/estado,/existencias)}</text>
+<text x="58" y="703" font-size="10.2" fill="#1e293b">Admin Ops: GET /api/admin/pedidos/:id | /admin/{usuarios*(/estado,/rol), pedidos*, retractos*}</text>
+<text x="58" y="719" font-size="10.2" fill="#1e293b">Reportes:  GET /api/admin/reportes/{resumen, ventas} (?desde, ?hasta, ?id_categoria | 90d/5000f)</text>
+<rect x="625" y="534" width="295" height="236" rx="6" fill="#ffffff" stroke="#eab308" stroke-width="1.5"/>
+<rect x="625" y="534" width="295" height="24" rx="6" fill="#fef9c3" stroke="#eab308" stroke-width="1.2"/>
+<text x="772.5" y="550" text-anchor="middle" font-size="11.5" font-weight="bold" fill="#0f172a">2 · Middlewares (middlewares/)</text>
+<text x="635" y="575" font-size="10.2" fill="#1e293b">• app.js: trust proxy, helmet, cors(credentials)</text>
+<text x="635" y="591" font-size="10.2" fill="#1e293b">• csrf.middleware.js: Origin + X-Requested-With</text>
+<text x="635" y="607" font-size="10.2" fill="#1e293b">  (&quot;BikeStore&quot;) -&gt; 403 CSRF_ORIGEN_INVALIDO</text>
+<text x="635" y="623" font-size="10.2" fill="#1e293b">• auth.middleware.js: JWT HS256 (15m) + BD</text>
+<text x="635" y="639" font-size="10.2" fill="#1e293b">• role.middleware.js: guard ADMIN/CLIENTE</text>
+<text x="635" y="655" font-size="10.2" fill="#1e293b">• validate.middleware.js: Zod .strict() (100kb)</text>
+<text x="635" y="671" font-size="10.2" fill="#1e293b">• rateLimit.middleware.js: auth + /refresh</text>
+<text x="635" y="687" font-size="10.2" fill="#1e293b">• error.middleware.js: JSON + 503 CONFLICTO</text>
+<text x="635" y="703" font-size="10.2" fill="#1e293b">  CONCURRENCIA (40P01/40001 agotados)</text>
+<rect x="932" y="534" width="185" height="236" rx="6" fill="#ffffff" stroke="#eab308" stroke-width="1.5"/>
+<rect x="932" y="534" width="185" height="24" rx="6" fill="#fef9c3" stroke="#eab308" stroke-width="1.2"/>
+<text x="1024.5" y="550" text-anchor="middle" font-size="11.5" font-weight="bold" fill="#0f172a">3 · Controladores</text>
+<text x="942" y="575" font-size="10.2" fill="#1e293b">• auth.controller.js</text>
+<text x="942" y="591" font-size="10.2" fill="#1e293b">  (cookie bikestore_rt)</text>
+<text x="942" y="607" font-size="10.2" fill="#1e293b">• perfil.controller.js</text>
+<text x="942" y="623" font-size="10.2" fill="#1e293b">• catalogo.controller.js</text>
+<text x="942" y="639" font-size="10.2" fill="#1e293b">• carrito.controller.js</text>
+<text x="942" y="655" font-size="10.2" fill="#1e293b">• pedidos.controller.js</text>
+<text x="942" y="671" font-size="10.2" fill="#1e293b">  (Idempotency UUID)</text>
+<text x="942" y="687" font-size="10.2" fill="#1e293b">• retractos.controller.js</text>
+<text x="942" y="703" font-size="10.2" fill="#1e293b">• admin.controller.js</text>
+<rect x="1129" y="534" width="303" height="236" rx="6" fill="#ffffff" stroke="#eab308" stroke-width="1.5"/>
+<rect x="1129" y="534" width="303" height="24" rx="6" fill="#fef9c3" stroke="#eab308" stroke-width="1.2"/>
+<text x="1280.5" y="550" text-anchor="middle" font-size="11.5" font-weight="bold" fill="#0f172a">4 · Utilidades y Jobs (utils/ &amp; jobs/)</text>
+<text x="1139" y="575" font-size="10.2" fill="#1e293b">• cookies.js (bikestore_rt HttpOnly SameSite=Lax)</text>
+<text x="1139" y="591" font-size="10.2" fill="#1e293b">• refreshCrypto.js (AES-256-GCM + HKDF replay 30s)</text>
+<text x="1139" y="607" font-size="10.2" fill="#1e293b">• idempotency.js (UUID RFC 4122/9562 estricto)</text>
+<text x="1139" y="623" font-size="10.2" fill="#1e293b">• imagenUrl.js (rechazo SVG + anti-SSRF IPs/local)</text>
+<text x="1139" y="639" font-size="10.2" fill="#1e293b">• password.js, jwt.js, documento.js, decimal.js</text>
+<text x="1139" y="655" font-size="10.2" fill="#1e293b">• festivos.js (5d hábiles) &amp; mailer.js (sin logs token)</text>
+<text x="1139" y="671" font-size="10.2" fill="#1e293b">• expiracionReservas.job.js (SKIP LOCKED +</text>
+<text x="1139" y="687" font-size="10.2" fill="#1e293b">  purgarRegistrosExpiradosLote cada 15m)</text>
+<rect x="48" y="782" width="1384" height="228" rx="6" fill="#ffffff" stroke="#eab308" stroke-width="1.5"/>
+<rect x="48" y="782" width="1384" height="24" rx="6" fill="#fef9c3" stroke="#eab308" stroke-width="1.2"/>
+<text x="740" y="798" text-anchor="middle" font-size="11.5" font-weight="bold" fill="#0f172a">5 · Servicios de negocio, bloqueos unificados y transacciones (backend/src/services/)</text>
+<text x="58" y="823" font-size="10.2" fill="#1e293b">• auth.service.js / perfil.service.js: login + familia sesion_refresh; /refresh (reemplazo_cifrado AEAD 30s si T2 no usado; reúso -&gt; 401 SESION_REVOCADA; 401 SESION_EXPIRADA);</text>
+<text x="58" y="839" font-size="10.2" fill="#1e293b">  logout global y cambios de clave/estado/rol incrementan token_version y revocan sesion_refresh activas; recuperación HTTP 200 inmediata sin tokens en logs.</text>
+<text x="58" y="855" font-size="10.2" fill="#1e293b">• catalogo.service.js / carrito.service.js: fusionar exige UUID, bloquea usuario -&gt; carrito_fusion_idempotencia (retención 30d, NULL ON DELETE SET NULL) antes de tocar carrito.</text>
+<text x="58" y="871" font-size="10.2" fill="#1e293b">• pedidos.service.js: pre-tx expiración de vencidos antes de crearPedido; jerarquía usuario-&gt;carrito-&gt;pedido-&gt;detalle-&gt;producto (FOR NO KEY UPDATE OF p); pago 1:N;</text>
+<text x="58" y="887" font-size="10.2" fill="#1e293b">  volver-al-carrito en 2 fases sin rollback (Fase A expira vencido -&gt; CANCELADO + restituye con COMMIT; Fase B devuelve al carrito con 200 OK y guarda 3 columnas en pedido).</text>
+<text x="58" y="903" font-size="10.2" fill="#1e293b">• retractos.service.js: RETRACTO_LEGAL (&lt; dia_habil_6 00:00:00-05:00); detalle_pedido ORDER BY id_producto ASC FOR UPDATE bloqueando unidades dañadas.</text>
+<text x="58" y="919" font-size="10.2" fill="#1e293b">• admin.service.js: DELETE categorías (409), detalle pedido (:id), bloqueo ordenado usuarios (ORDER BY id_usuario ASC FOR UPDATE OF u), pedido-&gt;retracto-&gt;pago en reembolso.</text>
+<text x="58" y="935" font-size="10.2" fill="#1e293b">• Verificación autónoma: node:test + supertest contra PostgreSQL real (TEST_DATABASE_URL) cubriendo A1, B1, CSRF, 40P01/40001 -&gt; 503, SSRF/SVG y purga.</text>
+<line x1="460" y1="1025" x2="460" y2="1071" stroke="#1e293b" stroke-width="2.5" marker-end="url(#arr)"/>
+<text x="474" y="1053" font-size="11" font-weight="bold" fill="#0f172a">SQL parametrizado ($1..$n) + withTransaction (reintentos 40P01/40001) + FOR NO KEY UPDATE</text>
+<line x1="1080" y1="1073" x2="1080" y2="1027" stroke="#1e293b" stroke-width="2.5" marker-end="url(#arr)"/>
+<text x="1094" y="1053" font-size="11" font-weight="bold" fill="#0f172a">Filas y restricciones CHECK / UNIQUE / UQp / ON DELETE</text>
+<rect x="30" y="1075" width="1420" height="475" rx="8" fill="#f0fdf4" stroke="#16a34a" stroke-width="2"/>
+<rect x="30" y="1075" width="1420" height="32" rx="8" fill="#bbf7d0" stroke="#16a34a" stroke-width="2"/>
+<text x="50" y="1096" font-size="14" font-weight="bold" fill="#14532d">Capa de persistencia y datos (PostgreSQL — Migraciones 001..005)</text>
+<rect x="1195" y="1080" width="235" height="22" rx="4" fill="#15803d"/>
+<text x="1312" y="1095" text-anchor="middle" font-size="11.5" font-weight="bold" fill="#ffffff">PostgreSQL (16 tablas exactas)</text>
+<rect x="48" y="1121" width="440" height="132" rx="6" fill="#ffffff" stroke="#22c55e" stroke-width="1.5"/>
+<rect x="48" y="1121" width="440" height="24" rx="6" fill="#dcfce7" stroke="#22c55e" stroke-width="1.2"/>
+<text x="268" y="1137" text-anchor="middle" font-size="11.5" font-weight="bold" fill="#0f172a">6 · Acceso a datos y Env (db.js &amp; env.js)</text>
+<text x="58" y="1162" font-size="10.2" fill="#1e293b">• Pool pg (max = DB_POOL_MAX, SSL opt, SET TIME ZONE UTC)</text>
+<text x="58" y="1178" font-size="10.2" fill="#1e293b">• withTransaction(fn, { maxRetries: 3 }) ante 40P01/40001</text>
+<text x="58" y="1194" font-size="10.2" fill="#1e293b">• Scripts SQL: 001..004 + 005_sesiones_refresh_e_idempotencia.sql</text>
+<text x="58" y="1210" font-size="10.2" fill="#1e293b">• Config prod: TRUST_PROXY, COOKIE_SECURE, REFRESH_REPLAY_KEY</text>
+<text x="58" y="1226" font-size="10.2" fill="#1e293b">• checkFestivos: fail-fast año actual / WARN año siguiente</text>
+<rect x="504" y="1121" width="450" height="132" rx="6" fill="#ffffff" stroke="#22c55e" stroke-width="1.5"/>
+<rect x="504" y="1121" width="450" height="24" rx="6" fill="#dcfce7" stroke="#22c55e" stroke-width="1.2"/>
+<text x="729" y="1137" text-anchor="middle" font-size="11.5" font-weight="bold" fill="#0f172a">Reglas de integridad, índices parciales y retención</text>
+<text x="514" y="1162" font-size="10.2" fill="#1e293b">• NUMERIC(12,2), TIMESTAMPTZ, UUID, JSONB (sin ñ en DDL)</text>
+<text x="514" y="1178" font-size="10.2" fill="#1e293b">• Parciales: ACTIVO, PENDIENTE, APROBADO|REEMBOLSADO,</text>
+<text x="514" y="1194" font-size="10.2" fill="#1e293b">  familia_activa, reemplazo_expira, usuario_idem_carrito</text>
+<text x="514" y="1210" font-size="10.2" fill="#1e293b">• CHECK todo-o-nada en pedido y consistencia sesion_refresh</text>
+<text x="514" y="1226" font-size="10.2" fill="#1e293b">• Retención 30d en carrito_fusion_idempotencia (purga SKIP LOCKED)</text>
+<rect x="970" y="1121" width="462" height="132" rx="6" fill="#ffffff" stroke="#22c55e" stroke-width="1.5"/>
+<rect x="970" y="1121" width="462" height="24" rx="6" fill="#dcfce7" stroke="#22c55e" stroke-width="1.2"/>
+<text x="1201" y="1137" text-anchor="middle" font-size="11.5" font-weight="bold" fill="#0f172a">Servicios externos y operación controlada</text>
+<text x="980" y="1162" font-size="10.2" fill="#1e293b">• Mailtrap Sandbox (~50 correos/mes): demo / bikestore.http</text>
+<text x="980" y="1178" font-size="10.2" fill="#1e293b">• Dev/test: SMTP_TRANSPORT=json (en prod smtp exige host/user/pass)</text>
+<text x="980" y="1194" font-size="10.2" fill="#1e293b">• Despacho SMTP no bloqueante tras HTTP 200 sin tokens en log</text>
+<text x="980" y="1210" font-size="10.2" fill="#1e293b">• CORS multi-origen (CORS_ORIGIN) + credentials: true</text>
+<text x="980" y="1226" font-size="10.2" fill="#1e293b">• Reportes JSON acotados (exportación Excel/PDF en frontend)</text>
+<rect x="48" y="1268" width="1150" height="260" rx="6" fill="#ffffff" stroke="#22c55e" stroke-width="1.5"/>
+<rect x="48" y="1268" width="1150" height="24" rx="6" fill="#dcfce7" stroke="#22c55e" stroke-width="1.2"/>
+<text x="623" y="1284" text-anchor="middle" font-size="11.5" font-weight="bold" fill="#14532d">7 · Modelo de datos PostgreSQL actualizado (16 tablas exactas — 001..005)</text>
+<rect x="68" y="1306" width="268" height="40" rx="5" fill="#dcfce7" stroke="#16a34a" stroke-width="1.4"/>
+<text x="202" y="1330" text-anchor="middle" font-size="10.8" font-weight="bold" fill="#0f172a">1. rol (ADMIN, CLIENTE)</text>
+<rect x="350" y="1306" width="268" height="40" rx="5" fill="#dcfce7" stroke="#16a34a" stroke-width="1.4"/>
+<text x="484" y="1330" text-anchor="middle" font-size="10.8" font-weight="bold" fill="#0f172a">2. usuario (token_version)</text>
+<rect x="632" y="1306" width="268" height="40" rx="5" fill="#dcfce7" stroke="#16a34a" stroke-width="1.4"/>
+<text x="766" y="1330" text-anchor="middle" font-size="10.8" font-weight="bold" fill="#0f172a">3. usuario_rol (1:1 único)</text>
+<rect x="914" y="1306" width="268" height="40" rx="5" fill="#dcfce7" stroke="#16a34a" stroke-width="1.4"/>
+<text x="1048" y="1330" text-anchor="middle" font-size="10.8" font-weight="bold" fill="#0f172a">4. token_recuperacion</text>
+<rect x="68" y="1360" width="268" height="40" rx="5" fill="#dcfce7" stroke="#16a34a" stroke-width="1.4"/>
+<text x="202" y="1384" text-anchor="middle" font-size="10.8" font-weight="bold" fill="#0f172a">5. categoria</text>
+<rect x="350" y="1360" width="268" height="40" rx="5" fill="#dcfce7" stroke="#16a34a" stroke-width="1.4"/>
+<text x="484" y="1384" text-anchor="middle" font-size="10.8" font-weight="bold" fill="#0f172a">6. producto</text>
+<rect x="632" y="1360" width="268" height="40" rx="5" fill="#dcfce7" stroke="#16a34a" stroke-width="1.4"/>
+<text x="766" y="1384" text-anchor="middle" font-size="10.8" font-weight="bold" fill="#0f172a">7. carrito</text>
+<rect x="914" y="1360" width="268" height="40" rx="5" fill="#dcfce7" stroke="#16a34a" stroke-width="1.4"/>
+<text x="1048" y="1384" text-anchor="middle" font-size="10.8" font-weight="bold" fill="#0f172a">8. detalle_carrito</text>
+<rect x="68" y="1414" width="268" height="40" rx="5" fill="#dbeafe" stroke="#2563eb" stroke-width="1.4"/>
+<text x="202" y="1438" text-anchor="middle" font-size="10.8" font-weight="bold" fill="#0f172a">9. pedido (+reemb. +dev. carrito)</text>
+<rect x="350" y="1414" width="268" height="40" rx="5" fill="#dcfce7" stroke="#16a34a" stroke-width="1.4"/>
+<text x="484" y="1438" text-anchor="middle" font-size="10.8" font-weight="bold" fill="#0f172a">10. detalle_pedido</text>
+<rect x="632" y="1414" width="268" height="40" rx="5" fill="#dcfce7" stroke="#16a34a" stroke-width="1.4"/>
+<text x="766" y="1438" text-anchor="middle" font-size="10.8" font-weight="bold" fill="#0f172a">11. pago (1:N id_pedido)</text>
+<rect x="914" y="1414" width="268" height="40" rx="5" fill="#dcfce7" stroke="#16a34a" stroke-width="1.4"/>
+<text x="1048" y="1438" text-anchor="middle" font-size="10.8" font-weight="bold" fill="#0f172a">12. retracto (RETRACTO_LEGAL)</text>
+<rect x="68" y="1468" width="268" height="40" rx="5" fill="#dcfce7" stroke="#16a34a" stroke-width="1.4"/>
+<text x="202" y="1492" text-anchor="middle" font-size="10.8" font-weight="bold" fill="#0f172a">13. detalle_retracto (cant.)</text>
+<rect x="350" y="1468" width="268" height="40" rx="5" fill="#dcfce7" stroke="#16a34a" stroke-width="1.4"/>
+<text x="484" y="1492" text-anchor="middle" font-size="10.8" font-weight="bold" fill="#0f172a">14. festivo_colombia (25-35)</text>
+<rect x="632" y="1468" width="268" height="40" rx="5" fill="#dbeafe" stroke="#2563eb" stroke-width="1.4"/>
+<text x="766" y="1492" text-anchor="middle" font-size="10.8" font-weight="bold" fill="#0f172a">15. sesion_refresh (A1 AEAD)</text>
+<rect x="914" y="1468" width="268" height="40" rx="5" fill="#dbeafe" stroke="#2563eb" stroke-width="1.4"/>
+<text x="1048" y="1492" text-anchor="middle" font-size="10.8" font-weight="bold" fill="#0f172a">16. carrito_fusion_idempotencia (30d)</text>
+<rect x="1214" y="1268" width="218" height="260" rx="8" fill="#1e3a8a" stroke="#1d4ed8" stroke-width="2"/>
+<ellipse cx="1323" cy="1335" rx="46" ry="15" fill="#60a5fa" stroke="#ffffff" stroke-width="2"/>
+<path d="M 1277 1335 L 1277 1389 A 46 15 0 0 0 1369 1389 L 1369 1335" fill="#3b82f6" stroke="#ffffff" stroke-width="2"/>
+<path d="M 1277 1361 A 46 15 0 0 0 1369 1361" fill="none" stroke="#dbeafe" stroke-width="1.5"/>
+<text x="1323" y="1436" text-anchor="middle" font-size="20" font-weight="bold" fill="#ffffff">PostgreSQL</text>
+<text x="1323" y="1458" text-anchor="middle" font-size="11.5" fill="#dbeafe">16 tablas · pg + UTC</text>
+<text x="1323" y="1478" text-anchor="middle" font-size="10.5" fill="#93c5fd">001..005 · A1 + B1</text>
 </svg>

@@ -14,6 +14,8 @@ function createTransporter() {
       connectionTimeout: 5000,
       greetingTimeout: 5000,
       socketTimeout: 5000,
+      logger: false,
+      debug: false,
     });
   }
 
@@ -21,6 +23,22 @@ function createTransporter() {
 }
 
 const transporter = createTransporter();
+
+export function escapeHtml(value) {
+  return String(value ?? '')
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
+export function sanitizeMailerLogMessage(msg) {
+  return String(msg || 'Error SMTP desconocido')
+    .replace(/https?:\/\/[^\s"'<>]+/gi, '[URL_REDACTED]')
+    .replace(/([?&]token=)[^&\s"']+/gi, '$1[REDACTED]')
+    .replace(/\b[0-9a-f]{32,}\b/gi, '[TOKEN_REDACTED]');
+}
 
 export async function sendMail({ to, subject, text, html }) {
   const info = await transporter.sendMail({
@@ -41,15 +59,20 @@ export async function sendMail({ to, subject, text, html }) {
 
 export function dispatchPasswordResetEmail({ correo, nombre, token }) {
   const resetUrl = `${env.FRONTEND_URL}/restablecer-contrasena?token=${encodeURIComponent(token)}`;
+  const safeHtmlNombre = escapeHtml(nombre);
+  const safeHtmlUrl = escapeHtml(resetUrl);
   const subject = 'BikeStore — Recuperación de contraseña';
   const text = `Hola ${nombre},\n\nRecibimos una solicitud para restablecer tu contraseña en BikeStore.\nUsa el siguiente enlace dentro de los próximos 60 minutos:\n${resetUrl}\n\nSi no realizaste esta solicitud, ignora este mensaje.`;
-  const html = `<p>Hola <strong>${nombre}</strong>,</p><p>Recibimos una solicitud para restablecer tu contraseña en BikeStore.</p><p><a href="${resetUrl}">Restablecer contraseña</a> (válido por 60 minutos).</p><p>Si no solicitaste este cambio, ignora este correo.</p>`;
+  const html = `<p>Hola <strong>${safeHtmlNombre}</strong>,</p><p>Recibimos una solicitud para restablecer tu contraseña en BikeStore.</p><p><a href="${safeHtmlUrl}">Restablecer contraseña</a> (válido por 60 minutos).</p><p>Si no solicitaste este cambio, ignora este correo.</p>`;
 
-  // Despacho no bloqueante: los errores SMTP nunca se devuelven al cliente en /recuperar
+  // Despacho no bloqueante: nunca imprime tokens ni URLs de reset en logs
   Promise.resolve()
     .then(() => sendMail({ to: correo, subject, text, html }))
     .catch((err) => {
-      console.error('Error enviando correo de recuperación (no bloqueante):', err.message);
+      console.error(
+        'Error enviando correo de recuperación (no bloqueante):',
+        sanitizeMailerLogMessage(err?.message)
+      );
     });
 }
 

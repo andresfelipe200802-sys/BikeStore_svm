@@ -1,18 +1,27 @@
-import { useCallback, useEffect, useId, useState } from 'react';
-import { adminApi } from '../../api/client.js';
+import { useCallback, useEffect, useId, useRef, useState } from 'react';
+import { adminApi, obtenerPedidoAdminDetalle } from '../../api/client.js';
 import { AdminNav } from '../../components/AdminNav.jsx';
 import { ConfirmDialog } from '../../components/ConfirmDialog.jsx';
 import { Icono } from '../../components/Iconos.jsx';
 import { Paginacion } from '../../components/Paginacion.jsx';
 import { StatusBadge } from '../../components/StatusBadge.jsx';
+import { useAuth } from '../../context/AuthContext.jsx';
 import { useTituloPagina } from '../../hooks/useTituloPagina.js';
-import { formatearCOP, formatearFechaHoraBogota } from '../../utils/formato.js';
+import { formatearCOP, formatearFechaHoraBogota, obtenerMetaEstado } from '../../utils/formato.js';
 
 const ESTADOS_PEDIDO = ['', 'PENDIENTE', 'PAGADO', 'ENVIADO', 'ENTREGADO', 'CANCELADO'];
 
 export function AdminPedidosPage({ onNotificar }) {
-  useTituloPagina('Admin - Pedidos');
+  useTituloPagina('Admin - Pedidos', {
+    descripcion: 'Gestión administrativa de pedidos y reembolsos BikeStore.',
+    noIndex: true,
+  });
+  const { token } = useAuth();
   const captionId = useId();
+  const detalleTituloId = useId();
+  const detalleProductosCaptionId = useId();
+  const detallePagosCaptionId = useId();
+  const detalleDialogRef = useRef(null);
 
   const [estadoFiltro, setEstadoFiltro] = useState('');
   const [page, setPage] = useState(1);
@@ -20,6 +29,11 @@ export function AdminPedidosPage({ onNotificar }) {
   const [meta, setMeta] = useState(null);
   const [cargando, setCargando] = useState(true);
   const [error, setError] = useState('');
+
+  const [detalleAbierto, setDetalleAbierto] = useState(false);
+  const [detallePedido, setDetallePedido] = useState(null);
+  const [cargandoDetalle, setCargandoDetalle] = useState(false);
+  const [errorDetalle, setErrorDetalle] = useState('');
 
   const [cancelarTarget, setCancelarTarget] = useState(null);
   const [motivoCancelacion, setMotivoCancelacion] = useState('');
@@ -46,6 +60,47 @@ export function AdminPedidosPage({ onNotificar }) {
   useEffect(() => {
     cargar(estadoFiltro, page);
   }, [estadoFiltro, page, cargar]);
+
+  useEffect(() => {
+    const el = detalleDialogRef.current;
+    if (!el) return;
+    if (detalleAbierto) {
+      if (!el.open) {
+        if (typeof el.showModal === 'function') {
+          el.showModal();
+        } else {
+          el.setAttribute('open', '');
+        }
+      }
+    } else if (el.open) {
+      if (typeof el.close === 'function') {
+        el.close();
+      } else {
+        el.removeAttribute('open');
+      }
+    }
+  }, [detalleAbierto]);
+
+  const abrirDetallePedido = async (idPedido) => {
+    setDetallePedido(null);
+    setErrorDetalle('');
+    setCargandoDetalle(true);
+    setDetalleAbierto(true);
+    try {
+      const resp = await obtenerPedidoAdminDetalle(token, idPedido);
+      setDetallePedido(resp?.datos || null);
+    } catch (err) {
+      setErrorDetalle(err?.mensaje || 'No fue posible consultar el detalle del pedido.');
+    } finally {
+      setCargandoDetalle(false);
+    }
+  };
+
+  const cerrarDetallePedido = () => {
+    setDetalleAbierto(false);
+    setDetallePedido(null);
+    setErrorDetalle('');
+  };
 
   const avanzarEstado = async (idPedido, nuevoEstado) => {
     setError('');
@@ -112,7 +167,7 @@ export function AdminPedidosPage({ onNotificar }) {
             <p className="antetitulo">Despacho y cancelaciones</p>
             <h1 className="titulo-seccion">Gestión de pedidos</h1>
           </div>
-          <p>Para filtrar ventas por rango de fechas, usa el tablero de reportes en /admin.</p>
+          <p>Para filtrar ventas por rango de fechas, consulta el tablero de resumen y reportes.</p>
         </div>
 
         <div className="pestanas-categoria" role="group" aria-label="Filtrar pedidos por estado">
@@ -127,7 +182,7 @@ export function AdminPedidosPage({ onNotificar }) {
                 setPage(1);
               }}
             >
-              {est || 'Todos'}
+              {est ? obtenerMetaEstado(est).etiqueta : 'Todos'}
             </button>
           ))}
         </div>
@@ -179,6 +234,13 @@ export function AdminPedidosPage({ onNotificar }) {
                       </td>
                       <td data-etiqueta="Acciones">
                         <div className="acciones-celda">
+                          <button
+                            type="button"
+                            className="btn btn-contorno btn-pequeno"
+                            onClick={() => abrirDetallePedido(p.id_pedido)}
+                          >
+                            Ver detalle
+                          </button>
                           {p.estado_pedido === 'PAGADO' && (
                             <button
                               type="button"
@@ -238,7 +300,7 @@ export function AdminPedidosPage({ onNotificar }) {
         <ConfirmDialog
           abierto={Boolean(cancelarTarget)}
           titulo={`Cancelar pedido #${cancelarTarget?.id_pedido}`}
-          mensaje="Se restituirá el inventario y, si el pedido estaba pagado, quedará en PENDIENTE_REEMBOLSO."
+          mensaje="Se restituirá el inventario y, si el pedido ya estaba pagado, quedará pendiente de reembolso."
           etiquetaConfirmar="Confirmar cancelación"
           etiquetaCancelar="Volver"
           varianteDestructiva
@@ -269,7 +331,7 @@ export function AdminPedidosPage({ onNotificar }) {
         <ConfirmDialog
           abierto={Boolean(reembolsoTarget)}
           titulo={`Confirmar reembolso del pedido #${reembolsoTarget?.id_pedido}`}
-          mensaje="Esta acción marcará el pago y la cancelación como REEMBOLSADO para los reportes netos."
+          mensaje="Esta acción confirmará el reembolso del pedido y lo reflejará en los reportes netos."
           etiquetaConfirmar="Confirmar reembolso"
           etiquetaCancelar="Cancelar"
           ocupado={procesando}
@@ -294,6 +356,174 @@ export function AdminPedidosPage({ onNotificar }) {
             />
           </div>
         </ConfirmDialog>
+
+        <dialog
+          ref={detalleDialogRef}
+          className="dialogo"
+          style={{ inlineSize: 'min(48rem, calc(100dvw - 2rem))', overflowY: 'auto' }}
+          aria-labelledby={detalleTituloId}
+          onClose={cerrarDetallePedido}
+        >
+          <div className="seccion-encabezado" style={{ marginBottom: '1rem' }}>
+            <div>
+              <h2 id={detalleTituloId}>
+                {detallePedido ? `Detalle del pedido #${detallePedido.id_pedido}` : 'Detalle del pedido'}
+              </h2>
+              {detallePedido && (
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem', marginTop: '0.5rem' }}>
+                  <StatusBadge codigo={detallePedido.estado_pedido} />
+                  <StatusBadge codigo={detallePedido.estado_reembolso_cancelacion} />
+                </div>
+              )}
+            </div>
+            <button
+              type="button"
+              className="btn btn-contorno btn-pequeno"
+              onClick={cerrarDetallePedido}
+            >
+              Cerrar
+            </button>
+          </div>
+
+          {cargandoDetalle ? (
+            <p className="texto-estado" aria-live="polite">
+              Cargando detalle del pedido...
+            </p>
+          ) : errorDetalle ? (
+            <div className="alerta alerta-error" role="alert">
+              <Icono tipo="error" size={18} />
+              <p>{errorDetalle}</p>
+            </div>
+          ) : detallePedido ? (
+            <div style={{ display: 'grid', gap: '1.25rem' }}>
+              <div>
+                <p className="campo-ayuda" style={{ margin: '0 0 0.25rem' }}>
+                  Cliente:{' '}
+                  <strong>
+                    {detallePedido.cliente_nombre} {detallePedido.cliente_apellido}
+                  </strong>{' '}
+                  ({detallePedido.cliente_tipo_documento} {detallePedido.cliente_numero_documento})
+                </p>
+                <p className="campo-ayuda" style={{ margin: '0 0 0.25rem' }}>
+                  Contacto: {detallePedido.cliente_correo} · Tel. {detallePedido.cliente_telefono}
+                </p>
+                <p className="campo-ayuda" style={{ margin: '0 0 0.25rem' }}>
+                  Dirección de envío: <strong>{detallePedido.direccion_envio}</strong>
+                </p>
+                <p className="campo-ayuda" style={{ margin: '0 0 0.25rem' }}>
+                  Fecha de creación: {formatearFechaHoraBogota(detallePedido.fecha_pedido)} · Total:{' '}
+                  <strong className="tabular">{formatearCOP(detallePedido.total)}</strong>
+                </p>
+                {detallePedido.fecha_envio && (
+                  <p className="campo-ayuda" style={{ margin: '0 0 0.25rem' }}>
+                    Enviado: {formatearFechaHoraBogota(detallePedido.fecha_envio)}
+                  </p>
+                )}
+                {detallePedido.fecha_entrega && (
+                  <p className="campo-ayuda" style={{ margin: '0 0 0.25rem' }}>
+                    Entregado: {formatearFechaHoraBogota(detallePedido.fecha_entrega)}
+                  </p>
+                )}
+                {detallePedido.motivo_cancelacion && (
+                  <p className="campo-ayuda" style={{ margin: '0 0 0.25rem' }}>
+                    Motivo de cancelación: {detallePedido.motivo_cancelacion}
+                  </p>
+                )}
+                {detallePedido.datos_reembolso_cancelacion && (
+                  <p className="campo-ayuda" style={{ margin: 0 }}>
+                    Datos de reembolso: {detallePedido.datos_reembolso_cancelacion}
+                  </p>
+                )}
+              </div>
+
+              <div>
+                <h3 style={{ fontSize: '1.05rem', marginBottom: '0.5rem' }}>Productos</h3>
+                <div tabIndex={0} role="region" aria-labelledby={detalleProductosCaptionId} className="table-wrapper">
+                  <table className="tabla-datos">
+                    <caption id={detalleProductosCaptionId} className="sr-only">
+                      Productos incluidos en el pedido
+                    </caption>
+                    <thead>
+                      <tr>
+                        <th scope="col">Producto</th>
+                        <th scope="col">Cantidad</th>
+                        <th scope="col">Precio unitario</th>
+                        <th scope="col">Subtotal</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {(detallePedido.detalles || []).map((det) => (
+                        <tr key={det.id_detalle_pedido}>
+                          <th scope="row">{det.nombre}</th>
+                          <td data-etiqueta="Cantidad" className="tabular">
+                            {det.cantidad}
+                          </td>
+                          <td data-etiqueta="Precio unitario" className="tabular">
+                            {formatearCOP(det.precio_unitario)}
+                          </td>
+                          <td data-etiqueta="Subtotal" className="tabular">
+                            <strong>{formatearCOP(Number(det.precio_unitario) * Number(det.cantidad))}</strong>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+
+              <div>
+                <h3 style={{ fontSize: '1.05rem', marginBottom: '0.5rem' }}>Historial de pagos</h3>
+                {(detallePedido.pagos || []).length === 0 ? (
+                  <p className="campo-ayuda" style={{ margin: 0 }}>
+                    Este pedido no registra intentos de pago.
+                  </p>
+                ) : (
+                  <div tabIndex={0} role="region" aria-labelledby={detallePagosCaptionId} className="table-wrapper">
+                    <table className="tabla-datos">
+                      <caption id={detallePagosCaptionId} className="sr-only">
+                        Intentos de pago del pedido
+                      </caption>
+                      <thead>
+                        <tr>
+                          <th scope="col">Intento</th>
+                          <th scope="col">Método</th>
+                          <th scope="col">Referencia</th>
+                          <th scope="col">Monto</th>
+                          <th scope="col">Estado</th>
+                          <th scope="col">Fecha</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {detallePedido.pagos.map((pg) => (
+                          <tr key={pg.id_pago}>
+                            <th scope="row" className="tabular">
+                              #{pg.numero_intento}
+                            </th>
+                            <td data-etiqueta="Método">{obtenerMetaEstado(pg.metodo_pago).etiqueta}</td>
+                            <td data-etiqueta="Referencia">{pg.referencia_simulada}</td>
+                            <td data-etiqueta="Monto" className="tabular">
+                              {formatearCOP(pg.monto)}
+                            </td>
+                            <td data-etiqueta="Estado">
+                              <StatusBadge codigo={pg.estado_pago} />
+                            </td>
+                            <td data-etiqueta="Fecha">{formatearFechaHoraBogota(pg.fecha_pago)}</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                )}
+              </div>
+            </div>
+          ) : null}
+
+          <div className="dialogo-acciones">
+            <button type="button" className="btn btn-primario" onClick={cerrarDetallePedido}>
+              Cerrar
+            </button>
+          </div>
+        </dialog>
       </section>
     </>
   );

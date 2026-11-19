@@ -4,6 +4,7 @@ export class AppError extends Error {
     this.name = 'AppError';
     this.status = status;
     this.codigo = codigo;
+    this.mensaje = mensaje;
     this.detalles = detalles;
   }
 }
@@ -18,7 +19,7 @@ export function notFoundHandler(req, res) {
 
 export function errorHandler(err, _req, res, _next) {
   if (err instanceof AppError) {
-    const body = { ok: false, codigo: err.codigo, mensaje: err.mensaje };
+    const body = { ok: false, codigo: err.codigo, mensaje: err.mensaje ?? err.message };
     if (err.detalles !== undefined) body.detalles = err.detalles;
     return res.status(err.status).json(body);
   }
@@ -36,6 +37,14 @@ export function errorHandler(err, _req, res, _next) {
       ok: false,
       codigo: 'VALIDACION_INVALIDA',
       mensaje: 'El tamaño de la petición supera el límite permitido de 100kb.',
+    });
+  }
+
+  if (err?.code === '40P01' || err?.code === '40001') {
+    return res.status(503).json({
+      ok: false,
+      codigo: 'CONFLICTO_CONCURRENCIA',
+      mensaje: 'La operación encontró un conflicto temporal de concurrencia. Intenta nuevamente.',
     });
   }
 

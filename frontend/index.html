@@ -3,12 +3,27 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <!-- CSP estricta de producción (sin frame-ancestors en meta; dev HMR se relaja solo en vite.config.js apply:'serve').
+         style-src incluye 'unsafe-inline' por atributos style={{...}} de React y fallback de @oddbird/popover-polyfill. -->
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self'; base-uri 'self'; form-action 'self'; object-src 'none'; script-src 'self'; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' https: http: data:; connect-src 'self' http://localhost:3000"
+    />
     <meta name="color-scheme" content="light" />
     <meta name="theme-color" content="#141414" />
     <meta
       name="description"
       content="BikeStore: tienda en línea de bicicletas, cascos, repuestos y accesorios en Colombia. Precisión mecánica y compra transparente."
     />
+    <meta name="robots" content="index, follow" />
+    <meta property="og:site_name" content="BikeStore" />
+    <meta property="og:title" content="BikeStore | Bicicletas y accesorios" />
+    <meta
+      property="og:description"
+      content="BikeStore: tienda en línea de bicicletas, cascos, repuestos y accesorios en Colombia. Precisión mecánica y compra transparente."
+    />
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="es_CO" />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <title>BikeStore | Bicicletas y accesorios</title>
   </head>

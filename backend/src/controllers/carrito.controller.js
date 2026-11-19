@@ -1,4 +1,5 @@
 import * as carritoService from '../services/carrito.service.js';
+import { requireUuidIdempotencyKey } from '../utils/idempotency.js';
 
 export async function getCarrito(req, res, next) {
   try {
@@ -11,7 +12,7 @@ export async function getCarrito(req, res, next) {
 
 export async function fusionarCarrito(req, res, next) {
   try {
-    const idemKey = req.get('Idempotency-Key')?.trim() || null;
+    const idemKey = requireUuidIdempotencyKey(req.get('Idempotency-Key'));
     const datos = await carritoService.fusionarCarrito(req.usuario.id_usuario, req.validatedBody, idemKey);
     return res.status(200).json({ ok: true, datos });
   } catch (err) {

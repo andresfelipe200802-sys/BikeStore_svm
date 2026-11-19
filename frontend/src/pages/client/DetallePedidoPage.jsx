@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useId, useState } from 'react';
+import { useCallback, useEffect, useId, useRef, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { pedidosApi } from '../../api/client.js';
 import { ConfirmDialog } from '../../components/ConfirmDialog.jsx';
@@ -8,14 +8,19 @@ import { useAuth } from '../../context/AuthContext.jsx';
 import { useTituloPagina } from '../../hooks/useTituloPagina.js';
 import { containsSensitiveCardData } from '../../utils/documentos.js';
 import { formatearCOP, formatearFechaHoraBogota } from '../../utils/formato.js';
+import { generarUuidAleatorio } from '../../utils/refreshSync.js';
 
 export function DetallePedidoPage({ onNotificar }) {
   const { id } = useParams();
   const navigate = useNavigate();
   const { sincronizarContadorCarrito } = useAuth();
-  useTituloPagina(`Pedido #${id}`);
+  useTituloPagina(`Pedido #${id}`, {
+    descripcion: `Detalle y seguimiento del pedido #${id} en BikeStore.`,
+    noIndex: true,
+  });
 
   const pagosCaptionId = useId();
+  const volverCarritoIdemRef = useRef({ pedidoId: null, key: null });
   const [pedido, setPedido] = useState(null);
   const [cargando, setCargando] = useState(true);
   const [error, setError] = useState('');
@@ -82,9 +87,14 @@ export function DetallePedidoPage({ onNotificar }) {
   };
 
   const manejarVolverAlCarrito = async () => {
+    if (volverCarritoIdemRef.current.pedidoId !== id || !volverCarritoIdemRef.current.key) {
+      volverCarritoIdemRef.current = { pedidoId: id, key: generarUuidAleatorio() };
+    }
+    setError('');
     setVolviendoCarrito(true);
     try {
-      const resp = await pedidosApi.volverAlCarrito(id, crypto.randomUUID());
+      const resp = await pedidosApi.volverAlCarrito(id, volverCarritoIdemRef.current.key);
+      volverCarritoIdemRef.current = { pedidoId: null, key: null };
       await sincronizarContadorCarrito();
       onNotificar?.('info', 'Artículos devueltos al carrito.');
       navigate('/carrito', { state: { ajustesFusion: resp?.datos?.ajustes || [] } });

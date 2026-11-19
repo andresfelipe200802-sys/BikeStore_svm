@@ -8,7 +8,10 @@ import { formatearCOP, formatearFechaHoraBogota } from '../../utils/formato.js';
 
 export function RetractoDetallePage() {
   const { id } = useParams();
-  useTituloPagina(`Retracto #${id}`);
+  useTituloPagina(`Retracto #${id}`, {
+    descripcion: `Seguimiento e inspección de la solicitud de retracto #${id}.`,
+    noIndex: true,
+  });
   const captionId = useId();
   const [retracto, setRetracto] = useState(null);
   const [cargando, setCargando] = useState(true);

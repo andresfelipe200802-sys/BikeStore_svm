@@ -1,10 +1,11 @@
 import { Router } from 'express';
 import { z } from 'zod';
 import * as authController from '../controllers/auth.controller.js';
-import { authenticate } from '../middlewares/auth.middleware.js';
+import { csrfLogoutMiddleware, csrfRefreshMiddleware } from '../middlewares/csrf.middleware.js';
 import {
   loginLimiter,
   recuperarLimiter,
+  refreshLimiter,
   registroLimiter,
   restablecerLimiter,
 } from '../middlewares/rateLimit.middleware.js';
@@ -48,7 +49,8 @@ const restablecerSchema = z
 
 router.post('/registro', registroLimiter, validate({ body: registroSchema }), authController.registro);
 router.post('/login', loginLimiter, validate({ body: loginSchema }), authController.login);
-router.post('/logout', authenticate, authController.logout);
+router.post('/refresh', refreshLimiter, csrfRefreshMiddleware, authController.refresh);
+router.post('/logout', csrfLogoutMiddleware, authController.logout);
 router.post('/recuperar', recuperarLimiter, validate({ body: recuperarSchema }), authController.recuperar);
 router.post('/restablecer', restablecerLimiter, validate({ body: restablecerSchema }), authController.restablecer);
 

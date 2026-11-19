@@ -7,7 +7,10 @@ import { StatusBadge } from '../../components/StatusBadge.jsx';
 import { useTituloPagina } from '../../hooks/useTituloPagina.js';
 
 export function AdminCategoriasPage({ onNotificar }) {
-  useTituloPagina('Admin - Categorías');
+  useTituloPagina('Admin - Categorías', {
+    descripcion: 'Administración de categorías del catálogo BikeStore.',
+    noIndex: true,
+  });
   const captionId = useId();
 
   const [categorias, setCategorias] = useState([]);
@@ -226,7 +229,7 @@ export function AdminCategoriasPage({ onNotificar }) {
         <ConfirmDialog
           abierto={Boolean(catAEliminar)}
           titulo={`¿Eliminar categoría "${catAEliminar?.nombre}"?`}
-          mensaje="Solo puede eliminarse si no tiene productos asociados; en caso contrario, el servidor la protegerá (409 CATEGORIA_CON_PRODUCTOS)."
+          mensaje="Solo puede eliminarse si no tiene productos asociados."
           etiquetaConfirmar="Sí, eliminar"
           etiquetaCancelar="Cancelar"
           varianteDestructiva

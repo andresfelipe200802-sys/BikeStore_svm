@@ -7,9 +7,13 @@ import { Paginacion } from '../../components/Paginacion.jsx';
 import { StatusBadge } from '../../components/StatusBadge.jsx';
 import { useAuth } from '../../context/AuthContext.jsx';
 import { useTituloPagina } from '../../hooks/useTituloPagina.js';
+import { obtenerMetaEstado } from '../../utils/formato.js';
 
 export function AdminUsuariosPage({ onNotificar }) {
-  useTituloPagina('Admin - Usuarios');
+  useTituloPagina('Admin - Usuarios', {
+    descripcion: 'Gestión administrativa de usuarios y roles BikeStore.',
+    noIndex: true,
+  });
   const { usuario: adminActual } = useAuth();
   const captionId = useId();
 
@@ -85,7 +89,7 @@ export function AdminUsuariosPage({ onNotificar }) {
       <section className="contenedor seccion">
         <div className="seccion-encabezado">
           <div>
-            <p className="antetitulo">Seguridad y roles (RF-28)</p>
+            <p className="antetitulo">Administración de cuentas</p>
             <h1 className="titulo-seccion">Gestión de usuarios</h1>
           </div>
         </div>
@@ -178,7 +182,7 @@ export function AdminUsuariosPage({ onNotificar }) {
                                 })
                               }
                             >
-                              Pasar a {siguienteRol}
+                              Pasar a {obtenerMetaEstado(siguienteRol).etiqueta}
                             </button>
                           </div>
                         </td>
@@ -196,10 +200,10 @@ export function AdminUsuariosPage({ onNotificar }) {
           abierto={Boolean(accionPendiente)}
           titulo={
             accionPendiente?.tipo === 'estado'
-              ? `¿Cambiar estado a ${accionPendiente?.valor}?`
-              : `¿Cambiar rol a ${accionPendiente?.valor}?`
+              ? `¿Cambiar estado a ${obtenerMetaEstado(accionPendiente?.valor).etiqueta}?`
+              : `¿Cambiar rol a ${obtenerMetaEstado(accionPendiente?.valor).etiqueta}?`
           }
-          mensaje={`Se actualizará la cuenta ${accionPendiente?.user?.correo || ''} y sus tokens JWT vigentes quedarán revocados. Si es el único administrador activo, el sistema protegerá la operación (409 ULTIMO_ADMIN_ACTIVO).`}
+          mensaje="Se actualizarán los permisos de la cuenta y se cerrarán sus sesiones activas. El sistema siempre conserva al menos un administrador activo."
           etiquetaConfirmar="Confirmar cambio"
           etiquetaCancelar="Cancelar"
           varianteDestructiva

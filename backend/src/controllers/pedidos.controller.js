@@ -1,4 +1,5 @@
 import * as pedidosService from '../services/pedidos.service.js';
+import { requireUuidIdempotencyKey } from '../utils/idempotency.js';
 
 export async function crearPedido(req, res, next) {
   try {
@@ -57,7 +58,7 @@ export async function cancelarPedido(req, res, next) {
 
 export async function volverAlCarrito(req, res, next) {
   try {
-    const idemKey = req.get('Idempotency-Key')?.trim() || null;
+    const idemKey = requireUuidIdempotencyKey(req.get('Idempotency-Key'));
     const datos = await pedidosService.volverPedidoAlCarrito(
       req.usuario.id_usuario,
       req.validatedParams.id,

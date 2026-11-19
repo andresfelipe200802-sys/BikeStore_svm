@@ -7,7 +7,6 @@ import { ejecutarBarridoExpiracion } from '../../src/jobs/expiracionReservas.job
 import { resetRateLimiters } from '../../src/middlewares/rateLimit.middleware.js';
 import { runMigrations } from '../../src/scripts/migrate.js';
 import { seedInitialAdmin } from '../../src/scripts/seedAdmin.js';
-import { clearPedidosIdempotencyCache } from '../../src/services/pedidos.service.js';
 
 describe('Integración Pedidos, Concurrencia, Pagos 1:N y Expiración', () => {
   before(async () => {
@@ -18,7 +17,6 @@ describe('Integración Pedidos, Concurrencia, Pagos 1:N y Expiración', () => {
     await query('TRUNCATE TABLE usuario, categoria, producto, carrito, pedido, pago, retracto RESTART IDENTITY CASCADE');
     await query(`INSERT INTO categoria (nombre) VALUES ('MTB')`);
     resetRateLimiters();
-    clearPedidosIdempotencyCache();
     await seedInitialAdmin();
   });
 
@@ -171,16 +169,86 @@ describe('Integración Pedidos, Concurrencia, Pagos 1:N y Expiración', () => {
     assert.equal(prodAfter.rows[0].existencias, 4);
 
     // Volver al carrito desde pedido CANCELADO
+    const volverUuid = '22222222-2222-4222-8222-222222222222';
     const volverRes = await request(app)
       .post(`/api/pedidos/${pedidoId}/volver-al-carrito`)
       .set('Authorization', `Bearer ${cliToken}`)
-      .set('Idempotency-Key', 'back-1');
+      .set('Idempotency-Key', volverUuid);
     assert.equal(volverRes.status, 200);
+    assert.equal(volverRes.body.datos.replayed, false);
     assert.equal(volverRes.body.datos.items[0].cantidad, 2);
 
     // Límite de body JSON > 100kb rechazado
     const hugeBody = { direccion_envio: 'x'.repeat(120000) };
     const overLimit = await request(app).post('/api/pedidos').set('Authorization', `Bearer ${cliToken}`).send(hugeBody);
     assert.equal(overLimit.status, 413);
+  });
+
+  it('expira perezosamente en 00:00 al volver al carrito sin esperar barrido ni duplicar stock', async () => {
+    const admRes = await request(app).post('/api/auth/login').send({
+      correo: process.env.SEED_ADMIN_EMAIL || 'admin@bikestore.local',
+      contrasena: process.env.SEED_ADMIN_PASSWORD || 'AdminBikeStore2026!',
+    });
+    const adminToken = admRes.body.datos.token;
+    const prodId = await createProduct(adminToken, 5, 300000);
+    const cliToken = await createClient('44444444', 'c4@example.com');
+
+    await request(app)
+      .post('/api/carrito/items')
+      .set('Authorization', `Bearer ${cliToken}`)
+      .send({ id_producto: prodId, cantidad: 2 });
+
+    const pedRes = await request(app)
+      .post('/api/pedidos')
+      .set('Authorization', `Bearer ${cliToken}`)
+      .send({ direccion_envio: 'Avenida Siempre Viva 742' });
+    assert.equal(pedRes.status, 201);
+    const pedidoId = pedRes.body.datos.id_pedido;
+
+    // Confirmamos que aún vigente (no expirado) devuelve 409 TRANSICION_ESTADO_INVALIDA
+    const earlyUuid = '33333333-3333-4333-8333-333333333333';
+    const notExpiredRes = await request(app)
+      .post(`/api/pedidos/${pedidoId}/volver-al-carrito`)
+      .set('Authorization', `Bearer ${cliToken}`)
+      .set('Idempotency-Key', earlyUuid);
+    assert.equal(notExpiredRes.status, 409);
+    assert.equal(notExpiredRes.body.codigo, 'TRANSICION_ESTADO_INVALIDA');
+
+    // Simular reloj llegando exactamente a 00:00 (vencido sin que haya corrido el barrido de 60s)
+    await query(
+      `UPDATE pedido SET fecha_expiracion = CURRENT_TIMESTAMP - INTERVAL '1 second' WHERE id_pedido = $1`,
+      [pedidoId]
+    );
+
+    const expiredBackUuid = '44444444-4444-4444-8444-444444444444';
+    const [volverRes, sweepCount] = await Promise.all([
+      request(app)
+        .post(`/api/pedidos/${pedidoId}/volver-al-carrito`)
+        .set('Authorization', `Bearer ${cliToken}`)
+        .set('Idempotency-Key', expiredBackUuid),
+      ejecutarBarridoExpiracion(),
+    ]);
+
+    assert.equal(volverRes.status, 200);
+    assert.equal(volverRes.body.datos.replayed, false);
+    assert.equal(volverRes.body.datos.items.length, 1);
+    assert.equal(volverRes.body.datos.items[0].cantidad, 2);
+    assert.ok(sweepCount === 0 || sweepCount === 1);
+
+    // Stock restituido exactamente a 5 (sin doble restitución) y pedido en CANCELADO
+    const prodDb = await query(`SELECT existencias FROM producto WHERE id_producto = $1`, [prodId]);
+    assert.equal(prodDb.rows[0].existencias, 5);
+
+    const pedDb = await query(`SELECT estado_pedido FROM pedido WHERE id_pedido = $1`, [pedidoId]);
+    assert.equal(pedDb.rows[0].estado_pedido, 'CANCELADO');
+
+    // Reintento idempotente no duplica cantidades
+    const replayRes = await request(app)
+      .post(`/api/pedidos/${pedidoId}/volver-al-carrito`)
+      .set('Authorization', `Bearer ${cliToken}`)
+      .set('Idempotency-Key', expiredBackUuid);
+    assert.equal(replayRes.status, 200);
+    assert.equal(replayRes.body.datos.replayed, true);
+    assert.equal(replayRes.body.datos.items[0].cantidad, 2);
   });
 });

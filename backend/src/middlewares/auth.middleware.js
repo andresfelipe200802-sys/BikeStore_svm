@@ -2,11 +2,17 @@ import { query } from '../config/db.js';
 import { verifyAccessToken } from '../utils/jwt.js';
 import { AppError } from './error.middleware.js';
 
+export function extractBearerToken(authHeader) {
+  if (typeof authHeader !== 'string' || !authHeader.trim()) return null;
+  const parts = authHeader.trim().split(/\s+/);
+  if (parts.length !== 2 || parts[0] !== 'Bearer' || !parts[1]) return null;
+  return parts[1];
+}
+
 export async function authenticate(req, _res, next) {
   try {
-    const authHeader = req.headers.authorization || '';
-    const [scheme, token] = authHeader.split(' ');
-    if (scheme !== 'Bearer' || !token) {
+    const token = extractBearerToken(req.headers.authorization);
+    if (!token) {
       throw new AppError(401, 'TOKEN_INVALIDO', 'Se requiere un token de autenticación válido.');
     }
 

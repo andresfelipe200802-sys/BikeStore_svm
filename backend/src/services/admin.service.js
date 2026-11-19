@@ -2,6 +2,7 @@ import { query, withTransaction } from '../config/db.js';
 import { AppError } from '../middlewares/error.middleware.js';
 import { fromCents, multiplyCents, toCents } from '../utils/decimal.js';
 import { escapeLike } from '../utils/documento.js';
+import { revocarSesionesUsuarioLocked } from './auth.service.js';
 
 // ---------------- Categorías ----------------
 export async function listarCategoriasAdmin() {
@@ -190,43 +191,44 @@ export async function listarUsuariosAdmin({ q, page, limit }) {
   };
 }
 
-async function verificarOtroAdminActivo(client, targetUserId) {
-  const activeAdmins = await client.query(
-    `SELECT u.id_usuario
+async function bloquearObjetivoYAdminsActivos(client, targetUserId) {
+  const { rows } = await client.query(
+    `SELECT u.id_usuario, u.correo, u.estado_usuario, r.nombre AS rol
      FROM usuario u
      JOIN usuario_rol ur ON ur.id_usuario = u.id_usuario
      JOIN rol r ON r.id_rol = ur.id_rol
-     WHERE r.nombre = 'ADMIN' AND u.estado_usuario = 'ACTIVO'
-     FOR UPDATE OF u`
+     WHERE u.id_usuario = $1
+        OR (r.nombre = 'ADMIN' AND u.estado_usuario = 'ACTIVO')
+     ORDER BY u.id_usuario ASC
+     FOR UPDATE OF u`,
+    [targetUserId]
   );
-  const remaining = activeAdmins.rows.filter((a) => a.id_usuario !== targetUserId);
-  if (remaining.length < 1) {
-    throw new AppError(
-      409,
-      'ULTIMO_ADMIN_ACTIVO',
-      'No es posible desactivar ni degradar al último administrador activo del sistema.'
-    );
+  const target = rows.find((r) => r.id_usuario === targetUserId) || null;
+  if (!target) {
+    throw new AppError(404, 'RECURSO_NO_ENCONTRADO', 'Usuario no encontrado.');
   }
+  const otherActiveAdmins = rows.filter(
+    (r) => r.rol === 'ADMIN' && r.estado_usuario === 'ACTIVO' && r.id_usuario !== targetUserId
+  );
+  return { target, otherActiveAdmins };
 }
 
 export async function cambiarEstadoUsuario(targetUserId, { estado_usuario }) {
   return withTransaction(async (client) => {
-    const userRes = await client.query(
-      `SELECT u.id_usuario, u.estado_usuario, r.nombre AS rol
-       FROM usuario u
-       JOIN usuario_rol ur ON ur.id_usuario = u.id_usuario
-       JOIN rol r ON r.id_rol = ur.id_rol
-       WHERE u.id_usuario = $1
-       FOR UPDATE OF u`,
-      [targetUserId]
-    );
-    if (userRes.rows.length === 0) {
-      throw new AppError(404, 'RECURSO_NO_ENCONTRADO', 'Usuario no encontrado.');
+    const { target, otherActiveAdmins } = await bloquearObjetivoYAdminsActivos(client, targetUserId);
+
+    if (target.rol === 'ADMIN' && target.estado_usuario === 'ACTIVO' && estado_usuario === 'INACTIVO') {
+      if (otherActiveAdmins.length < 1) {
+        throw new AppError(
+          409,
+          'ULTIMO_ADMIN_ACTIVO',
+          'No es posible desactivar ni degradar al último administrador activo del sistema.'
+        );
+      }
     }
 
-    const target = userRes.rows[0];
-    if (target.rol === 'ADMIN' && target.estado_usuario === 'ACTIVO' && estado_usuario === 'INACTIVO') {
-      await verificarOtroAdminActivo(client, targetUserId);
+    if (estado_usuario === 'INACTIVO') {
+      await revocarSesionesUsuarioLocked(client, targetUserId, 'ADMIN_INACTIVACION');
     }
 
     const upd = await client.query(
@@ -243,28 +245,24 @@ export async function cambiarEstadoUsuario(targetUserId, { estado_usuario }) {
 
 export async function cambiarRolUsuario(adminId, targetUserId, { rol }) {
   return withTransaction(async (client) => {
-    const userRes = await client.query(
-      `SELECT u.id_usuario, u.correo, u.estado_usuario, r.nombre AS rol_actual
-       FROM usuario u
-       JOIN usuario_rol ur ON ur.id_usuario = u.id_usuario
-       JOIN rol r ON r.id_rol = ur.id_rol
-       WHERE u.id_usuario = $1
-       FOR UPDATE OF u`,
-      [targetUserId]
-    );
-    if (userRes.rows.length === 0) {
-      throw new AppError(404, 'RECURSO_NO_ENCONTRADO', 'Usuario no encontrado.');
-    }
-    const target = userRes.rows[0];
+    const { target, otherActiveAdmins } = await bloquearObjetivoYAdminsActivos(client, targetUserId);
 
-    if (target.rol_actual === 'ADMIN' && target.estado_usuario === 'ACTIVO' && rol !== 'ADMIN') {
-      await verificarOtroAdminActivo(client, targetUserId);
+    if (target.rol === 'ADMIN' && target.estado_usuario === 'ACTIVO' && rol !== 'ADMIN') {
+      if (otherActiveAdmins.length < 1) {
+        throw new AppError(
+          409,
+          'ULTIMO_ADMIN_ACTIVO',
+          'No es posible desactivar ni degradar al último administrador activo del sistema.'
+        );
+      }
     }
 
     const rolRes = await client.query(`SELECT id_rol FROM rol WHERE nombre = $1`, [rol]);
     if (rolRes.rows.length === 0) {
       throw new AppError(400, 'VALIDACION_INVALIDA', 'Rol no válido.');
     }
+
+    await revocarSesionesUsuarioLocked(client, targetUserId, 'LOGOUT_GLOBAL');
 
     await client.query(
       `UPDATE usuario_rol
@@ -311,6 +309,49 @@ export async function listarPedidosAdmin({ estado, page, limit }) {
   return {
     items: rows,
     meta: { page, limit, total, total_paginas: Math.max(1, Math.ceil(total / limit)) },
+  };
+}
+
+export async function obtenerDetallePedidoAdmin(idPedido) {
+  const pedRes = await query(
+    `SELECT p.*,
+            u.nombre AS cliente_nombre,
+            u.primer_apellido AS cliente_apellido,
+            u.correo AS cliente_correo,
+            u.telefono AS cliente_telefono,
+            u.tipo_documento AS cliente_tipo_documento,
+            u.numero_documento AS cliente_numero_documento
+     FROM pedido p
+     JOIN usuario u ON u.id_usuario = p.id_usuario
+     WHERE p.id_pedido = $1`,
+    [idPedido]
+  );
+  if (pedRes.rows.length === 0) {
+    throw new AppError(404, 'RECURSO_NO_ENCONTRADO', 'Pedido no encontrado.');
+  }
+
+  const [detallesRes, pagosRes] = await Promise.all([
+    query(
+      `SELECT dp.id_detalle_pedido, dp.id_producto, p.nombre, p.imagen_url, dp.cantidad, dp.precio_unitario
+       FROM detalle_pedido dp
+       JOIN producto p ON p.id_producto = dp.id_producto
+       WHERE dp.id_pedido = $1
+       ORDER BY dp.id_detalle_pedido ASC`,
+      [idPedido]
+    ),
+    query(
+      `SELECT id_pago, metodo_pago, referencia_simulada, numero_intento, monto, estado_pago, motivo_resultado, fecha_pago
+       FROM pago
+       WHERE id_pedido = $1
+       ORDER BY numero_intento ASC`,
+      [idPedido]
+    ),
+  ]);
+
+  return {
+    ...pedRes.rows[0],
+    detalles: detallesRes.rows,
+    pagos: pagosRes.rows,
   };
 }
 
@@ -361,7 +402,10 @@ export async function cambiarEstadoPedidoAdmin(adminId, idPedido, { estado_pedid
       );
       const prodIds = detRes.rows.map((d) => d.id_producto);
       if (prodIds.length > 0) {
-        await client.query(`SELECT id_producto FROM producto WHERE id_producto = ANY($1::INTEGER[]) ORDER BY id_producto ASC FOR UPDATE`, [prodIds]);
+        await client.query(
+          `SELECT id_producto FROM producto WHERE id_producto = ANY($1::INTEGER[]) ORDER BY id_producto ASC FOR NO KEY UPDATE`,
+          [prodIds]
+        );
         for (const item of detRes.rows) {
           await client.query(`UPDATE producto SET existencias = existencias + $2 WHERE id_producto = $1`, [
             item.id_producto,
@@ -426,7 +470,11 @@ export async function confirmarReembolsoCancelacionPedido(idPedido, { observacio
       [idPedido, obsText]
     );
 
-    // Reembolso 100 % del pedido -> pago pasa a REEMBOLSADO
+    // Reembolso 100 % del pedido -> pago pasa a REEMBOLSADO (jerarquía pedido -> pago)
+    await client.query(
+      `SELECT id_pago FROM pago WHERE id_pedido = $1 AND estado_pago = 'APROBADO' ORDER BY id_pago ASC FOR UPDATE`,
+      [idPedido]
+    );
     await client.query(
       `UPDATE pago
        SET estado_pago = 'REEMBOLSADO'
@@ -612,7 +660,7 @@ export async function registrarRecepcionRetractoAdmin(adminId, idRetracto, { obs
     const prodIds = [...restockByProd.keys()].sort((a, b) => a - b);
     if (prodIds.length > 0) {
       await client.query(
-        `SELECT id_producto FROM producto WHERE id_producto = ANY($1::INTEGER[]) ORDER BY id_producto ASC FOR UPDATE`,
+        `SELECT id_producto FROM producto WHERE id_producto = ANY($1::INTEGER[]) ORDER BY id_producto ASC FOR NO KEY UPDATE`,
         [prodIds]
       );
       for (const idProd of prodIds) {
@@ -655,11 +703,18 @@ export async function registrarRecepcionRetractoAdmin(adminId, idRetracto, { obs
 
 export async function confirmarReembolsoRetractoAdmin(adminId, idRetracto, { observacion_admin }) {
   return withTransaction(async (client) => {
+    // Jerarquía unificada: pedido -> retracto -> pago
+    const lookupRes = await client.query(`SELECT id_pedido FROM retracto WHERE id_retracto = $1`, [idRetracto]);
+    if (lookupRes.rows.length === 0) throw new AppError(404, 'RECURSO_NO_ENCONTRADO', 'Retracto no encontrado.');
+
+    const pedRes = await client.query(`SELECT id_pedido, total FROM pedido WHERE id_pedido = $1 FOR UPDATE`, [
+      lookupRes.rows[0].id_pedido,
+    ]);
+    if (pedRes.rows.length === 0) throw new AppError(404, 'RECURSO_NO_ENCONTRADO', 'Pedido no encontrado.');
+
     const retRes = await client.query(`SELECT * FROM retracto WHERE id_retracto = $1 FOR UPDATE`, [idRetracto]);
     if (retRes.rows.length === 0) throw new AppError(404, 'RECURSO_NO_ENCONTRADO', 'Retracto no encontrado.');
     const ret = retRes.rows[0];
-
-    const pedRes = await client.query(`SELECT id_pedido, total FROM pedido WHERE id_pedido = $1 FOR UPDATE`, [ret.id_pedido]);
 
     if (
       ret.estado_retracto !== 'APROBADO_RECEPCION' ||
@@ -693,6 +748,10 @@ export async function confirmarReembolsoRetractoAdmin(adminId, idRetracto, { obs
     const totalPedidoCents = toCents(pedRes.rows[0].total);
 
     if (acumuladoCents >= totalPedidoCents) {
+      await client.query(
+        `SELECT id_pago FROM pago WHERE id_pedido = $1 AND estado_pago = 'APROBADO' ORDER BY id_pago ASC FOR UPDATE`,
+        [ret.id_pedido]
+      );
       await client.query(
         `UPDATE pago SET estado_pago = 'REEMBOLSADO' WHERE id_pedido = $1 AND estado_pago = 'APROBADO'`,
         [ret.id_pedido]

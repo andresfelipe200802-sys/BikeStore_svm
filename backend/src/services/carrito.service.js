@@ -1,13 +1,8 @@
 import { withTransaction } from '../config/db.js';
 import { AppError } from '../middlewares/error.middleware.js';
 import { fromCents, multiplyCents } from '../utils/decimal.js';
+import { requireUuidIdempotencyKey } from '../utils/idempotency.js';
 import { sha256Hex } from '../utils/password.js';
-
-const idempotencyMemory = new Map();
-
-export function clearCarritoIdempotencyCache() {
-  idempotencyMemory.clear();
-}
 
 export async function ensureCarritoActivoLocked(client, idUsuario) {
   const found = await client.query(
@@ -23,6 +18,18 @@ export async function ensureCarritoActivoLocked(client, idUsuario) {
     [idUsuario]
   );
   return inserted.rows[0].id_carrito;
+}
+
+export async function bloquearDetalleCarritoMap(client, idCarrito) {
+  const existingRes = await client.query(
+    `SELECT id_producto, cantidad
+     FROM detalle_carrito
+     WHERE id_carrito = $1
+     ORDER BY id_producto ASC
+     FOR UPDATE`,
+    [idCarrito]
+  );
+  return new Map(existingRes.rows.map((e) => [e.id_producto, e.cantidad]));
 }
 
 export async function leerResumenCarrito(client, idCarrito) {
@@ -77,13 +84,12 @@ export async function obtenerCarrito(idUsuario) {
 }
 
 /**
- * Fusión segura e idempotente de artículos temporales del visitante en PostgreSQL.
+ * Ejecuta la fusión de ítems sobre un carrito y detalle_carrito ya bloqueados,
+ * adquiriendo producto ASC FOR NO KEY UPDATE OF p.
  */
-export async function fusionarItemsEnCarrito(client, idUsuario, incomingItems) {
-  const idCarrito = await ensureCarritoActivoLocked(client, idUsuario);
+export async function aplicarFusionEnCarritoBloqueado(client, idCarrito, existingMap, incomingItems) {
   const ajustes = [];
 
-  // Deduplicar posibles entradas repetidas del cliente sumando cantidades por id_producto
   const grouped = new Map();
   for (const item of incomingItems) {
     grouped.set(item.id_producto, (grouped.get(item.id_producto) || 0) + item.cantidad);
@@ -96,16 +102,11 @@ export async function fusionarItemsEnCarrito(client, idUsuario, incomingItems) {
        FROM producto p
        JOIN categoria c ON c.id_categoria = p.id_categoria
        WHERE p.id_producto = ANY($1::INTEGER[])
-       ORDER BY p.id_producto ASC`,
+       ORDER BY p.id_producto ASC
+       FOR NO KEY UPDATE OF p`,
       [productIds]
     );
     const prodMap = new Map(prodRes.rows.map((p) => [p.id_producto, p]));
-
-    const existingRes = await client.query(
-      `SELECT id_producto, cantidad FROM detalle_carrito WHERE id_carrito = $1`,
-      [idCarrito]
-    );
-    const existingMap = new Map(existingRes.rows.map((e) => [e.id_producto, e.cantidad]));
 
     for (const idProd of productIds) {
       const requestedQty = grouped.get(idProd);
@@ -160,41 +161,79 @@ export async function fusionarItemsEnCarrito(client, idUsuario, incomingItems) {
 }
 
 export async function fusionarCarrito(idUsuario, payload, idempotencyKey) {
-  if (idempotencyKey) {
-    const cacheKey = `${idUsuario}:fusionar:${idempotencyKey}`;
-    const payloadHash = sha256Hex(JSON.stringify(payload));
-    const cached = idempotencyMemory.get(cacheKey);
-    if (cached) {
-      if (cached.payloadHash !== payloadHash) {
+  const normalizedKey = requireUuidIdempotencyKey(idempotencyKey);
+  const grouped = new Map();
+  for (const item of payload.items || []) {
+    grouped.set(item.id_producto, (grouped.get(item.id_producto) || 0) + item.cantidad);
+  }
+  const normalizedItems = [...grouped.entries()]
+    .sort((a, b) => a[0] - b[0])
+    .map(([id_producto, cantidad]) => ({ id_producto, cantidad }));
+  const canonicalPayload = {
+    schema_version: payload.schema_version,
+    items: normalizedItems,
+  };
+  const payloadHash = sha256Hex(JSON.stringify(canonicalPayload));
+
+  return withTransaction(async (client) => {
+    const userLock = await client.query(
+      `SELECT id_usuario FROM usuario WHERE id_usuario = $1 FOR UPDATE`,
+      [idUsuario]
+    );
+    if (userLock.rows.length === 0) {
+      throw new AppError(404, 'RECURSO_NO_ENCONTRADO', 'Usuario no encontrado.');
+    }
+
+    // Verificar idempotencia persistente ANTES de crear o tocar carrito
+    const idemRes = await client.query(
+      `SELECT id_fusion, payload_hash, resultado_json
+       FROM carrito_fusion_idempotencia
+       WHERE id_usuario = $1 AND clave_idempotencia = $2
+       FOR UPDATE`,
+      [idUsuario, normalizedKey]
+    );
+
+    if (idemRes.rows.length > 0) {
+      const prev = idemRes.rows[0];
+      if (prev.payload_hash !== payloadHash) {
         throw new AppError(409, 'IDEMPOTENCY_CONFLICT', 'La clave de idempotencia fue reutilizada con datos distintos.');
       }
-      return cached.response;
+      return { ...prev.resultado_json, replayed: true };
     }
 
-    const response = await withTransaction((client) =>
-      fusionarItemsEnCarrito(client, idUsuario, payload.items)
+    const idCarrito = await ensureCarritoActivoLocked(client, idUsuario);
+    const existingMap = await bloquearDetalleCarritoMap(client, idCarrito);
+    const resultado = await aplicarFusionEnCarritoBloqueado(client, idCarrito, existingMap, canonicalPayload.items);
+
+    await client.query(
+      `INSERT INTO carrito_fusion_idempotencia (
+         id_usuario, id_carrito, clave_idempotencia, payload_hash, resultado_json
+       ) VALUES ($1, $2, $3, $4, $5::jsonb)`,
+      [idUsuario, idCarrito, normalizedKey, payloadHash, JSON.stringify(resultado)]
     );
-    idempotencyMemory.set(cacheKey, { payloadHash, response });
-    if (idempotencyMemory.size > 500) {
-      const oldestKey = idempotencyMemory.keys().next().value;
-      idempotencyMemory.delete(oldestKey);
-    }
-    return response;
-  }
 
-  return withTransaction((client) =>
-    fusionarItemsEnCarrito(client, idUsuario, payload.items)
-  );
+    return { ...resultado, replayed: false };
+  });
 }
 
 export async function agregarItemCarrito(idUsuario, { id_producto, cantidad }) {
   return withTransaction(async (client) => {
+    await client.query(`SELECT id_usuario FROM usuario WHERE id_usuario = $1 FOR UPDATE`, [idUsuario]);
     const idCarrito = await ensureCarritoActivoLocked(client, idUsuario);
+    const currRes = await client.query(
+      `SELECT cantidad
+       FROM detalle_carrito
+       WHERE id_carrito = $1 AND id_producto = $2
+       FOR UPDATE`,
+      [idCarrito, id_producto]
+    );
+
     const prodRes = await client.query(
       `SELECT p.id_producto, p.precio, p.existencias, p.estado AS prod_estado, c.estado AS cat_estado
        FROM producto p
        JOIN categoria c ON c.id_categoria = p.id_categoria
-       WHERE p.id_producto = $1`,
+       WHERE p.id_producto = $1
+       FOR NO KEY UPDATE OF p`,
       [id_producto]
     );
 
@@ -203,10 +242,6 @@ export async function agregarItemCarrito(idUsuario, { id_producto, cantidad }) {
     }
 
     const prod = prodRes.rows[0];
-    const currRes = await client.query(
-      `SELECT cantidad FROM detalle_carrito WHERE id_carrito = $1 AND id_producto = $2`,
-      [idCarrito, id_producto]
-    );
     const nuevaCantidad = (currRes.rows[0]?.cantidad || 0) + cantidad;
 
     if (nuevaCantidad > prod.existencias) {
@@ -232,12 +267,21 @@ export async function agregarItemCarrito(idUsuario, { id_producto, cantidad }) {
 
 export async function actualizarCantidadItem(idUsuario, idProducto, { cantidad }) {
   return withTransaction(async (client) => {
+    await client.query(`SELECT id_usuario FROM usuario WHERE id_usuario = $1 FOR UPDATE`, [idUsuario]);
     const idCarrito = await ensureCarritoActivoLocked(client, idUsuario);
+    await client.query(
+      `SELECT id_detalle_carrito
+       FROM detalle_carrito
+       WHERE id_carrito = $1 AND id_producto = $2
+       FOR UPDATE`,
+      [idCarrito, idProducto]
+    );
     const prodRes = await client.query(
       `SELECT p.precio, p.existencias, p.estado AS prod_estado, c.estado AS cat_estado
        FROM producto p
        JOIN categoria c ON c.id_categoria = p.id_categoria
-       WHERE p.id_producto = $1`,
+       WHERE p.id_producto = $1
+       FOR NO KEY UPDATE OF p`,
       [idProducto]
     );
 
@@ -270,6 +314,7 @@ export async function actualizarCantidadItem(idUsuario, idProducto, { cantidad }
 
 export async function eliminarItemCarrito(idUsuario, idProducto) {
   return withTransaction(async (client) => {
+    await client.query(`SELECT id_usuario FROM usuario WHERE id_usuario = $1 FOR UPDATE`, [idUsuario]);
     const idCarrito = await ensureCarritoActivoLocked(client, idUsuario);
     const del = await client.query(
       `DELETE FROM detalle_carrito WHERE id_carrito = $1 AND id_producto = $2`,

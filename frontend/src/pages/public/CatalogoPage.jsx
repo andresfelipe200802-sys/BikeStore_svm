@@ -9,7 +9,10 @@ import { useTituloPagina } from '../../hooks/useTituloPagina.js';
 import { agregarProductoAlCarrito } from '../../utils/carritoHelper.js';
 
 export function CatalogoPage({ onNotificar }) {
-  useTituloPagina('Catálogo');
+  useTituloPagina('Catálogo', {
+    descripcion:
+      'Catálogo BikeStore de bicicletas, cascos, repuestos y equipamiento con precios transparentes en pesos colombianos (COP).',
+  });
   const [searchParams, setSearchParams] = useSearchParams();
   const { estaAutenticado, esAdmin, setCantidadCarrito } = useAuth();
 
@@ -115,7 +118,7 @@ export function CatalogoPage({ onNotificar }) {
     <section className="contenedor seccion">
       <div className="seccion-encabezado">
         <div>
-          <p className="antetitulo">Tienda oficial</p>
+          <p className="antetitulo">Bicicletas y equipamiento</p>
           <h1 className="titulo-seccion">Catálogo de productos</h1>
         </div>
         <p>Explora bicicletas, cascos y accesorios con inventario disponible en tiempo real.</p>
@@ -207,6 +210,7 @@ export function CatalogoPage({ onNotificar }) {
         </div>
       ) : productos.length > 0 ? (
         <>
+          <h2 className="sr-only">Listado de productos</h2>
           <div className="grilla-productos">
             {productos.map((prod) => (
               <ProductCard key={prod.id_producto} producto={prod} onAgregar={manejarAgregar} />

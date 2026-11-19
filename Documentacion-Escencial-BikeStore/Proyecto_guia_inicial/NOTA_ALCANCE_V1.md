@@ -1,7 +1,7 @@
 # Nota de Alcance v1 — Conciliación sobre Guía Didáctica BikeStore
 
 * **Autores:** Andrés Felipe – Juan Sánchez
-* **Fecha:** 2026-11-15
+* **Fecha:** 2026-11-19
 * **Documento fuente conservado intacto:** [ProyectoDidactico-BikeStore-Aprendiz.pdf](file:///c:/Users/Andr%C3%A9s/OneDrive/Desktop/Web_BikeStore_svm/Documentacion-Escencial-BikeStore/Proyecto_guia_inicial/ProyectoDidactico-BikeStore-Aprendiz.pdf)
 * **Especificación técnica de referencia:** [docs/designs/bikestore_v1.md](file:///c:/Users/Andr%C3%A9s/OneDrive/Desktop/Web_BikeStore_svm/docs/designs/bikestore_v1.md)
 
@@ -24,7 +24,7 @@ La guía didáctica [ProyectoDidactico-BikeStore-Aprendiz.pdf](file:///c:/Users/
 | **Mención a "entradas de mercancía" y "cargar compras" (págs. 1, 7 y 8)** | Excluido el módulo de compras a proveedores o recepción de almacén en v1. El `ADMIN` ajusta inventario manualmente mediante `PATCH /api/admin/productos/:id/existencias`, y en posventa solo reingresan unidades en `BUEN_ESTADO` derivadas de un `RETRACTO_LEGAL`. | `Non-Goals`, `Future Improvements` |
 | **Mención a "Generación de factura para pago" (pág. 7, Sprint 4)** | Excluida la facturación electrónica DIAN. El checkout y pago generan el registro persistente del pedido (`pedido`, `detalle_pedido`, `pago`) y su comprobante/resumen de compra en JSON para visualización en pantalla. | `Non-Goals` |
 | **`RF-26` ("Exportar los informes en formato Excel o PDF")** | El backend expone reportes JSON acotados (`90 días`, `5000 filas`, filtros `desde`, `hasta`, `id_categoria`) con ventas netas reales en `America/Bogota`; la generación y descarga de los archivos Excel y PDF se ejecuta en el frontend (`Etapa 2`). | `Goals (6)`, `Non-Goals`, `§4.5` |
-| **`RF-28` ("Asignar roles a los usuarios")** | En v1 cada usuario posee **un único rol vigente** (`ADMIN` o `CLIENTE`) en `usuario_rol` (`UNIQUE (id_usuario)`), administrado mediante `PATCH /api/admin/usuarios/:id/rol` con protección transaccional del último `ADMIN` activo (`409 ULTIMO_ADMIN_ACTIVO`) e invalidación de sesión vía `token_version`. | `Goals (2)`, `§3.1 (usuario_rol)`, `§4.3` |
+| **`RF-28` ("Asignar roles a los usuarios")** | En v1 cada usuario posee **un único rol vigente** (`ADMIN` o `CLIENTE`) en `usuario_rol` (`UNIQUE (id_usuario)`), administrado mediante `PATCH /api/admin/usuarios/:id/rol` con protección transaccional del último `ADMIN` activo (`409 ULTIMO_ADMIN_ACTIVO`) e invalidación global de sesión vía `token_version` y revocación de `sesion_refresh`. | `Goals (2)`, `§3.1 (usuario_rol)`, `§4.3` |
 
 ---
 
@@ -38,13 +38,13 @@ Los siguientes elementos quedan **explícitamente excluidos de la versión 1**, 
 | **`NIT` (perfiles empresariales / personas jurídicas)** | v1 atiende únicamente personas naturales con validación sintáctica inicial para `CC`, `TI`, `CE`, `PASAPORTE` y `PPT` (sin afirmar validación oficial estatal). | Mapeado 1:1 en `Non-Goals` y `Future Improvements` |
 | **`'BLOQUEADO'` (tercer estado en `usuario.estado_usuario`)** | `usuario.estado_usuario` admite estrictamente `'ACTIVO'` e `'INACTIVO'`. | Mapeado 1:1 en `Non-Goals` |
 | **`DEVOLUCION_COMERCIAL` (devolución voluntaria no amparada por ley)** | La posventa post-entrega de v1 se limita estrictamente al **`RETRACTO_LEGAL`** (5 días hábiles en `America/Bogota`). | Mapeado 1:1 en `Non-Goals` y `Future Improvements` |
-| **Tabla `token_revocacion` y sesiones selectivas multidispositivo** | La revocación inmediata de JWT `HS256` (`15m`) se resuelve con `usuario.token_version` en las **14 tablas** del esquema. | Mapeado 1:1 en `Non-Goals` y `ALT-10` |
+| **Tabla heredada `token_revocacion` y consola selectiva por dispositivo** | v1 opera sobre **16 tablas exactas** (`001`–`005`): incorpora `sesion_refresh` (Tabla #15) para rotación `HttpOnly` (`bikestore_rt`, replay AEAD de `30 s`) y `carrito_fusion_idempotencia` (Tabla #16, retención `30 días`), manteniendo la revocación de cierre de sesión (`logout`) y cambios de seguridad de forma **global** para toda la cuenta vía `usuario.token_version` + revocación de `sesion_refresh` activas (sin panel selectivo por dispositivo). | Mapeado 1:1 en `Non-Goals` y `ALT-10` |
 | **Servicios de taller, mantenimiento y citas** | Sin agenda técnica ni órdenes de reparación de bicicletas en v1. | Mapeado 1:1 en `Non-Goals` y `Future Improvements` |
 | **Módulo de proveedores y compras de mercancía** | Sin órdenes de compra a proveedores ni entradas de almacén en v1. | Mapeado 1:1 en `Non-Goals` y `Future Improvements` |
 | **Promociones, cupones y facturación electrónica DIAN** | Sin motor de descuentos ni emisión tributaria DIAN en v1. | Mapeado 1:1 en `Non-Goals` |
 | **Cálculo de fletes y tarifas de envío por ubicación** | `pedido.total` suma exclusivamente productos y cantidades; sin cobro ni prorrateo de transporte en v1. | Mapeado 1:1 en `Non-Goals` y `Future Improvements` |
 | **Administración UI de `festivo_colombia`** | La tabla `festivo_colombia` (2025–2035) se mantiene mediante scripts SQL versionados (`004_festivos_colombia_2025_2035.sql`). | Mapeado 1:1 en `Non-Goals` y `ALT-17` |
-| **Carga binaria de imágenes (`Upload` / `multer` / S3)** | `producto.imagen_url` almacena URL externa (`http://`/`https://`) sin subida binaria al servidor Express. | Mapeado 1:1 en `Non-Goals` y `ALT-14` |
+| **Carga binaria de imágenes (`Upload` / `multer` / S3) o SVG** | `producto.imagen_url` almacena URL externa segura (`http://`/`https://`, bloqueando SVG, credenciales embebidas y hosts locales/privados anti-SSRF) sin subida binaria al servidor Express. | Mapeado 1:1 en `Non-Goals` y `ALT-14` |
 | **Pagos reales, mixtos, parciales o pasarela asíncrona** | El simulador opera en transacción síncrona única determinista (`TARJETA`, `PSE`, `TRANSFERENCIA`) en relación `1:N`. | Mapeado 1:1 en `Non-Goals` y `Future Improvements` |
 | **Renderizado binario Excel/PDF en backend e infraestructura distribuida externa** | Reportes desde backend en JSON acotado; exportación Excel/PDF en frontend (`Etapa 2`); ejecución en `localhost` sin Redis, RabbitMQ, Kafka ni microservicios. | Mapeado 1:1 en `Non-Goals` |
 

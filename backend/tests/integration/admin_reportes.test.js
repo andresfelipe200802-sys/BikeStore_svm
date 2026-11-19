@@ -195,4 +195,59 @@ describe('Integración Admin Categorías, Cancelación/Reembolso y Reportes Neto
     assert.equal(badRange.status, 400);
     assert.equal(badRange.body.codigo, 'RANGO_REPORTES_EXCEDIDO');
   });
+
+  it('consulta detalle administrativo de pedido (GET /api/admin/pedidos/:id) con productos e intentos de pago', async () => {
+    const { adminToken, clientToken, p1Id, p2Id } = await setupScenario();
+
+    await request(app).post('/api/carrito/items').set('Authorization', `Bearer ${clientToken}`).send({ id_producto: p1Id, cantidad: 2 });
+    await request(app).post('/api/carrito/items').set('Authorization', `Bearer ${clientToken}`).send({ id_producto: p2Id, cantidad: 1 });
+    const pedRes = await request(app)
+      .post('/api/pedidos')
+      .set('Authorization', `Bearer ${clientToken}`)
+      .send({ direccion_envio: 'Calle 50 # 12-34' });
+    const idPedido = pedRes.body.datos.id_pedido;
+
+    // Un intento rechazado y uno aprobado
+    await request(app)
+      .post(`/api/pedidos/${idPedido}/pagos`)
+      .set('Authorization', `Bearer ${clientToken}`)
+      .send({ metodo_pago: 'TARJETA', referencia_simulada: 'VISA-1000' });
+    await request(app)
+      .post(`/api/pedidos/${idPedido}/pagos`)
+      .set('Authorization', `Bearer ${clientToken}`)
+      .send({ metodo_pago: 'PSE', referencia_simulada: 'PSE-9001' });
+
+    // Cliente no puede consultar endpoint administrativo
+    const forbidden = await request(app)
+      .get(`/api/admin/pedidos/${idPedido}`)
+      .set('Authorization', `Bearer ${clientToken}`);
+    assert.equal(forbidden.status, 403);
+
+    // Parámetro inválido -> 400
+    const badId = await request(app)
+      .get('/api/admin/pedidos/abc')
+      .set('Authorization', `Bearer ${adminToken}`);
+    assert.equal(badId.status, 400);
+
+    // Inexistente -> 404
+    const notFound = await request(app)
+      .get('/api/admin/pedidos/999999')
+      .set('Authorization', `Bearer ${adminToken}`);
+    assert.equal(notFound.status, 404);
+
+    // Admin obtiene cabecera, detalles y pagos 1:N sin secretos de idempotencia
+    const detRes = await request(app)
+      .get(`/api/admin/pedidos/${idPedido}`)
+      .set('Authorization', `Bearer ${adminToken}`);
+    assert.equal(detRes.status, 200);
+    assert.equal(detRes.body.datos.id_pedido, idPedido);
+    assert.equal(detRes.body.datos.cliente_correo, 'andres.perez@example.com');
+    assert.equal(detRes.body.datos.total, '250000.00');
+    assert.equal(detRes.body.datos.detalles.length, 2);
+    assert.equal(detRes.body.datos.pagos.length, 2);
+    assert.equal(detRes.body.datos.pagos[0].estado_pago, 'RECHAZADO');
+    assert.equal(detRes.body.datos.pagos[1].estado_pago, 'APROBADO');
+    assert.equal('clave_idempotencia' in detRes.body.datos.pagos[0], false);
+    assert.equal('payload_hash' in detRes.body.datos.pagos[0], false);
+  });
 });

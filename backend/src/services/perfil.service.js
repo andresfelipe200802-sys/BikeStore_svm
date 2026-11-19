@@ -1,6 +1,7 @@
 import { query, withTransaction } from '../config/db.js';
 import { AppError } from '../middlewares/error.middleware.js';
 import { comparePassword, hashPassword } from '../utils/password.js';
+import { revocarSesionesUsuarioLocked } from './auth.service.js';
 
 export async function obtenerPerfil(idUsuario) {
   const { rows } = await query(
@@ -59,6 +60,8 @@ export async function cambiarContrasena(idUsuario, { contrasena_actual, nueva_co
     if (!ok) {
       throw new AppError(401, 'CREDENCIALES_INVALIDAS', 'La contraseña actual no coincide.');
     }
+
+    await revocarSesionesUsuarioLocked(client, idUsuario, 'CAMBIO_PASSWORD');
 
     await client.query(
       `UPDATE usuario

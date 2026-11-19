@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { Link, NavLink, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext.jsx';
 import { ConfirmDialog } from './ConfirmDialog.jsx';
-import { Icono } from './Iconos.jsx';
+import { Icono, LogoMarcaBS } from './Iconos.jsx';
 
 /**
  * Barra de navegación adaptable con medición por ResizeObserver (sin breakpoint rígido),
@@ -17,11 +17,34 @@ export function Navbar({ onNotificar }) {
   const innerRef = useRef(null);
   const menuRef = useRef(null);
   const ultimoAnchoColapsadoRef = useRef(0);
+  const ultimoAnchoMedidoRef = useRef(0);
   const esAmplioRef = useRef(true);
 
   const [esAmplio, setEsAmplio] = useState(true);
+  const [menuAbierto, setMenuAbierto] = useState(false);
   const [confirmarSalida, setConfirmarSalida] = useState(false);
   const [saliendo, setSaliendo] = useState(false);
+
+  // Sincroniza estado abierto/cerrado del popover nativo (y aria-expanded)
+  useEffect(() => {
+    const menu = menuRef.current;
+    if (!menu) return undefined;
+
+    const manejarToggle = (ev) => {
+      if (ev && typeof ev.newState === 'string') {
+        setMenuAbierto(ev.newState === 'open');
+        return;
+      }
+      try {
+        setMenuAbierto(menu.matches(':popover-open'));
+      } catch {
+        setMenuAbierto(false);
+      }
+    };
+
+    menu.addEventListener('toggle', manejarToggle);
+    return () => menu.removeEventListener('toggle', manejarToggle);
+  }, []);
 
   // Cierra el popover móvil al cambiar de ruta
   useEffect(() => {
@@ -34,6 +57,7 @@ export function Navbar({ onNotificar }) {
     } catch {
       // Sin popover abierto
     }
+    setMenuAbierto(false);
   }, [location.pathname, location.search]);
 
   useEffect(() => {
@@ -50,6 +74,7 @@ export function Navbar({ onNotificar }) {
       if (amplio) {
         header.classList.add('is-wide');
         menu.removeAttribute('popover');
+        setMenuAbierto(false);
       } else {
         header.classList.remove('is-wide');
         menu.setAttribute('popover', 'auto');
@@ -58,9 +83,14 @@ export function Navbar({ onNotificar }) {
 
     const medir = (forzarMedicion = false) => {
       const anchoHeader = header.clientWidth;
-      if (!esAmplioRef.current && !forzarMedicion && anchoHeader <= ultimoAnchoColapsadoRef.current) {
+      if (!forzarMedicion && Math.abs(anchoHeader - ultimoAnchoMedidoRef.current) < 1) {
         return;
       }
+      if (!esAmplioRef.current && !forzarMedicion && anchoHeader <= ultimoAnchoColapsadoRef.current) {
+        ultimoAnchoMedidoRef.current = anchoHeader;
+        return;
+      }
+      ultimoAnchoMedidoRef.current = anchoHeader;
 
       let estabaAbierto = false;
       try {
@@ -84,6 +114,7 @@ export function Navbar({ onNotificar }) {
         if (estabaAbierto && typeof menu.showPopover === 'function') {
           try {
             menu.showPopover();
+            setMenuAbierto(true);
           } catch {
             // Ignora si el elemento aún no está conectado
           }
@@ -123,9 +154,9 @@ export function Navbar({ onNotificar }) {
       <header ref={headerRef} className={`site-header${esAmplio ? ' is-wide' : ''}`}>
         <div ref={innerRef} className="header-inner">
           <Link className="site-logo" to="/">
-            <Icono tipo="bicicleta" size={24} />
-            <span>
-              Bike<span className="acento">Store</span>
+            <LogoMarcaBS size={32} />
+            <span className="site-logo-texto">
+              <span className="acento">BIKE</span>STORE
             </span>
           </Link>
 
@@ -136,6 +167,7 @@ export function Navbar({ onNotificar }) {
               popoverTarget="site-menu"
               popoverTargetAction="toggle"
               aria-controls="site-menu"
+              aria-expanded={!esAmplio ? menuAbierto : undefined}
             >
               <Icono tipo="menu" size={18} />
               <span>Menú</span>
@@ -157,9 +189,12 @@ export function Navbar({ onNotificar }) {
                     <Icono tipo="carrito" size={16} />
                     <span>Carrito</span>
                     {cantidadCarrito > 0 && (
-                      <span className="insignia-carrito tabular" aria-label={`${cantidadCarrito} artículos en carrito`}>
-                        {cantidadCarrito}
-                      </span>
+                      <>
+                        <span className="insignia-carrito tabular" aria-hidden="true">
+                          {cantidadCarrito}
+                        </span>
+                        <span className="sr-only"> ({cantidadCarrito} artículos en carrito)</span>
+                      </>
                     )}
                   </NavLink>
                 </li>

@@ -20,8 +20,18 @@ const MENSAJES_AJUSTE = {
 };
 
 export function CarritoPage({ onNotificar }) {
-  useTituloPagina('Carrito de compras');
-  const { estaAutenticado, esCliente, esAdmin, setCantidadCarrito } = useAuth();
+  useTituloPagina('Carrito de compras', {
+    descripcion: 'Revisa los artículos, cantidades y total estimado de tu carrito de compras en BikeStore.',
+    noIndex: true,
+  });
+  const {
+    estaAutenticado,
+    esCliente,
+    esAdmin,
+    cargandoSesion,
+    setCantidadCarrito,
+    consumirCarritoReciente,
+  } = useAuth();
   const location = useLocation();
   const ajustesFusion = location.state?.ajustesFusion || [];
 
@@ -33,6 +43,10 @@ export function CarritoPage({ onNotificar }) {
   const [ocupadoId, setOcupadoId] = useState(null);
 
   const cargarCarrito = useCallback(async () => {
+    if (cargandoSesion) {
+      return;
+    }
+
     if (esAdmin) {
       setItems([]);
       setCargando(false);
@@ -44,10 +58,11 @@ export function CarritoPage({ onNotificar }) {
 
     if (estaAutenticado && esCliente) {
       try {
-        const resp = await carritoApi.obtener();
-        const lista = resp?.datos?.items || [];
+        const reciente = consumirCarritoReciente?.();
+        const datos = reciente || (await carritoApi.obtener())?.datos;
+        const lista = datos?.items || [];
         setItems(lista);
-        setTotal(resp?.datos?.total || '0.00');
+        setTotal(datos?.total || '0.00');
         setCantidadCarrito(lista.reduce((acc, it) => acc + Number(it.cantidad || 0), 0));
       } catch (err) {
         setError(err?.mensaje || 'No pudimos obtener tu carrito.');
@@ -115,7 +130,7 @@ export function CarritoPage({ onNotificar }) {
     setTotal(String(totalNum));
     setCantidadCarrito(contarUnidadesVisitante(leerCarritoVisitante()));
     setCargando(false);
-  }, [estaAutenticado, esCliente, esAdmin, setCantidadCarrito]);
+  }, [cargandoSesion, estaAutenticado, esCliente, esAdmin, setCantidadCarrito, consumirCarritoReciente]);
 
   useEffect(() => {
     cargarCarrito();
@@ -183,7 +198,10 @@ export function CarritoPage({ onNotificar }) {
         <div className="alerta alerta-info">
           <Icono tipo="info" size={20} />
           <div>
-            <p>Las cuentas con rol ADMIN no utilizan el carrito ni generan pedidos de compra.</p>
+            <p>
+              Las cuentas administrativas gestionan el catálogo y los pedidos desde su panel, por lo
+              que no utilizan carrito de compras.
+            </p>
             <Link className="btn btn-primario" to="/admin" style={{ marginTop: '0.75rem' }}>
               Ir al panel administrativo
             </Link>
@@ -199,7 +217,7 @@ export function CarritoPage({ onNotificar }) {
     <section className="contenedor seccion">
       <div className="seccion-encabezado">
         <div>
-          <p className="antetitulo">{estaAutenticado ? 'Sincronizado con tu cuenta' : 'Modo visitante'}</p>
+          <p className="antetitulo">{estaAutenticado ? 'Sincronizado con tu cuenta' : 'Resumen de selección'}</p>
           <h1 className="titulo-seccion">Tu carrito de compras</h1>
         </div>
         <Link className="btn btn-contorno" to="/catalogo">

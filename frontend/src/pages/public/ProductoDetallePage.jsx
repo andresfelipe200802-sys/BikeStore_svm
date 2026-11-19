@@ -20,7 +20,14 @@ export function ProductoDetallePage({ onNotificar }) {
   const [errorImg, setErrorImg] = useState(false);
   const [enviando, setEnviando] = useState(false);
 
-  useTituloPagina(producto?.nombre || 'Detalle de producto');
+  const descripcionSeo = producto?.descripcion
+    ? `${producto.nombre}: ${String(producto.descripcion).replace(/\s+/g, ' ').trim().slice(0, 145)}`
+    : 'Ficha técnica, disponibilidad en tiempo real y precio en COP en BikeStore Colombia.';
+
+  useTituloPagina(noEncontrado ? 'Producto no disponible' : producto?.nombre || 'Detalle de producto', {
+    descripcion: descripcionSeo,
+    noIndex: noEncontrado,
+  });
 
   useEffect(() => {
     const controller = new AbortController();
@@ -132,7 +139,11 @@ export function ProductoDetallePage({ onNotificar }) {
               onError={() => setErrorImg(true)}
             />
           ) : (
-            <div className="tarjeta-sin-imagen" aria-label={`Sin imagen disponible para ${producto.nombre}`}>
+            <div
+              className="tarjeta-sin-imagen"
+              role="img"
+              aria-label={`Sin imagen disponible para ${producto.nombre}`}
+            >
               <IlustracionBicicletaFallback />
             </div>
           )}

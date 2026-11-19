@@ -3,41 +3,20 @@ import { expirarPedidoSiVencido } from '../jobs/expiracionReservas.job.js';
 import { AppError } from '../middlewares/error.middleware.js';
 import { fromCents, multiplyCents, toCents } from '../utils/decimal.js';
 import { containsSensitiveCardData } from '../utils/documento.js';
+import { requireUuidIdempotencyKey } from '../utils/idempotency.js';
 import { sha256Hex } from '../utils/password.js';
-import { fusionarItemsEnCarrito, leerResumenCarrito } from './carrito.service.js';
+import {
+  aplicarFusionEnCarritoBloqueado,
+  bloquearDetalleCarritoMap,
+  ensureCarritoActivoLocked,
+  leerResumenCarrito,
+} from './carrito.service.js';
 
-const volverCarritoIdemCache = new Map();
-
-export function clearPedidosIdempotencyCache() {
-  volverCarritoIdemCache.clear();
-}
-
-export async function crearPedidoDesdeCarrito(idUsuario, { direccion_envio }) {
-  const outcome = await withTransaction(async (client) => {
-    // 1. Bloquear carrito ACTIVO del cliente
-    const cartRes = await client.query(
-      `SELECT id_carrito FROM carrito WHERE id_usuario = $1 AND estado = 'ACTIVO' FOR UPDATE`,
-      [idUsuario]
-    );
-    if (cartRes.rows.length === 0) {
-      throw new AppError(400, 'VALIDACION_INVALIDA', 'No tienes productos en tu carrito activo.');
-    }
-    const idCarrito = cartRes.rows[0].id_carrito;
-
-    const itemsRes = await client.query(
-      `SELECT id_detalle_carrito, id_producto, cantidad, precio_unidad
-       FROM detalle_carrito
-       WHERE id_carrito = $1
-       ORDER BY id_producto ASC`,
-      [idCarrito]
-    );
-    if (itemsRes.rows.length === 0) {
-      throw new AppError(400, 'VALIDACION_INVALIDA', 'El carrito está vacío.');
-    }
-
-    // 2. Bloquear pedido PENDIENTE previo (expiración perezosa bloqueante FOR UPDATE)
+async function expirarPendienteVencidoPreTx(idUsuario) {
+  await withTransaction(async (client) => {
+    await client.query(`SELECT id_usuario FROM usuario WHERE id_usuario = $1 FOR UPDATE`, [idUsuario]);
     const pendRes = await client.query(
-      `SELECT id_pedido, fecha_expiracion
+      `SELECT id_pedido, fecha_expiracion, (fecha_expiracion <= CURRENT_TIMESTAMP) AS vencido_db
        FROM pedido
        WHERE id_usuario = $1 AND estado_pedido = 'PENDIENTE'
        FOR UPDATE`,
@@ -45,105 +24,162 @@ export async function crearPedidoDesdeCarrito(idUsuario, { direccion_envio }) {
     );
     if (pendRes.rows.length > 0) {
       const pend = pendRes.rows[0];
-      if (new Date(pend.fecha_expiracion).getTime() < Date.now()) {
+      if (pend.vencido_db || new Date(pend.fecha_expiracion).getTime() <= Date.now()) {
         await expirarPedidoSiVencido(client, pend.id_pedido);
-      } else {
+      }
+    }
+  });
+}
+
+export async function crearPedidoDesdeCarrito(idUsuario, { direccion_envio }) {
+  // Pre-transacción para expirar pedido PENDIENTE vencido y evitar rollback en 409 o bloqueo cruzado de productos
+  await expirarPendienteVencidoPreTx(idUsuario);
+
+  let outcome;
+  for (let pass = 0; pass < 2; pass += 1) {
+    outcome = await withTransaction(async (client) => {
+      await client.query(`SELECT id_usuario FROM usuario WHERE id_usuario = $1 FOR UPDATE`, [idUsuario]);
+
+      // 1. Bloquear carrito ACTIVO del cliente y su detalle
+      const cartRes = await client.query(
+        `SELECT id_carrito FROM carrito WHERE id_usuario = $1 AND estado = 'ACTIVO' FOR UPDATE`,
+        [idUsuario]
+      );
+      if (cartRes.rows.length === 0) {
+        throw new AppError(400, 'VALIDACION_INVALIDA', 'No tienes productos en tu carrito activo.');
+      }
+      const idCarrito = cartRes.rows[0].id_carrito;
+
+      const itemsRes = await client.query(
+        `SELECT id_detalle_carrito, id_producto, cantidad, precio_unidad
+         FROM detalle_carrito
+         WHERE id_carrito = $1
+         ORDER BY id_producto ASC
+         FOR UPDATE`,
+        [idCarrito]
+      );
+      if (itemsRes.rows.length === 0) {
+        throw new AppError(400, 'VALIDACION_INVALIDA', 'El carrito está vacío.');
+      }
+
+      // 2. Verificar que no haya pedido PENDIENTE vigente (si venció en el instante previo, reintentar pre-tx)
+      const pendRes = await client.query(
+        `SELECT id_pedido, fecha_expiracion, (fecha_expiracion <= CURRENT_TIMESTAMP) AS vencido_db
+         FROM pedido
+         WHERE id_usuario = $1 AND estado_pedido = 'PENDIENTE'
+         FOR UPDATE`,
+        [idUsuario]
+      );
+      if (pendRes.rows.length > 0) {
+        const pend = pendRes.rows[0];
+        if (pend.vencido_db || new Date(pend.fecha_expiracion).getTime() <= Date.now()) {
+          return { needsPreExpire: true };
+        }
         throw new AppError(
           409,
           'PEDIDO_PENDIENTE_ACTIVO',
           `Ya tienes un pedido pendiente (#${pend.id_pedido}). Paga o cancélalo antes de crear uno nuevo.`
         );
       }
-    }
 
-    // 3. Bloquear productos en orden ascendente por id_producto (jerarquía fija)
-    const productIds = itemsRes.rows.map((i) => i.id_producto);
-    const prodRes = await client.query(
-      `SELECT p.id_producto, p.nombre, p.precio, p.existencias, p.estado AS prod_estado, c.estado AS cat_estado
-       FROM producto p
-       JOIN categoria c ON c.id_categoria = p.id_categoria
-       WHERE p.id_producto = ANY($1::INTEGER[])
-       ORDER BY p.id_producto ASC
-       FOR UPDATE OF p`,
-      [productIds]
-    );
-    const prodMap = new Map(prodRes.rows.map((p) => [p.id_producto, p]));
+      // 3. Bloquear productos en orden ascendente por id_producto (jerarquía fija, FOR NO KEY UPDATE OF p)
+      const productIds = itemsRes.rows.map((i) => i.id_producto);
+      const prodRes = await client.query(
+        `SELECT p.id_producto, p.nombre, p.precio, p.existencias, p.estado AS prod_estado, c.estado AS cat_estado
+         FROM producto p
+         JOIN categoria c ON c.id_categoria = p.id_categoria
+         WHERE p.id_producto = ANY($1::INTEGER[])
+         ORDER BY p.id_producto ASC
+         FOR NO KEY UPDATE OF p`,
+        [productIds]
+      );
+      const prodMap = new Map(prodRes.rows.map((p) => [p.id_producto, p]));
 
-    // 4. Validar disponibilidad y detectar cambios de precio antes de descontar stock
-    let priceChanged = false;
-    for (const item of itemsRes.rows) {
-      const prod = prodMap.get(item.id_producto);
-      if (!prod || !prod.prod_estado || !prod.cat_estado) {
-        throw new AppError(
-          409,
-          'STOCK_INSUFICIENTE',
-          `El producto #${item.id_producto} o su categoría ya no se encuentran activos.`
-        );
+      // 4. Validar disponibilidad y detectar cambios de precio antes de descontar stock
+      let priceChanged = false;
+      for (const item of itemsRes.rows) {
+        const prod = prodMap.get(item.id_producto);
+        if (!prod || !prod.prod_estado || !prod.cat_estado) {
+          throw new AppError(
+            409,
+            'STOCK_INSUFICIENTE',
+            `El producto #${item.id_producto} o su categoría ya no se encuentran activos.`
+          );
+        }
+        if (toCents(item.precio_unidad) !== toCents(prod.precio)) {
+          priceChanged = true;
+          await client.query(
+            `UPDATE detalle_carrito SET precio_unidad = $2 WHERE id_detalle_carrito = $1`,
+            [item.id_detalle_carrito, prod.precio]
+          );
+        }
       }
-      if (toCents(item.precio_unidad) !== toCents(prod.precio)) {
-        priceChanged = true;
+
+      if (priceChanged) {
+        await client.query(`UPDATE carrito SET fecha_actualizacion = CURRENT_TIMESTAMP WHERE id_carrito = $1`, [idCarrito]);
+        const carritoActualizado = await leerResumenCarrito(client, idCarrito);
+        return { priceUpdated: true, carrito: carritoActualizado };
+      }
+
+      let totalCents = 0;
+      for (const item of itemsRes.rows) {
+        const prod = prodMap.get(item.id_producto);
+        if (prod.existencias < item.cantidad) {
+          throw new AppError(
+            409,
+            'STOCK_INSUFICIENTE',
+            `Existencias insuficientes para '${prod.nombre}'. Disponibles: ${prod.existencias}.`
+          );
+        }
+        totalCents += multiplyCents(prod.precio, item.cantidad);
+      }
+
+      // 5. Descontar inventario en orden ascendente y crear pedido + detalle
+      for (const item of itemsRes.rows) {
         await client.query(
-          `UPDATE detalle_carrito SET precio_unidad = $2 WHERE id_detalle_carrito = $1`,
-          [item.id_detalle_carrito, prod.precio]
+          `UPDATE producto SET existencias = existencias - $2 WHERE id_producto = $1`,
+          [item.id_producto, item.cantidad]
         );
       }
-    }
 
-    if (priceChanged) {
-      await client.query(`UPDATE carrito SET fecha_actualizacion = CURRENT_TIMESTAMP WHERE id_carrito = $1`, [idCarrito]);
-      const carritoActualizado = await leerResumenCarrito(client, idCarrito);
-      // Hacemos COMMIT de los precios actualizados en el carrito y respondemos 409 fuera de withTransaction
-      return { priceUpdated: true, carrito: carritoActualizado };
-    }
+      const pedIns = await client.query(
+        `INSERT INTO pedido (id_usuario, direccion_envio, total, estado_pedido, fecha_expiracion)
+         VALUES ($1, $2, $3, 'PENDIENTE', CURRENT_TIMESTAMP + INTERVAL '15 minutes')
+         RETURNING id_pedido, id_usuario, direccion_envio, total, estado_pedido, fecha_pedido, fecha_expiracion`,
+        [idUsuario, direccion_envio.trim(), fromCents(totalCents)]
+      );
+      const pedido = pedIns.rows[0];
 
-    let totalCents = 0;
-    for (const item of itemsRes.rows) {
-      const prod = prodMap.get(item.id_producto);
-      if (prod.existencias < item.cantidad) {
-        throw new AppError(
-          409,
-          'STOCK_INSUFICIENTE',
-          `Existencias insuficientes para '${prod.nombre}'. Disponibles: ${prod.existencias}.`
+      const detalles = [];
+      for (const item of itemsRes.rows) {
+        const prod = prodMap.get(item.id_producto);
+        const detIns = await client.query(
+          `INSERT INTO detalle_pedido (id_pedido, id_producto, cantidad, precio_unitario)
+           VALUES ($1, $2, $3, $4)
+           RETURNING id_detalle_pedido, id_producto, cantidad, precio_unitario`,
+          [pedido.id_pedido, item.id_producto, item.cantidad, prod.precio]
         );
+        detalles.push({ ...detIns.rows[0], nombre: prod.nombre });
       }
-      totalCents += multiplyCents(prod.precio, item.cantidad);
-    }
 
-    // 5. Descontar inventario en orden ascendente y crear pedido + detalle
-    for (const item of itemsRes.rows) {
       await client.query(
-        `UPDATE producto SET existencias = existencias - $2 WHERE id_producto = $1`,
-        [item.id_producto, item.cantidad]
+        `UPDATE carrito SET estado = 'CONVERTIDO', fecha_actualizacion = CURRENT_TIMESTAMP WHERE id_carrito = $1`,
+        [idCarrito]
       );
+
+      return { priceUpdated: false, pedido: { ...pedido, detalles } };
+    });
+
+    if (outcome.needsPreExpire && pass === 0) {
+      await expirarPendienteVencidoPreTx(idUsuario);
+      continue;
     }
+    break;
+  }
 
-    const pedIns = await client.query(
-      `INSERT INTO pedido (id_usuario, direccion_envio, total, estado_pedido, fecha_expiracion)
-       VALUES ($1, $2, $3, 'PENDIENTE', CURRENT_TIMESTAMP + INTERVAL '15 minutes')
-       RETURNING id_pedido, id_usuario, direccion_envio, total, estado_pedido, fecha_pedido, fecha_expiracion`,
-      [idUsuario, direccion_envio.trim(), fromCents(totalCents)]
-    );
-    const pedido = pedIns.rows[0];
-
-    const detalles = [];
-    for (const item of itemsRes.rows) {
-      const prod = prodMap.get(item.id_producto);
-      const detIns = await client.query(
-        `INSERT INTO detalle_pedido (id_pedido, id_producto, cantidad, precio_unitario)
-         VALUES ($1, $2, $3, $4)
-         RETURNING id_detalle_pedido, id_producto, cantidad, precio_unitario`,
-        [pedido.id_pedido, item.id_producto, item.cantidad, prod.precio]
-      );
-      detalles.push({ ...detIns.rows[0], nombre: prod.nombre });
-    }
-
-    await client.query(
-      `UPDATE carrito SET estado = 'CONVERTIDO', fecha_actualizacion = CURRENT_TIMESTAMP WHERE id_carrito = $1`,
-      [idCarrito]
-    );
-
-    return { priceUpdated: false, pedido: { ...pedido, detalles } };
-  });
+  if (outcome.needsPreExpire) {
+    throw new AppError(409, 'PEDIDO_PENDIENTE_ACTIVO', 'Tienes un pedido pendiente en proceso de expiración. Intenta nuevamente.');
+  }
 
   if (outcome.priceUpdated) {
     throw new AppError(
@@ -232,7 +268,8 @@ export async function ejecutarPagoSimulado(idUsuario, idPedido, payload, idempot
   const result = await withTransaction(async (client) => {
     // 1. Bloquear pedido primero (evita condición de carrera 23505 en Idempotency-Key)
     const pedRes = await client.query(
-      `SELECT id_pedido, id_usuario, total, estado_pedido, fecha_expiracion
+      `SELECT id_pedido, id_usuario, total, estado_pedido, fecha_expiracion,
+              (fecha_expiracion <= CURRENT_TIMESTAMP) AS vencido_db
        FROM pedido
        WHERE id_pedido = $1 AND id_usuario = $2
        FOR UPDATE`,
@@ -273,9 +310,8 @@ export async function ejecutarPagoSimulado(idUsuario, idPedido, payload, idempot
       throw new AppError(409, 'RESERVA_EXPIRADA', 'El pedido se encuentra cancelado o su reserva ya expiró.');
     }
 
-    if (new Date(pedido.fecha_expiracion).getTime() < Date.now()) {
+    if (pedido.vencido_db || new Date(pedido.fecha_expiracion).getTime() <= Date.now()) {
       await expirarPedidoSiVencido(client, idPedido);
-      // Retornamos para hacer COMMIT de la expiración y restitución de stock
       return { expired: true };
     }
 
@@ -369,7 +405,10 @@ export async function cancelarPedidoCliente(idUsuario, idPedido, { motivo_cancel
     );
     const prodIds = detRes.rows.map((d) => d.id_producto);
     if (prodIds.length > 0) {
-      await client.query(`SELECT id_producto FROM producto WHERE id_producto = ANY($1::INTEGER[]) ORDER BY id_producto ASC FOR UPDATE`, [prodIds]);
+      await client.query(
+        `SELECT id_producto FROM producto WHERE id_producto = ANY($1::INTEGER[]) ORDER BY id_producto ASC FOR NO KEY UPDATE`,
+        [prodIds]
+      );
       for (const item of detRes.rows) {
         await client.query(`UPDATE producto SET existencias = existencias + $2 WHERE id_producto = $1`, [
           item.id_producto,
@@ -403,59 +442,142 @@ export async function cancelarPedidoCliente(idUsuario, idPedido, { motivo_cancel
 }
 
 export async function volverPedidoAlCarrito(idUsuario, idPedido, idempotencyKey) {
-  if (idempotencyKey) {
-    const cacheKey = `${idUsuario}:volver:${idempotencyKey}`;
-    const payloadHash = sha256Hex(String(idPedido));
-    const cached = volverCarritoIdemCache.get(cacheKey);
-    if (cached) {
-      if (cached.payloadHash !== payloadHash) {
-        throw new AppError(409, 'IDEMPOTENCY_CONFLICT', 'La clave de idempotencia fue usada para otro pedido.');
-      }
-      return cached.response;
+  const normalizedKey = requireUuidIdempotencyKey(idempotencyKey);
+
+  // Fase A (tx1): usuario FOR UPDATE -> pedido FOR UPDATE
+  // Valida existencia, conflictos de clave, replay exacto sin tocar carrito, o expiración perezosa con COMMIT.
+  const phaseA = await withTransaction(async (client) => {
+    await client.query(`SELECT id_usuario FROM usuario WHERE id_usuario = $1 FOR UPDATE`, [idUsuario]);
+
+    const pedRes = await client.query(
+      `SELECT id_pedido, estado_pedido, fecha_expiracion, fecha_cancelacion,
+              clave_idempotencia_carrito, resultado_devolucion_carrito,
+              (fecha_expiracion <= CURRENT_TIMESTAMP) AS vencido_db
+       FROM pedido
+       WHERE id_usuario = $1
+         AND (id_pedido = $2 OR clave_idempotencia_carrito = $3)
+       ORDER BY id_pedido ASC
+       FOR UPDATE`,
+      [idUsuario, idPedido, normalizedKey]
+    );
+
+    const target = pedRes.rows.find((r) => r.id_pedido === idPedido) || null;
+    const conflictOrder =
+      pedRes.rows.find((r) => r.id_pedido !== idPedido && r.clave_idempotencia_carrito === normalizedKey) || null;
+
+    if (!target) {
+      return { action: 'ERROR', status: 404, codigo: 'RECURSO_NO_ENCONTRADO', mensaje: 'Pedido no encontrado.' };
+    }
+    if (conflictOrder) {
+      return {
+        action: 'ERROR',
+        status: 409,
+        codigo: 'IDEMPOTENCY_CONFLICT',
+        mensaje: 'La clave de idempotencia fue usada para otro pedido.',
+      };
+    }
+    if (target.clave_idempotencia_carrito === normalizedKey) {
+      return {
+        action: 'REPLAY',
+        resultado: { ...target.resultado_devolucion_carrito, replayed: true },
+      };
+    }
+    if (target.clave_idempotencia_carrito !== null) {
+      return {
+        action: 'ERROR',
+        status: 409,
+        codigo: 'TRANSICION_ESTADO_INVALIDA',
+        mensaje: 'Este pedido ya fue devuelto al carrito anteriormente.',
+      };
     }
 
-    const response = await withTransaction(async (client) => {
-      const pedRes = await client.query(
-        `SELECT id_pedido, estado_pedido FROM pedido WHERE id_pedido = $1 AND id_usuario = $2 FOR UPDATE`,
-        [idPedido, idUsuario]
-      );
-      if (pedRes.rows.length === 0) {
-        throw new AppError(404, 'RECURSO_NO_ENCONTRADO', 'Pedido no encontrado.');
+    let estadoActual = target.estado_pedido;
+    if (
+      estadoActual === 'PENDIENTE' &&
+      (target.vencido_db || new Date(target.fecha_expiracion).getTime() <= Date.now())
+    ) {
+      const expiro = await expirarPedidoSiVencido(client, idPedido);
+      if (expiro) {
+        estadoActual = 'CANCELADO';
       }
-      if (pedRes.rows[0].estado_pedido !== 'CANCELADO') {
-        throw new AppError(409, 'TRANSICION_ESTADO_INVALIDA', 'Solo puedes volver al carrito pedidos en estado CANCELADO.');
-      }
-
-      const detRes = await client.query(
-        `SELECT id_producto, cantidad FROM detalle_pedido WHERE id_pedido = $1 ORDER BY id_producto ASC`,
-        [idPedido]
-      );
-      return fusionarItemsEnCarrito(client, idUsuario, detRes.rows);
-    });
-
-    volverCarritoIdemCache.set(cacheKey, { payloadHash, response });
-    if (volverCarritoIdemCache.size > 500) {
-      volverCarritoIdemCache.delete(volverCarritoIdemCache.keys().next().value);
     }
-    return response;
+
+    if (estadoActual !== 'CANCELADO') {
+      return {
+        action: 'ERROR',
+        status: 409,
+        codigo: 'TRANSICION_ESTADO_INVALIDA',
+        mensaje: 'Solo puedes volver al carrito pedidos en estado CANCELADO.',
+      };
+    }
+
+    return { action: 'MERGE' };
+  });
+
+  if (phaseA.action === 'REPLAY') {
+    return phaseA.resultado;
+  }
+  if (phaseA.action === 'ERROR') {
+    throw new AppError(phaseA.status, phaseA.codigo, phaseA.mensaje);
   }
 
+  // Fase B (tx2): usuario -> carrito -> detalle_carrito ASC -> pedido -> detalle_pedido ASC -> producto ASC FOR NO KEY UPDATE OF p
   return withTransaction(async (client) => {
+    await client.query(`SELECT id_usuario FROM usuario WHERE id_usuario = $1 FOR UPDATE`, [idUsuario]);
+    const idCarrito = await ensureCarritoActivoLocked(client, idUsuario);
+    const existingMap = await bloquearDetalleCarritoMap(client, idCarrito);
+
     const pedRes = await client.query(
-      `SELECT id_pedido, estado_pedido FROM pedido WHERE id_pedido = $1 AND id_usuario = $2 FOR UPDATE`,
-      [idPedido, idUsuario]
+      `SELECT id_pedido, estado_pedido, fecha_cancelacion,
+              clave_idempotencia_carrito, resultado_devolucion_carrito
+       FROM pedido
+       WHERE id_usuario = $1
+         AND (id_pedido = $2 OR clave_idempotencia_carrito = $3)
+       ORDER BY id_pedido ASC
+       FOR UPDATE`,
+      [idUsuario, idPedido, normalizedKey]
     );
-    if (pedRes.rows.length === 0) {
+
+    const target = pedRes.rows.find((r) => r.id_pedido === idPedido) || null;
+    const conflictOrder =
+      pedRes.rows.find((r) => r.id_pedido !== idPedido && r.clave_idempotencia_carrito === normalizedKey) || null;
+
+    if (!target) {
       throw new AppError(404, 'RECURSO_NO_ENCONTRADO', 'Pedido no encontrado.');
     }
-    if (pedRes.rows[0].estado_pedido !== 'CANCELADO') {
+    if (conflictOrder) {
+      throw new AppError(409, 'IDEMPOTENCY_CONFLICT', 'La clave de idempotencia fue usada para otro pedido.');
+    }
+    if (target.clave_idempotencia_carrito === normalizedKey) {
+      return { ...target.resultado_devolucion_carrito, replayed: true };
+    }
+    if (target.clave_idempotencia_carrito !== null) {
+      throw new AppError(409, 'TRANSICION_ESTADO_INVALIDA', 'Este pedido ya fue devuelto al carrito anteriormente.');
+    }
+    if (target.estado_pedido !== 'CANCELADO' || target.fecha_cancelacion === null) {
       throw new AppError(409, 'TRANSICION_ESTADO_INVALIDA', 'Solo puedes volver al carrito pedidos en estado CANCELADO.');
     }
 
     const detRes = await client.query(
-      `SELECT id_producto, cantidad FROM detalle_pedido WHERE id_pedido = $1 ORDER BY id_producto ASC`,
+      `SELECT id_producto, cantidad
+       FROM detalle_pedido
+       WHERE id_pedido = $1
+       ORDER BY id_producto ASC
+       FOR UPDATE`,
       [idPedido]
     );
-    return fusionarItemsEnCarrito(client, idUsuario, detRes.rows);
+
+    const resultado = await aplicarFusionEnCarritoBloqueado(client, idCarrito, existingMap, detRes.rows);
+
+    await client.query(
+      `UPDATE pedido
+       SET clave_idempotencia_carrito = $2,
+           fecha_devolucion_carrito = CURRENT_TIMESTAMP,
+           resultado_devolucion_carrito = $3::jsonb
+       WHERE id_pedido = $1`,
+      [idPedido, normalizedKey, JSON.stringify(resultado)]
+    );
+
+    return { ...resultado, replayed: false };
   });
 }

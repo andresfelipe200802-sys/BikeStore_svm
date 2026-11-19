@@ -1,7 +1,7 @@
 # Historias de Usuario Definitivas (`HU-01..HU-19`) — BikeStore v1
 
 * **Autores:** Andrés Felipe – Juan Sánchez
-* **Fecha:** 2026-11-15
+* **Fecha:** 2026-11-19
 * **Artefacto histórico conservado:** [evhistoriasdeusuariodocx.pdf](file:///c:/Users/Andr%C3%A9s/OneDrive/Desktop/Web_BikeStore_svm/Documentacion-Escencial-BikeStore/historias_usuario/evhistoriasdeusuariodocx.pdf)
 * **Referencias de alineación:** [NOTA_ALCANCE_V1.md](file:///c:/Users/Andr%C3%A9s/OneDrive/Desktop/Web_BikeStore_svm/Documentacion-Escencial-BikeStore/Proyecto_guia_inicial/NOTA_ALCANCE_V1.md) y [docs/designs/bikestore_v1.md](file:///c:/Users/Andr%C3%A9s/OneDrive/Desktop/Web_BikeStore_svm/docs/designs/bikestore_v1.md)
 
@@ -25,22 +25,22 @@
   3. `GET /api/productos/:id` retorna `imagen_url` única externa (`http://`/`https://`), descripción, precio vigente (`NUMERIC(12,2)`) y `existencias`.
   4. Si `existencias = 0`, el producto permanece visible etiquetado como `"Agotado"` con compra deshabilitada.
 
-### `HU-02`: Carrito temporal de visitante y fusión en PostgreSQL
+### `HU-02`: Carrito temporal de visitante y fusión idempotente persistida en PostgreSQL
 * **Actor:** `Visitante` / `CLIENTE` — **Prioridad:** Alta
-* **Historia:** Como visitante o cliente autenticado, quiero gestionar artículos en mi carrito y que mi selección anónima se fusione de manera segura al iniciar sesión o registrarme, para conservar mis productos sin exceder existencias ni desactualizar precios.
+* **Historia:** Como visitante o cliente autenticado, quiero gestionar artículos en mi carrito y que mi selección anónima se fusione de manera segura e idempotente al iniciar sesión o registrarme, para conservar mis productos sin duplicar cantidades ni exceder existencias o desactualizar precios.
 * **Criterios de aceptación:**
   1. El visitante almacena `{ schema_version: 1, items: [{ id_producto, cantidad }] }` en `localStorage` sin crear registros en PostgreSQL.
-  2. Al autenticarse, `POST /api/carrito/fusionar` (con cabecera opcional `Idempotency-Key`) crea o recupera el `carrito` `'ACTIVO'` único del usuario en BD, descarta ítems inexistentes, inactivos, de categoría inactiva o con `existencias = 0`, aplica `LEAST(cantidad_bd + cantidad_local, existencias)`, recalcula `precio_unidad` con `producto.precio` vigente y retorna el carrito junto con `ajustes[]`.
-  3. El `CLIENTE` gestiona su carrito persistente mediante `GET /api/carrito`, `POST /api/carrito/items`, `PATCH /api/carrito/items/:id_producto` y `DELETE /api/carrito/items/:id_producto` validando enteros `> 0` y stock disponible.
+  2. Al autenticarse, `POST /api/carrito/fusionar` exige cabecera **`Idempotency-Key` UUID RFC 4122/9562 obligatoria** (persistida en `carrito_fusion_idempotencia` con `id_carrito NULL ON DELETE SET NULL` y retención garantizada de **30 días**; bloqueando `usuario FOR UPDATE` → `carrito_fusion_idempotencia FOR UPDATE` antes de crear/tocar el carrito). Descarta ítems inexistentes, inactivos, de categoría inactiva o con `existencias = 0`, aplica `LEAST(cantidad_bd + cantidad_local, existencias)`, recalcula `precio_unidad` con `producto.precio` vigente y retorna el carrito junto con `ajustes[]` y `replayed` (`409 IDEMPOTENCY_CONFLICT` si reutiliza clave con payload distinto; advertencia post-purga después de 30 días).
+  3. El `CLIENTE` gestiona su carrito persistente mediante `GET /api/carrito`, `POST /api/carrito/items`, `PATCH /api/carrito/items/:id_producto` y `DELETE /api/carrito/items/:id_producto` validando enteros `> 0`, bloqueando `usuario FOR UPDATE` en `POST /items` y stock disponible.
 
 ### `HU-03`: Creación de pedido (`Checkout`) y reserva por 15 minutos
 * **Actor:** `CLIENTE` (`'ACTIVO'`) — **Prioridad:** Alta
 * **Historia:** Como cliente autenticado, quiero confirmar los productos de mi carrito indicando mi dirección de envío para reservar existencias por 15 minutos bajo un identificador único `id_pedido`, asegurando el precio vigente antes de pagar.
 * **Criterios de aceptación:**
-  1. `POST /api/pedidos` exige `direccion_envio`, carrito `'ACTIVO'` no vacío y no tener otro pedido `'PENDIENTE'` vigente (ejecutando expiración perezosa bloqueante sobre vencidos previos).
+  1. `POST /api/pedidos` exige `direccion_envio`, carrito `'ACTIVO'` no vacío y no tener otro pedido `'PENDIENTE'` vigente (expirando pedidos `'PENDIENTE'` vencidos en pre-transacción antes de la transacción principal para evitar rollbacks espurios).
   2. El total suma exclusivamente `cantidad * precio_unitario` sin cobro independiente de flete en v1, asignando `id_pedido` único (`RF-10`).
-  3. Si algún `detalle_carrito.precio_unidad` difiere del `producto.precio` actual, el backend actualiza el carrito al precio vigente y rechaza la confirmación con `HTTP 409 PRECIO_ACTUALIZADO` para confirmación explícita del cliente.
-  4. Con precios consistentes, adquiere locks en orden `carrito → pedido → detalle_pedido → producto ORDER BY id_producto ASC FOR UPDATE`, descuenta `existencias`, crea el pedido en `'PENDIENTE'` con `fecha_expiracion = CURRENT_TIMESTAMP + INTERVAL '15 minutes'` y marca `carrito` como `'CONVERTIDO'`.
+  3. Si algún `detalle_carrito.precio_unidad` difiere del `producto.precio` actual, el backend actualiza el carrito al precio vigente (`COMMIT`) y rechaza la confirmación con `HTTP 409 PRECIO_ACTUALIZADO` para confirmación explícita del cliente.
+  4. Con precios consistentes, adquiere locks en orden `carrito → pedido → detalle_pedido → producto ORDER BY id_producto ASC FOR NO KEY UPDATE OF p`, descuenta `existencias`, crea el pedido en `'PENDIENTE'` con `fecha_expiracion = CURRENT_TIMESTAMP + INTERVAL '15 minutes'` y marca `carrito` como `'CONVERTIDO'`.
 
 ### `HU-04`: Registro de cliente (persona natural)
 * **Actor:** `Visitante` — **Prioridad:** Alta
@@ -50,29 +50,29 @@
   2. Exige `nombre`, `primer_apellido`, `segundo_apellido` opcional, `telefono`, `correo` único *case-insensitive* (`LOWER(correo)`) sin envío de correo de activación (`RF-14`), y contraseña mínima de `8` caracteres almacenada con `bcrypt` (`>= 10` rondas).
   3. Garantiza unicidad compuesta `(tipo_documento, numero_documento)` (`409 DOCUMENTO_DUPLICADO`) y de correo (`409 CORREO_DUPLICADO`), aplica *rate limiting* y asigna rol único `'CLIENTE'` en `usuario_rol`.
 
-### `HU-05`: Inicio de sesión y control de acceso por estado y versión de token
+### `HU-05`: Inicio de sesión, renovación silenciosa A1 (`sesion_refresh`) y control de acceso
 * **Actor:** `Usuario` (`CLIENTE` / `ADMIN`) — **Prioridad:** Alta
-* **Historia:** Como usuario registrado, quiero iniciar sesión con correo y contraseña para acceder a las funcionalidades autorizadas de mi rol en un entorno seguro.
+* **Historia:** Como usuario registrado, quiero iniciar sesión de forma segura y mantener mi sesión fluida entre pestañas sin almacenar tokens JWT en `sessionStorage`/`localStorage`, protegiendo mi cuenta ante robos o reúsos de credenciales.
 * **Criterios de aceptación:**
-  1. `POST /api/auth/login` aplica *rate limiting* y ejecuta `bcrypt.compare` contra un hash ficticio cuando el correo no existe para evitar canal lateral por latencia.
-  2. Solo cuentas con `usuario.estado_usuario = 'ACTIVO'` pueden autenticarse (`403 USUARIO_INACTIVO` si está `'INACTIVO'`).
-  3. Emite JWT `HS256` (`TTL 15m`) con `{ sub: id_usuario, rol, tv: token_version }`.
+  1. `POST /api/auth/login` aplica *rate limiting*, ejecuta `bcrypt.compare` contra hash ficticio si el correo no existe, exige `estado_usuario = 'ACTIVO'` (`403 USUARIO_INACTIVO`), fija cookie `HttpOnly` `bikestore_rt` (`Path=/api/auth`, `Max-Age=604800`, `SameSite=Lax`, `Secure=env.COOKIE_SECURE`) creando familia en `sesion_refresh`, y retorna `{ token, expires_in: 900, rotacion_uid, usuario }`.
+  2. El frontend conserva el Access JWT `HS256` (`15m`) **únicamente en memoria React**, manteniendo en `localStorage` solo metadatos no secretos (`bs_client_secret` + `bs_refresh_uid`) y coordinando múltiples pestañas con `Web Locks API` + `BroadcastChannel` + `Idempotency-Key` UUID v8 determinista (sin mutex en `localStorage`).
+  3. `POST /api/auth/refresh` valida CSRF (`Origin` en `CORS_ORIGINS` + `X-Requested-With: BikeStore` → `403 CSRF_ORIGEN_INVALIDO`), exige `Idempotency-Key` UUID obligatorio *(correlación de operación, no identidad criptográfica del cliente)* y cookie `bikestore_rt`, reproduce el mismo token hijo `T2` por max `30 s` vía `reemplazo_cifrado` (`AES-256-GCM` + `HKDF`) si `T2` no ha sido usado, revoca toda la familia ante reúso (`401 SESION_REVOCADA`) y retorna `401 SESION_EXPIRADA` si venció.
   4. Todo endpoint protegido verifica en BD que `estado_usuario = 'ACTIVO'`, `token_version = tv` y el rol vigente coincida con `usuario_rol`.
 
 ### `HU-06`: Recuperación y restablecimiento seguro de contraseña
 * **Actor:** `Usuario` — **Prioridad:** Alta
 * **Historia:** Como usuario registrado que olvidó su contraseña, quiero solicitar un enlace temporal de recuperación a mi correo y definir una nueva clave para recuperar el acceso sin exponer si una cuenta existe.
 * **Criterios de aceptación:**
-  1. `POST /api/auth/recuperar` aplica *rate limiting*, invalida tokens previos sin usar si el usuario `'ACTIVO'` existe, registra nuevo `token_hash` (`SHA-256`, TTL `60m`), ejecuta `COMMIT`, **retorna `HTTP 200` neutro de inmediato** sin esperar respuesta SMTP y envía el correo por `Nodemailer` (`SMTP_TRANSPORT=json|smtp`) de forma no bloqueante.
-  2. `POST /api/auth/restablecer` aplica *rate limiting*, exige token vigente no usado, `usuario.estado_usuario = 'ACTIVO'` y nueva contraseña `>= 8` caracteres; actualiza `contrasena_hash`, marca `fecha_uso` e incrementa `token_version` invalidando sesiones activas.
+  1. `POST /api/auth/recuperar` aplica *rate limiting*, invalida tokens previos sin usar si el usuario `'ACTIVO'` existe, registra nuevo `token_hash` (`SHA-256`, TTL `60m`), ejecuta `COMMIT`, **retorna `HTTP 200` neutro de inmediato** sin esperar respuesta SMTP y envía el correo por `Nodemailer` (`SMTP_TRANSPORT=json|smtp`, sin registrar tokens ni URLs en logs).
+  2. `POST /api/auth/restablecer` aplica *rate limiting*, exige token vigente no usado, `usuario.estado_usuario = 'ACTIVO'` y nueva contraseña `>= 8` caracteres; bloquea `usuario → token_recuperacion → sesion_refresh`, actualiza `contrasena_hash`, marca `fecha_uso`, incrementa `token_version` y revoca sesiones refresh activas (`RESET_PASSWORD`).
 
 ### `HU-07`: Administración de productos y control separado de inventario
 * **Actor:** `ADMIN` — **Prioridad:** Alta
-* **Historia:** Como administrador, quiero registrar, consultar, editar, activar o inactivar productos y ajustar existencias en un flujo específico, para mantener el catálogo actualizado sin sobrescribir ventas concurrentes.
+* **Historia:** Como administrador, quiero registrar, consultar, editar, activar o inactivar productos y ajustar existencias en un flujo específico, para mantener el catálogo actualizado sin sobrescribir ventas concurrentes ni exponer URLs peligrosas.
 * **Criterios de aceptación:**
   1. `GET /api/admin/productos` lista y filtra productos activos e inactivos con búsqueda segura.
-  2. `POST /api/admin/productos` registra producto con `imagen_url` externa (`http://`/`https://`), categoría existente, `precio > 0` y `existencias >= 0`.
-  3. `PUT /api/admin/productos/:id` actualiza atributos descriptivos y precio **sin modificar `existencias`**; el ajuste de stock ocurre exclusivamente vía `PATCH /api/admin/productos/:id/existencias`.
+  2. `POST /api/admin/productos` registra producto con `imagen_url` externa (`http://`/`https://`, validada contra credenciales embebidas, hosts locales/privados/metadatos SSRF y formatos SVG), categoría existente, `precio > 0` y `existencias >= 0`.
+  3. `PUT /api/admin/productos/:id` actualiza atributos descriptivos y precio (validando `imagen_url` no-SVG/no-SSRF) **sin modificar `existencias`**; el ajuste de stock ocurre exclusivamente vía `PATCH /api/admin/productos/:id/existencias`.
   4. `PATCH /api/admin/productos/:id/estado` activa o inactiva lógicamente el producto.
 
 ### `HU-08`: Dashboard e informes comerciales netos (alineado a `evhistoriasdeusuariodocx.pdf`)
@@ -89,16 +89,16 @@
 * **Historia:** Como administrador, quiero listar y buscar usuarios, activar o inactivar cuentas y asignar su rol único (`ADMIN` o `CLIENTE`), revocando sesiones vigentes sin dejar el sistema sin administradores activos.
 * **Criterios de aceptación:**
   1. `GET /api/admin/usuarios` soporta paginación (`?page=1&limit=20`) y búsqueda por documento, nombre o correo.
-  2. `PATCH /api/admin/usuarios/:id/estado` alterna `'ACTIVO'` / `'INACTIVO'` e incrementa `token_version`.
-  3. `PATCH /api/admin/usuarios/:id/rol` (`RF-28`) actualiza el **único rol vigente** (`ADMIN` o `CLIENTE`) en `usuario_rol` e incrementa `token_version`.
-  4. Ambos endpoints bloquean administradores activos (`FOR UPDATE`) y rechazan con `HTTP 409 ULTIMO_ADMIN_ACTIVO` cualquier operación que deje `< 1` administrador `'ACTIVO'`.
+  2. `PATCH /api/admin/usuarios/:id/estado` alterna `'ACTIVO'` / `'INACTIVO'`, incrementa `token_version` y (cuando `'INACTIVO'`) revoca `sesion_refresh` activas (`ADMIN_INACTIVACION`).
+  3. `PATCH /api/admin/usuarios/:id/rol` (`RF-28`) actualiza el **único rol vigente** (`ADMIN` o `CLIENTE`) en `usuario_rol`, incrementa `token_version` y revoca `sesion_refresh` activas.
+  4. Ambos endpoints bloquean filas en orden determinista (`ORDER BY u.id_usuario ASC FOR UPDATE OF u`) y rechazan con `HTTP 409 ULTIMO_ADMIN_ACTIVO` cualquier operación que deje `< 1` administrador `'ACTIVO'`.
 
 ### `HU-10`: Cierre de sesión seguro (alineado a `evhistoriasdeusuariodocx.pdf`)
 * **Actor:** `Usuario` autenticado — **Prioridad:** Alta
-* **Historia:** Como usuario autenticado, quiero cerrar mi sesión explícitamente para revocar mis tokens vigentes y proteger mi cuenta.
+* **Historia:** Como usuario autenticado, quiero cerrar mi sesión explícitamente para revocar de inmediato mis tokens JWT y cookies de refresh vigentes y proteger mi cuenta.
 * **Criterios de aceptación:**
-  1. `POST /api/auth/logout` incrementa `usuario.token_version = token_version + 1` en PostgreSQL dentro de la petición autenticada.
-  2. Cualquier petición posterior con el JWT anterior recibe `HTTP 401 SESION_REVOCADA`.
+  1. `POST /api/auth/logout` acepta `Authorization: Bearer` o cookie `bikestore_rt` (exigiendo `Origin` + `X-Requested-With: BikeStore` si viene cookie), incrementa `usuario.token_version + 1`, revoca todas las `sesion_refresh` activas (`LOGOUT_GLOBAL`), limpia `reemplazo_cifrado` y elimina la cookie `bikestore_rt`.
+  2. El frontend limpia su estado en memoria React, `bs_refresh_uid` y difunde `SESION_CERRADA` entre pestañas; cualquier petición posterior recibe `HTTP 401 SESION_REVOCADA` / `TOKEN_INVALIDO`.
 
 ### `HU-11`: Consulta de historial y detalle de pedidos del cliente
 * **Actor:** `CLIENTE` — **Prioridad:** Media
@@ -109,9 +109,9 @@
 
 ### `HU-12`: Gestión administrativa de pedidos (alineado a `evhistoriasdeusuariodocx.pdf`)
 * **Actor:** `ADMIN` — **Prioridad:** Alta
-* **Historia:** Como administrador, quiero consultar los pedidos registrados y avanzar su ciclo operativo válido (`PAGADO` → `ENVIADO` → `ENTREGADO`, o cancelar antes del envío con motivo obligatorio), para controlar el despacho de la tienda.
+* **Historia:** Como administrador, quiero consultar los pedidos registrados, inspeccionar su detalle completo y avanzar su ciclo operativo válido (`PAGADO` → `ENVIADO` → `ENTREGADO`, o cancelar antes del envío con motivo obligatorio), para controlar el despacho de la tienda.
 * **Criterios de aceptación:**
-  1. `GET /api/admin/pedidos` lista pedidos filtrables por estado y fecha con datos del cliente e historial de pago.
+  1. `GET /api/admin/pedidos` lista pedidos filtrables por estado con datos básicos del cliente, y `GET /api/admin/pedidos/:id` retorna cabecera completa, datos del cliente, `detalles[]` de productos e historial de `pagos[]`.
   2. `PATCH /api/admin/pedidos/:id/estado` aplica únicamente transiciones válidas (`PAGADO` → `ENVIADO`, `ENVIADO` → `ENTREGADO`, o `'PENDIENTE'`/`'PAGADO'` → `'CANCELADO'`), rechazando transiciones inválidas con `409 TRANSICION_ESTADO_INVALIDA`.
   3. Toda cancelación iniciada por `ADMIN` exige `motivo_cancelacion` no vacío, registra `cancelado_por`, restituye stock de forma idempotente y, si el pedido estaba `'PAGADO'`, activa `estado_reembolso_cancelacion = 'PENDIENTE_REEMBOLSO'`.
 
@@ -121,7 +121,7 @@
 * **Criterios de aceptación:**
   1. `GET /api/perfil` devuelve datos del usuario autenticado excluyendo siempre `contrasena_hash`.
   2. `PUT /api/perfil` permite actualizar únicamente `nombre`, `primer_apellido`, `segundo_apellido` y `telefono` (rechazando campos extra mediante `Zod` estricto).
-  3. `PATCH /api/perfil/contrasena` verifica la contraseña actual, valida nueva contraseña `>= 8` caracteres, actualiza hash e incrementa `token_version`.
+  3. `PATCH /api/perfil/contrasena` verifica la contraseña actual, valida nueva contraseña `>= 8` caracteres, actualiza hash, incrementa `token_version` y revoca sesiones refresh activas (`CAMBIO_PASSWORD`).
 
 ### `HU-14`: Pago simulado síncrono (`1:N`) en transacción atómica
 * **Actor:** `CLIENTE` (`'ACTIVO'`) — **Prioridad:** Alta
@@ -141,10 +141,10 @@
 
 ### `HU-16`: Gestión administrativa de categorías (`NUEVA`)
 * **Actor:** `ADMIN` — **Prioridad:** Alta
-* **Historia:** Como administrador, quiero crear, editar e inactivar lógicamente categorías de productos protegiendo integridad referencial, para mantener organizado el catálogo sin romper referencias de pedidos históricos.
+* **Historia:** Como administrador, quiero crear, editar, eliminar cuando no tengan uso o inactivar lógicamente categorías de productos protegiendo integridad referencial, para mantener organizado el catálogo sin romper referencias de pedidos históricos.
 * **Criterios de aceptación:**
-  1. `GET /api/admin/categorias`, `POST /api/admin/categorias`, `PUT /api/admin/categorias/:id` y `PATCH /api/admin/categorias/:id/estado` gestionan categorías con nombre único.
-  2. Se prohíbe eliminar categorías con productos asociados (`ON DELETE RESTRICT` / `409 CATEGORIA_CON_PRODUCTOS`); la baja operativa se realiza inactivando su `estado = FALSE`.
+  1. `GET /api/admin/categorias`, `POST /api/admin/categorias`, `PUT /api/admin/categorias/:id`, `PATCH /api/admin/categorias/:id/estado` y `DELETE /api/admin/categorias/:id` gestionan categorías con nombre único.
+  2. Se prohíbe eliminar categorías con productos asociados (`ON DELETE RESTRICT` / `409 CATEGORIA_CON_PRODUCTOS`); la baja operativa con historial se realiza inactivando su `estado = FALSE`.
   3. Inactivar una categoría oculta automáticamente sus productos en catálogo público, fusión de carrito y checkout.
 
 ### `HU-17`: Cancelación pre-envío y gestión de reembolso total (`NUEVA`)
@@ -152,16 +152,16 @@
 * **Historia:** Como cliente con un pedido antes del envío (`PENDIENTE` o `PAGADO`), quiero poder cancelarlo registrando mis datos de reembolso cuando corresponda, y como administrador quiero confirmar dicho reembolso total dentro del plazo legal de 15 días calendario.
 * **Criterios de aceptación:**
   1. `POST /api/pedidos/:id/cancelar` permite al `CLIENTE` cancelar pedidos propios en `'PENDIENTE'` (motivo opcional) o `'PAGADO'` (exigiendo `datos_reembolso` sin PAN/CVV completos).
-  2. Al cancelar un pedido `'PAGADO'` (por `CLIENTE` o `ADMIN`), se restituyen existencias en orden ascendente y la misma transacción guarda en `pedido`: `estado_reembolso_cancelacion = 'PENDIENTE_REEMBOLSO'`, `datos_reembolso_cancelacion` y `fecha_limite_reembolso_cancelacion = CURRENT_TIMESTAMP + INTERVAL '15 days'`.
+  2. Al cancelar un pedido `'PAGADO'` (por `CLIENTE` o `ADMIN`), se restituyen existencias en orden ascendente (`FOR NO KEY UPDATE OF p`) y la misma transacción guarda en `pedido`: `estado_reembolso_cancelacion = 'PENDIENTE_REEMBOLSO'`, `datos_reembolso_cancelacion` y `fecha_limite_reembolso_cancelacion = CURRENT_TIMESTAMP + INTERVAL '15 days'`.
   3. `PATCH /api/admin/pedidos/:id/reembolso` permite al `ADMIN` confirmar el reembolso total pasando `pedido.estado_reembolso_cancelacion = 'REEMBOLSADO'`, `fecha_reembolso_cancelacion = CURRENT_TIMESTAMP` y `pago.estado_pago = 'REEMBOLSADO'`.
 
-### `HU-18`: Reincorporación de pedido cancelado al carrito (`NUEVA`)
+### `HU-18`: Reincorporación idempotente de pedido cancelado o vencido al carrito (`NUEVA`)
 * **Actor:** `CLIENTE` (`'ACTIVO'`) — **Prioridad:** Media
-* **Historia:** Como cliente cuyo pedido pasó a `'CANCELADO'` (por cancelación manual o expiración), quiero recuperar los productos aún disponibles hacia mi carrito activo en un solo clic, recibiendo informe de los ajustes por stock o precio.
+* **Historia:** Como cliente cuyo pedido pasó a `'CANCELADO'` (o venció su ventana de reserva de 15 minutos), quiero recuperar de forma segura los productos aún disponibles hacia mi carrito activo en un solo clic, recibiendo informe de los ajustes por stock o precio.
 * **Criterios de aceptación:**
-  1. `POST /api/pedidos/:id/volver-al-carrito` verifica propiedad del cliente y `estado_pedido = 'CANCELADO'`.
-  2. Opera con protección de idempotencia (`Idempotency-Key` o marca única controlada) para evitar duplicar cantidades ante doble clic.
-  3. Reincorpora únicamente ítems de productos y categorías activas con `existencias > 0`, ajustando cantidades al stock actual y precios vigentes, y devolviendo el carrito resultante junto con `ajustes[]`.
+  1. `POST /api/pedidos/:id/volver-al-carrito` exige cabecera **`Idempotency-Key` UUID RFC 4122/9562 obligatoria** y verifica propiedad del cliente.
+  2. Ejecuta el flujo en **2 fases sin rollback** (Opción recomendada): en **Fase A** bloquea `usuario → pedido FOR UPDATE`; si está `'PENDIENTE'` vencido (`fecha_expiracion <= CURRENT_TIMESTAMP`), lo expira a `'CANCELADO'` restituyendo inventario con `COMMIT`; luego en **Fase B** bloquea `usuario → carrito → detalle_carrito ASC → pedido → detalle_pedido ASC → producto ASC FOR NO KEY UPDATE OF p`, fusiona disponibles al carrito, registra `clave_idempotencia_carrito`, `fecha_devolucion_carrito` y `resultado_devolucion_carrito` en `pedido` (bajo `CHECK` todo-o-nada) y responde `200 OK` con `ajustes[]`.
+  3. Garantiza idempotencia exacta ante reintentos o doble clic (y `409 IDEMPOTENCY_CONFLICT` si se reutiliza la clave en otro pedido o el pedido ya fue devuelto con otra clave), omitiendo productos inactivos o con stock `0`.
 
 ### `HU-19`: Solicitud y resolución de `RETRACTO_LEGAL` con inspección por cantidad (`NUEVA`)
 * **Actor:** `CLIENTE` / `ADMIN` — **Prioridad:** Alta

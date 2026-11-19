@@ -8,7 +8,10 @@ import { useTituloPagina } from '../../hooks/useTituloPagina.js';
 import { formatearCOP, formatearFechaHoraBogota } from '../../utils/formato.js';
 
 export function MisPedidosPage() {
-  useTituloPagina('Mis pedidos');
+  useTituloPagina('Mis pedidos', {
+    descripcion: 'Historial y estado de tus pedidos en BikeStore.',
+    noIndex: true,
+  });
   const captionId = useId();
   const [page, setPage] = useState(1);
   const [pedidos, setPedidos] = useState([]);
@@ -79,7 +82,7 @@ export function MisPedidosPage() {
               <thead>
                 <tr>
                   <th scope="col">Pedido</th>
-                  <th scope="col">Fecha (Bogotá)</th>
+                  <th scope="col">Fecha</th>
                   <th scope="col">Total</th>
                   <th scope="col">Estado</th>
                   <th scope="col">Reembolso</th>

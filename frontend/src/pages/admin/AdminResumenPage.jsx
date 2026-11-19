@@ -11,7 +11,10 @@ import {
 } from '../../utils/formato.js';
 
 export function AdminResumenPage({ onNotificar }) {
-  useTituloPagina('Panel Admin - Reportes netos');
+  useTituloPagina('Panel Admin - Reportes netos', {
+    descripcion: 'Panel administrativo de reportes y analítica neta BikeStore.',
+    noIndex: true,
+  });
   const rangoInicial = obtenerRangoReportesPorDefecto(30);
   const topCaptionId = useId();
   const ventasCaptionId = useId();
@@ -95,7 +98,7 @@ export function AdminResumenPage({ onNotificar }) {
       <section className="contenedor seccion">
         <div className="seccion-encabezado">
           <div>
-            <p className="antetitulo">Analítica operativa · America/Bogota</p>
+            <p className="antetitulo">Analítica y reportes</p>
             <h1 className="titulo-seccion">Tablero de ventas netas</h1>
           </div>
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.65rem' }}>
@@ -237,7 +240,7 @@ export function AdminResumenPage({ onNotificar }) {
                   <thead>
                     <tr>
                       <th scope="col">Pedido</th>
-                      <th scope="col">Fecha pago (Bogotá)</th>
+                      <th scope="col">Fecha de pago</th>
                       <th scope="col">Cliente</th>
                       <th scope="col">Estado</th>
                       <th scope="col">Método</th>

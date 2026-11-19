@@ -130,6 +130,15 @@ export async function getPedidos(req, res, next) {
   }
 }
 
+export async function getPedido(req, res, next) {
+  try {
+    const datos = await adminService.obtenerDetallePedidoAdmin(req.validatedParams.id);
+    return res.status(200).json({ ok: true, datos });
+  } catch (err) {
+    return next(err);
+  }
+}
+
 export async function patchEstadoPedido(req, res, next) {
   try {
     const datos = await adminService.cambiarEstadoPedidoAdmin(

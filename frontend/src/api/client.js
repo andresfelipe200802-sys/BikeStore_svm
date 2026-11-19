@@ -7,6 +7,7 @@ const DEFAULT_BASE_URL = (typeof import.meta !== 'undefined' && import.meta.env?
 
 let tokenProvider = () => null;
 let authInvalidatedHandler = null;
+let authRefresher = null;
 
 export class ApiError extends Error {
   constructor(status, codigo, mensaje, detalles = undefined) {
@@ -25,6 +26,10 @@ export function setAuthTokenProvider(fn) {
 
 export function setAuthInvalidatedHandler(fn) {
   authInvalidatedHandler = typeof fn === 'function' ? fn : null;
+}
+
+export function setAuthRefresher(fn) {
+  authRefresher = typeof fn === 'function' ? fn : null;
 }
 
 /**
@@ -102,12 +107,18 @@ export async function apiRequest(ruta, opciones = {}) {
     suppressAuthInvalidation = false,
     signal,
     baseUrl = DEFAULT_BASE_URL,
+    _esReintentoAuth = false,
   } = opciones;
 
+  const rutaNormalizada = ruta.startsWith('/') ? ruta : `/${ruta}`;
   const qs = construirQueryString(query);
-  const url = `${String(baseUrl).replace(/\/$/, '')}${ruta.startsWith('/') ? ruta : `/${ruta}`}${qs}`;
+  const url = `${String(baseUrl).replace(/\/$/, '')}${rutaNormalizada}${qs}`;
 
-  const reqHeaders = { Accept: 'application/json', ...headers };
+  const reqHeaders = {
+    Accept: 'application/json',
+    'X-Requested-With': 'BikeStore',
+    ...headers,
+  };
   const jwt = token !== undefined ? token : tokenProvider();
   if (jwt) {
     reqHeaders.Authorization = `Bearer ${jwt}`;
@@ -128,6 +139,7 @@ export async function apiRequest(ruta, opciones = {}) {
       method,
       headers: reqHeaders,
       body: bodySerializado,
+      credentials: 'include',
       signal,
     });
   } catch (err) {
@@ -144,8 +156,13 @@ export async function apiRequest(ruta, opciones = {}) {
 
   if (!respuesta.ok) {
     const codigo = data?.codigo || (respuesta.status >= 500 ? 'ERROR_SERVIDOR' : 'ERROR_HTTP');
+    const detalleMensaje =
+      Array.isArray(data?.detalles) && typeof data.detalles[0]?.message === 'string'
+        ? data.detalles[0].message
+        : '';
     const mensaje =
       data?.mensaje ||
+      detalleMensaje ||
       (respuesta.status === 429
         ? 'Has realizado demasiadas solicitudes en poco tiempo. Espera un momento e intenta nuevamente.'
         : respuesta.status >= 500
@@ -153,6 +170,37 @@ export async function apiRequest(ruta, opciones = {}) {
           : 'No fue posible completar la solicitud.');
 
     const error = new ApiError(respuesta.status, codigo, mensaje, data?.detalles);
+
+    const esRutaAuth =
+      rutaNormalizada === '/auth' || rutaNormalizada.startsWith('/auth/');
+    const debeIntentarRefresh =
+      !_esReintentoAuth &&
+      !suppressAuthInvalidation &&
+      !esRutaAuth &&
+      Boolean(jwt) &&
+      respuesta.status === 401 &&
+      codigo === 'TOKEN_INVALIDO' &&
+      typeof authRefresher === 'function';
+
+    if (debeIntentarRefresh) {
+      try {
+        const resRefresh = await authRefresher(jwt);
+        const nuevoToken =
+          typeof resRefresh === 'string' ? resRefresh : resRefresh?.token;
+        if (nuevoToken) {
+          return await apiRequest(ruta, {
+            ...opciones,
+            token: nuevoToken,
+            _esReintentoAuth: true,
+          });
+        }
+      } catch (refreshErr) {
+        if (refreshErr?.status !== 0 && authInvalidatedHandler) {
+          authInvalidatedHandler(refreshErr);
+        }
+        throw refreshErr;
+      }
+    }
 
     const esSesionInvalida =
       !suppressAuthInvalidation &&
@@ -193,6 +241,12 @@ export const authApi = {
     }),
   login: (credenciales) =>
     api.post('/auth/login', credenciales, { suppressAuthInvalidation: true }),
+  refresh: (idempotencyKey) =>
+    api.post('/auth/refresh', undefined, {
+      idempotencyKey,
+      token: null,
+      suppressAuthInvalidation: true,
+    }),
   logout: (token) =>
     api.post('/auth/logout', undefined, { token, suppressAuthInvalidation: true }),
   recuperar: (correo) =>
@@ -268,6 +322,8 @@ export const adminApi = {
 
   listarPedidos: ({ estado, page, limit } = {}) =>
     api.get('/admin/pedidos', { query: { estado, page, limit } }),
+  obtenerPedido: (id, token) =>
+    api.get(`/admin/pedidos/${id}`, token ? { token } : undefined),
   cambiarEstadoPedido: (id, datos) => api.patch(`/admin/pedidos/${id}/estado`, datos),
   confirmarReembolsoPedido: (id, datos) => api.patch(`/admin/pedidos/${id}/reembolso`, datos),
 
@@ -280,3 +336,7 @@ export const adminApi = {
   obtenerResumenReportes: (query) => api.get('/admin/reportes/resumen', { query }),
   obtenerReporteVentas: (query) => api.get('/admin/reportes/ventas', { query }),
 };
+
+export function obtenerPedidoAdminDetalle(token, id) {
+  return adminApi.obtenerPedido(id, token);
+}

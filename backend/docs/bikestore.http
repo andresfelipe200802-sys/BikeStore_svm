@@ -1,5 +1,6 @@
 ### Variables de colección REST Client (VS Code)
 @baseUrl = http://localhost:3000/api
+@originFrontend = http://localhost:5173
 @tokenCliente = REEMPLAZAR_CON_JWT_CLIENTE
 @tokenAdmin = REEMPLAZAR_CON_JWT_ADMIN
 
@@ -21,7 +22,7 @@ Content-Type: application/json
   "contrasena": "Password2026!"
 }
 
-### 3. Login cliente (esperado: HTTP 200)
+### 3. Login cliente (fija cookie HttpOnly bikestore_rt y retorna token, expires_in: 900, rotacion_uid, usuario -> HTTP 200)
 POST {{baseUrl}}/auth/login
 Content-Type: application/json
 
@@ -29,6 +30,13 @@ Content-Type: application/json
   "correo": "laura.gomez@example.com",
   "contrasena": "Password2026!"
 }
+
+### 3b. Renovación silenciosa A1 con cookie bikestore_rt + CSRF + Idempotency-Key UUID (esperado: HTTP 200, 401 SESION_REVOCADA/EXPIRADA o 403 CSRF_ORIGEN_INVALIDO)
+# Nota: REST Client conserva cookies automáticamente tras ejecutar #3; Idempotency-Key correlaciona reintentos dentro de 30 s.
+POST {{baseUrl}}/auth/refresh
+Origin: {{originFrontend}}
+X-Requested-With: BikeStore
+Idempotency-Key: 11111111-1111-4111-8111-111111111111
 
 ### 4. Recuperación de contraseña neutra (esperado: HTTP 200 inmediato)
 POST {{baseUrl}}/auth/recuperar
@@ -44,10 +52,10 @@ GET {{baseUrl}}/categorias
 ###
 GET {{baseUrl}}/productos?page=1&limit=12&orden_precio=asc
 
-### 6. Fusión de carrito visitante al autenticarse (esperado: HTTP 200)
+### 6. Fusión idempotente de carrito visitante (Idempotency-Key UUID obligatorio, retención 30 días -> HTTP 200)
 POST {{baseUrl}}/carrito/fusionar
 Authorization: Bearer {{tokenCliente}}
-Idempotency-Key: fusion-demo-001
+Idempotency-Key: 22222222-2222-4222-8222-222222222222
 Content-Type: application/json
 
 {
@@ -69,7 +77,7 @@ Content-Type: application/json
 ### 8. Intento de pago rechazado por backend (referencia terminada en '00' -> HTTP 201 estado RECHAZADO)
 POST {{baseUrl}}/pedidos/1/pagos
 Authorization: Bearer {{tokenCliente}}
-Idempotency-Key: pago-intento-1
+Idempotency-Key: 33333333-3333-4333-8333-333333333331
 Content-Type: application/json
 
 {
@@ -80,7 +88,7 @@ Content-Type: application/json
 ### 9. Reintento de pago aprobado (referencia válida -> HTTP 201 estado APROBADO)
 POST {{baseUrl}}/pedidos/1/pagos
 Authorization: Bearer {{tokenCliente}}
-Idempotency-Key: pago-intento-2
+Idempotency-Key: 33333333-3333-4333-8333-333333333332
 Content-Type: application/json
 
 {
@@ -98,12 +106,16 @@ Content-Type: application/json
   "datos_reembolso": "Cuenta Ahorros Bancolombia terminada en 4321 - Laura Gómez"
 }
 
-### 11. Volver al carrito desde pedido cancelado (esperado: HTTP 200)
+### 11. Volver al carrito desde pedido cancelado o PENDIENTE vencido en 2 fases (Idempotency-Key UUID obligatorio -> HTTP 200)
 POST {{baseUrl}}/pedidos/1/volver-al-carrito
 Authorization: Bearer {{tokenCliente}}
-Idempotency-Key: volver-demo-001
+Idempotency-Key: 44444444-4444-4444-8444-444444444444
 
-### 12. Confirmación administrativa de reembolso pre-envío (esperado: HTTP 200)
+### 12. Inspección detallada y confirmación administrativa de reembolso pre-envío (esperado: HTTP 200)
+GET {{baseUrl}}/admin/pedidos/1
+Authorization: Bearer {{tokenAdmin}}
+
+###
 PATCH {{baseUrl}}/admin/pedidos/1/reembolso
 Authorization: Bearer {{tokenAdmin}}
 Content-Type: application/json
@@ -161,7 +173,11 @@ Content-Type: application/json
   "observacion_admin": "Reembolso parcial aplicado por 1 unidad aprobada"
 }
 
-### 14. Administración de rol único RF-28 y reportes netos (esperado: HTTP 200)
+### 14. Administración de categorías, rol único RF-28 y reportes netos (esperado: HTTP 200 o 409 CATEGORIA_CON_PRODUCTOS)
+DELETE {{baseUrl}}/admin/categorias/1
+Authorization: Bearer {{tokenAdmin}}
+
+###
 PATCH {{baseUrl}}/admin/usuarios/2/rol
 Authorization: Bearer {{tokenAdmin}}
 Content-Type: application/json
@@ -178,6 +194,8 @@ Authorization: Bearer {{tokenAdmin}}
 GET {{baseUrl}}/admin/reportes/ventas?desde=2026-11-01&hasta=2026-11-30
 Authorization: Bearer {{tokenAdmin}}
 
-### 15. Cierre de sesión revocando JWT via token_version (esperado: HTTP 200)
+### 15. Cierre de sesión global revocando token_version y sesion_refresh (Bearer o cookie + CSRF si hay cookie -> HTTP 200)
 POST {{baseUrl}}/auth/logout
 Authorization: Bearer {{tokenCliente}}
+Origin: {{originFrontend}}
+X-Requested-With: BikeStore

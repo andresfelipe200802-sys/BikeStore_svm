@@ -8,7 +8,10 @@ import { useTituloPagina } from '../../hooks/useTituloPagina.js';
 import { formatearCOP } from '../../utils/formato.js';
 
 export function CheckoutPage({ onNotificar }) {
-  useTituloPagina('Confirmar pedido');
+  useTituloPagina('Confirmar pedido', {
+    descripcion: 'Confirmación de dirección de envío y reserva de inventario en BikeStore.',
+    noIndex: true,
+  });
   const { setCantidadCarrito } = useAuth();
   const navigate = useNavigate();
 
@@ -209,7 +212,7 @@ export function CheckoutPage({ onNotificar }) {
               </div>
             ))}
             <div className="resumen-total">
-              <span>Total servidor</span>
+              <span>Total del pedido</span>
               <span className="tabular">{formatearCOP(carrito?.total)}</span>
             </div>
           </aside>
@@ -219,7 +222,7 @@ export function CheckoutPage({ onNotificar }) {
       <ConfirmDialog
         abierto={dialogoPreciosAbierto}
         titulo="Actualización de precios en el catálogo"
-        mensaje="Uno o más productos cambiaron de precio en el servidor antes de crear tu pedido. Revisa los valores actualizados y confirma nuevamente si deseas continuar."
+        mensaje="Uno o más productos cambiaron de precio antes de crear tu pedido. Revisa los valores actualizados y confirma nuevamente si deseas continuar."
         etiquetaConfirmar="Entendido, revisar totales"
         etiquetaCancelar="Volver al carrito"
         onConfirmar={() => setDialogoPreciosAbierto(false)}

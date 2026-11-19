@@ -1,0 +1,17 @@
+User-agent: *
+Allow: /
+Allow: /catalogo
+Allow: /producto/
+Disallow: /admin
+Disallow: /perfil
+Disallow: /checkout
+Disallow: /pedidos
+Disallow: /retractos
+Disallow: /carrito
+Disallow: /ingresar
+Disallow: /registro
+Disallow: /recuperar
+Disallow: /restablecer-contrasena
+Disallow: /api/
+
+Sitemap: https://bikestore.com.co/sitemap.xml

@@ -8,7 +8,10 @@ import { useTituloPagina } from '../../hooks/useTituloPagina.js';
 import { formatearCOP, formatearFechaHoraBogota } from '../../utils/formato.js';
 
 export function MisRetractosPage() {
-  useTituloPagina('Mis retractos');
+  useTituloPagina('Mis retractos', {
+    descripcion: 'Historial de solicitudes de derecho de retracto en BikeStore.',
+    noIndex: true,
+  });
   const captionId = useId();
   const [page, setPage] = useState(1);
   const [retractos, setRetractos] = useState([]);
@@ -78,7 +81,7 @@ export function MisRetractosPage() {
         <>
           <div tabIndex={0} role="region" aria-labelledby={captionId} className="table-wrapper">
             <table className="tabla-datos">
-              <caption id={captionId}>Historial de solicitudes RETRACTO_LEGAL</caption>
+              <caption id={captionId}>Historial de solicitudes de retracto</caption>
               <thead>
                 <tr>
                   <th scope="col">Retracto</th>

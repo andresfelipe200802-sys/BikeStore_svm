@@ -41,12 +41,12 @@ export async function solicitarRetracto(idUsuario, idPedido, { motivo, datos_ree
       );
     }
 
-    // 3. Bloquear detalle_pedido del pedido y validar saldo no reclamado / no dañado
+    // 3. Bloquear detalle_pedido del pedido en orden ascendente de id_producto y validar saldo no reclamado / no dañado
     const detRes = await client.query(
       `SELECT id_detalle_pedido, id_producto, cantidad, precio_unitario
        FROM detalle_pedido
        WHERE id_pedido = $1
-       ORDER BY id_detalle_pedido ASC
+       ORDER BY id_producto ASC
        FOR UPDATE`,
       [idPedido]
     );

@@ -4,6 +4,7 @@ import * as adminController from '../controllers/admin.controller.js';
 import { authenticate } from '../middlewares/auth.middleware.js';
 import { requireRole } from '../middlewares/role.middleware.js';
 import { validate } from '../middlewares/validate.middleware.js';
+import { validarImagenUrl } from '../utils/imagenUrl.js';
 
 const router = Router();
 const idParam = z.object({ id: z.coerce.number().int().positive() });
@@ -12,7 +13,15 @@ const urlSchema = z
   .string()
   .trim()
   .max(500)
-  .refine((v) => /^https?:\/\//i.test(v), 'imagen_url debe comenzar por http:// o https://');
+  .superRefine((v, ctx) => {
+    const res = validarImagenUrl(v);
+    if (!res.valid) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: res.reason,
+      });
+    }
+  });
 
 const categoriaBody = z
   .object({
@@ -154,6 +163,7 @@ router.patch('/usuarios/:id/rol', validate({ params: idParam, body: rolUsuarioBo
 
 // Pedidos
 router.get('/pedidos', validate({ query: pedidosAdminQuery }), adminController.getPedidos);
+router.get('/pedidos/:id', validate({ params: idParam }), adminController.getPedido);
 router.patch('/pedidos/:id/estado', validate({ params: idParam, body: estadoPedidoBody }), adminController.patchEstadoPedido);
 router.patch('/pedidos/:id/reembolso', validate({ params: idParam, body: reembolsoPedidoBody }), adminController.patchReembolsoPedido);
 

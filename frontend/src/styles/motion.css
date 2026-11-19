@@ -53,15 +53,14 @@
 }
 
 /* ---------- Aparición progresiva al hacer scroll ----------
-   Mejora progresiva decorativa: sin soporte nativo el contenido
-   permanece visible y estático (no se añade fallback por script). */
+   Solo animamos translate/scale (nunca opacity < 1) para mantener
+   contraste WCAG >= 4.5:1 en cualquier posición de scroll y sin ocultar contenido. */
 @media (prefers-reduced-motion: no-preference) {
   @supports ((animation-timeline: view()) and (animation-range: entry)) {
     @keyframes revelarEntrada {
       from {
-        opacity: 0.35;
-        translate: 0 1.75rem;
-        scale: 0.98;
+        translate: 0 1rem;
+        scale: 0.99;
       }
     }
 
@@ -69,7 +68,7 @@
       animation: revelarEntrada auto linear backwards;
       /* Declarados después del shorthand para que no se reinicien */
       animation-timeline: view();
-      animation-range: entry 0% entry 75%;
+      animation-range: entry 0% entry 35%;
     }
   }
 }

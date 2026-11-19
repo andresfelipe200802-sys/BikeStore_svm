@@ -6,7 +6,10 @@ import { useAuth } from '../../context/AuthContext.jsx';
 import { useTituloPagina } from '../../hooks/useTituloPagina.js';
 
 export function LoginPage({ onNotificar }) {
-  useTituloPagina('Ingresar');
+  useTituloPagina('Ingresar', {
+    descripcion: 'Inicia sesión en BikeStore para gestionar tus pedidos, carrito y solicitudes de retracto.',
+    noIndex: true,
+  });
   const { estaAutenticado, esAdmin, iniciarSesion } = useAuth();
   const location = useLocation();
   const navigate = useNavigate();
@@ -19,8 +22,9 @@ export function LoginPage({ onNotificar }) {
 
   const correoRef = useRef(null);
   const contrasenaRef = useRef(null);
+  const redirigiendoSubmitRef = useRef(false);
 
-  if (estaAutenticado) {
+  if (estaAutenticado && !enviando && !redirigiendoSubmitRef.current) {
     return <Navigate to={esAdmin ? '/admin' : '/'} replace />;
   }
 
@@ -64,6 +68,7 @@ export function LoginPage({ onNotificar }) {
       return;
     }
 
+    redirigiendoSubmitRef.current = true;
     setEnviando(true);
     try {
       const { usuario, ajustesFusion } = await iniciarSesion({
@@ -87,6 +92,7 @@ export function LoginPage({ onNotificar }) {
       const destino = location.state?.from?.pathname || '/';
       navigate(destino, { replace: true });
     } catch (err) {
+      redirigiendoSubmitRef.current = false;
       setErrorServidor(err?.mensaje || 'No fue posible iniciar sesión.');
     } finally {
       setEnviando(false);

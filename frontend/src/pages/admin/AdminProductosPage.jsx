@@ -18,7 +18,10 @@ const FORM_INICIAL = {
 };
 
 export function AdminProductosPage({ onNotificar }) {
-  useTituloPagina('Admin - Productos');
+  useTituloPagina('Admin - Productos', {
+    descripcion: 'Administración de productos e inventario BikeStore.',
+    noIndex: true,
+  });
   const captionId = useId();
 
   const [categorias, setCategorias] = useState([]);
@@ -78,7 +81,7 @@ export function AdminProductosPage({ onNotificar }) {
       return;
     }
     if (!esUrlHttpValida(form.imagen_url)) {
-      setError('imagen_url debe comenzar con http:// o https:// (máximo 500 caracteres).');
+      setError('La URL de la imagen debe comenzar con http:// o https:// (máximo 500 caracteres).');
       return;
     }
 
@@ -163,7 +166,7 @@ export function AdminProductosPage({ onNotificar }) {
         )}
 
         <div className="panel" style={{ marginBottom: '2rem' }}>
-          <h2>{editandoId ? `Editar datos descriptivos (#${editandoId})` : 'Crear producto nuevo'}</h2>
+          <h2>{editandoId ? `Editar producto #${editandoId}` : 'Crear producto nuevo'}</h2>
           <form className="formulario" onSubmit={guardarProducto} noValidate>
             <div className="fila-dos-columnas">
               <div className="campo">

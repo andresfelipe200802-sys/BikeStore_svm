@@ -6,6 +6,7 @@ import { StatusBadge } from '../../components/StatusBadge.jsx';
 import { useAuth } from '../../context/AuthContext.jsx';
 import { useTituloPagina } from '../../hooks/useTituloPagina.js';
 import { formatearCOP, formatearFechaHoraBogota } from '../../utils/formato.js';
+import { generarUuidAleatorio } from '../../utils/refreshSync.js';
 
 const METODOS_PAGO = [
   { valor: 'TARJETA', etiqueta: 'Tarjeta crédito/débito' },
@@ -24,8 +25,13 @@ function formatearRestante(ms) {
 export function PagoPedidoPage({ onNotificar }) {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { sincronizarContadorCarrito } = useAuth();
-  useTituloPagina(`Pagar pedido #${id}`);
+  const { usuario, sincronizarContadorCarrito } = useAuth();
+  useTituloPagina(`Pagar pedido #${id}`, {
+    descripcion: `Confirmación y pago seguro del pedido #${id} en BikeStore.`,
+    noIndex: true,
+  });
+
+  const mostrarGuiaPrueba = import.meta.env.DEV || usuario?.rol === 'ADMIN';
 
   const captionId = useId();
   const [pedido, setPedido] = useState(null);
@@ -40,8 +46,9 @@ export function PagoPedidoPage({ onNotificar }) {
   const [volviendoCarrito, setVolviendoCarrito] = useState(false);
 
   // Conserva la clave únicamente ante reintento idéntico por fallo de red;
-  // rota si cambia el payload o si el servidor emitió RECHAZADO ('00').
-  const idemRef = useRef({ key: crypto.randomUUID(), firma: '' });
+  // rota si cambia el pedido, el payload o si el servidor emitió RECHAZADO ('00').
+  const idemRef = useRef({ key: generarUuidAleatorio(), firma: '' });
+  const volverCarritoIdemRef = useRef({ pedidoId: null, key: null });
 
   const cargarPedido = useCallback(async () => {
     try {
@@ -87,13 +94,13 @@ export function PagoPedidoPage({ onNotificar }) {
 
     const refLimpia = referenciaSimulada.trim();
     if (refLimpia.length < 4) {
-      setError('Ingresa una referencia simulada de al menos 4 caracteres.');
+      setError('Ingresa una referencia o número de comprobante de al menos 4 caracteres.');
       return;
     }
 
-    const firmaActual = `${metodoPago}:${refLimpia}`;
+    const firmaActual = `${id}:${metodoPago}:${refLimpia}`;
     if (idemRef.current.firma !== firmaActual) {
-      idemRef.current = { key: crypto.randomUUID(), firma: firmaActual };
+      idemRef.current = { key: generarUuidAleatorio(), firma: firmaActual };
     }
 
     setPagando(true);
@@ -108,7 +115,7 @@ export function PagoPedidoPage({ onNotificar }) {
 
       if (resDatos.pago?.estado_pago === 'RECHAZADO') {
         // Prepara nueva Idempotency-Key para que el usuario pueda reintentar con otra referencia
-        idemRef.current = { key: crypto.randomUUID(), firma: '' };
+        idemRef.current = { key: generarUuidAleatorio(), firma: '' };
         onNotificar?.('alerta', resDatos.pago.motivo_resultado);
       } else if (resDatos.pago?.estado_pago === 'APROBADO') {
         onNotificar?.('exito', `¡Pago aprobado para el pedido #${id}!`);
@@ -120,16 +127,21 @@ export function PagoPedidoPage({ onNotificar }) {
         setExpirado(true);
         await cargarPedido();
       }
-      setError(err?.mensaje || 'No pudimos procesar el pago simulado.');
+      setError(err?.mensaje || 'No pudimos procesar el pago en este momento.');
     } finally {
       setPagando(false);
     }
   };
 
   const manejarVolverAlCarrito = async () => {
+    if (volverCarritoIdemRef.current.pedidoId !== id || !volverCarritoIdemRef.current.key) {
+      volverCarritoIdemRef.current = { pedidoId: id, key: generarUuidAleatorio() };
+    }
+    setError('');
     setVolviendoCarrito(true);
     try {
-      const resp = await pedidosApi.volverAlCarrito(id, crypto.randomUUID());
+      const resp = await pedidosApi.volverAlCarrito(id, volverCarritoIdemRef.current.key);
+      volverCarritoIdemRef.current = { pedidoId: null, key: null };
       await sincronizarContadorCarrito();
       onNotificar?.('info', 'Productos devueltos a tu carrito.');
       navigate('/carrito', {
@@ -146,7 +158,7 @@ export function PagoPedidoPage({ onNotificar }) {
   if (cargando) {
     return (
       <section className="contenedor seccion texto-estado" aria-live="polite">
-        <p>Cargando pasarela simulada...</p>
+        <p>Cargando información de pago...</p>
       </section>
     );
   }
@@ -173,7 +185,7 @@ export function PagoPedidoPage({ onNotificar }) {
     <section className="contenedor seccion">
       <div className="seccion-encabezado">
         <div>
-          <p className="antetitulo">Simulador síncrono en servidor</p>
+          <p className="antetitulo">Confirmación de pago</p>
           <h1 className="titulo-seccion">Pago del pedido #{pedido.id_pedido}</h1>
         </div>
 
@@ -261,7 +273,7 @@ export function PagoPedidoPage({ onNotificar }) {
             </div>
           ) : (
             <form className="formulario" onSubmit={manejarPagar} noValidate>
-              <h2>Datos del pago simulado</h2>
+              <h2>Método y referencia de pago</h2>
 
               <fieldset className="grupo-fieldset">
                 <legend>Método de pago *</legend>
@@ -283,11 +295,10 @@ export function PagoPedidoPage({ onNotificar }) {
 
               <div className="campo">
                 <label htmlFor="pago-referencia">
-                  Referencia de transacción simulada <span aria-hidden="true">*</span>
+                  Referencia de transacción <span aria-hidden="true">*</span>
                 </label>
                 <span id="pago-ref-ayuda" className="campo-ayuda">
-                  Mínimo 4 caracteres. Cualquier referencia aprueba salvo las terminadas en{' '}
-                  <strong>00</strong> (simulan rechazo para probar reintentos).
+                  Ingresa la referencia de tu comprobante o autorización (mínimo 4 caracteres).
                 </span>
                 <input
                   id="pago-referencia"
@@ -305,6 +316,19 @@ export function PagoPedidoPage({ onNotificar }) {
                   aria-describedby="pago-ref-ayuda"
                 />
               </div>
+
+              {mostrarGuiaPrueba && (
+                <div className="alerta alerta-info" style={{ marginBottom: '1rem' }}>
+                  <Icono tipo="info" size={18} />
+                  <p>
+                    <span className="insignia insignia-info" style={{ marginRight: '0.5rem' }}>
+                      Modo prueba
+                    </span>
+                    Cualquier referencia válida aprueba el pago; las terminadas en <strong>00</strong>{' '}
+                    simulan rechazo para verificar reintentos.
+                  </p>
+                </div>
+              )}
 
               <button
                 type="submit"
@@ -347,7 +371,7 @@ export function PagoPedidoPage({ onNotificar }) {
           <h2 style={{ marginBottom: '0.85rem' }}>Intentos de pago registrados</h2>
           <div tabIndex={0} role="region" aria-labelledby={captionId} className="table-wrapper">
             <table className="tabla-datos">
-              <caption id={captionId}>Historial 1:N de intentos para pedido #{pedido.id_pedido}</caption>
+              <caption id={captionId}>Historial de intentos de pago del pedido #{pedido.id_pedido}</caption>
               <thead>
                 <tr>
                   <th scope="col">Intento</th>

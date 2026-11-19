@@ -9,7 +9,10 @@ import { useTituloPagina } from '../../hooks/useTituloPagina.js';
 import { formatearFechaBogota } from '../../utils/formato.js';
 
 export function PerfilPage({ onNotificar }) {
-  useTituloPagina('Mi perfil');
+  useTituloPagina('Mi perfil', {
+    descripcion: 'Configuración de datos personales y seguridad de cuenta en BikeStore.',
+    noIndex: true,
+  });
   const { actualizarUsuarioLocal, cambiarContrasena } = useAuth();
   const navigate = useNavigate();
 

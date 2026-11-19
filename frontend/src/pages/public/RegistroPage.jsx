@@ -12,7 +12,10 @@ import {
 } from '../../utils/documentos.js';
 
 export function RegistroPage({ onNotificar }) {
-  useTituloPagina('Crear cuenta');
+  useTituloPagina('Crear cuenta', {
+    descripcion: 'Regístrate en BikeStore para comprar bicicletas y accesorios con reserva de inventario garantizada.',
+    noIndex: true,
+  });
   const { estaAutenticado, esAdmin, registrarCliente } = useAuth();
   const navigate = useNavigate();
 
@@ -38,8 +41,9 @@ export function RegistroPage({ onNotificar }) {
     correo: useRef(null),
     contrasena: useRef(null),
   };
+  const redirigiendoSubmitRef = useRef(false);
 
-  if (estaAutenticado) {
+  if (estaAutenticado && !enviando && !redirigiendoSubmitRef.current) {
     return <Navigate to={esAdmin ? '/admin' : '/'} replace />;
   }
 
@@ -112,6 +116,7 @@ export function RegistroPage({ onNotificar }) {
       return;
     }
 
+    redirigiendoSubmitRef.current = true;
     setEnviando(true);
     try {
       const { usuario, ajustesFusion } = await registrarCliente({
@@ -136,6 +141,7 @@ export function RegistroPage({ onNotificar }) {
         navigate('/catalogo', { replace: true });
       }
     } catch (err) {
+      redirigiendoSubmitRef.current = false;
       setErrorServidor(err?.mensaje || 'No pudimos completar el registro. Verifica tus datos.');
     } finally {
       setEnviando(false);
@@ -145,10 +151,10 @@ export function RegistroPage({ onNotificar }) {
   return (
     <section className="contenedor seccion">
       <div className="formulario-angosto panel">
-        <p className="antetitulo">Registro de persona natural</p>
+        <p className="antetitulo">Nueva cuenta</p>
         <h1>Crear cuenta</h1>
         <p className="campo-ayuda" style={{ marginBottom: '1.25rem' }}>
-          Regístrate para guardar pedidos, simular pagos en COP y ejercer el derecho de retracto.
+          Crea tu cuenta para realizar tus compras, hacer seguimiento a tus pedidos y gestionar devoluciones.
         </p>
 
         {errorServidor && (

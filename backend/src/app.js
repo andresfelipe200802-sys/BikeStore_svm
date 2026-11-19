@@ -14,8 +14,18 @@ import retractosRoutes from './routes/retractos.routes.js';
 
 const app = express();
 
+app.set('trust proxy', env.TRUST_PROXY);
 app.use(helmet());
-app.use(cors({ origin: env.CORS_ORIGIN }));
+app.use(
+  cors({
+    origin(origin, callback) {
+      if (!origin) return callback(null, true);
+      if (env.CORS_ORIGINS.includes(origin)) return callback(null, true);
+      return callback(null, false);
+    },
+    credentials: true,
+  })
+);
 app.use(express.json({ limit: '100kb' }));
 
 app.get('/api/health', async (_req, res, next) => {

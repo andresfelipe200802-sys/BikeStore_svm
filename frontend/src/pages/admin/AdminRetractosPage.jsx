@@ -5,12 +5,15 @@ import { Icono } from '../../components/Iconos.jsx';
 import { Paginacion } from '../../components/Paginacion.jsx';
 import { StatusBadge } from '../../components/StatusBadge.jsx';
 import { useTituloPagina } from '../../hooks/useTituloPagina.js';
-import { formatearCOP, formatearFechaHoraBogota } from '../../utils/formato.js';
+import { formatearCOP, formatearFechaHoraBogota, obtenerMetaEstado } from '../../utils/formato.js';
 
 const ESTADOS_RETRACTO = ['', 'SOLICITADO', 'APROBADO_RECEPCION', 'COMPLETADO', 'RECHAZADO'];
 
 export function AdminRetractosPage({ onNotificar }) {
-  useTituloPagina('Admin - Retractos');
+  useTituloPagina('Admin - Retractos', {
+    descripcion: 'Gestión administrativa de solicitudes de retracto BikeStore.',
+    noIndex: true,
+  });
   const captionId = useId();
 
   const [estadoFiltro, setEstadoFiltro] = useState('');
@@ -75,7 +78,12 @@ export function AdminRetractosPage({ onNotificar }) {
         decision,
         observacion_admin: observacionAdmin,
       });
-      onNotificar?.('exito', `Decisión "${decision}" aplicada al retracto #${seleccionado.id_retracto}.`);
+      onNotificar?.(
+        'exito',
+        decision === 'APROBAR'
+          ? `Aprobación registrada para el retracto #${seleccionado.id_retracto}.`
+          : `Rechazo registrado para el retracto #${seleccionado.id_retracto}.`
+      );
       await Promise.all([cargarListado(estadoFiltro, page), abrirDetalle(seleccionado.id_retracto)]);
     } catch (err) {
       setError(err?.mensaje || 'No fue posible registrar la decisión.');
@@ -155,7 +163,7 @@ export function AdminRetractosPage({ onNotificar }) {
                 setPage(1);
               }}
             >
-              {est || 'Todos'}
+              {est ? obtenerMetaEstado(est).etiqueta : 'Todos'}
             </button>
           ))}
         </div>

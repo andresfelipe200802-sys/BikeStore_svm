@@ -4,7 +4,7 @@
 
 /* ---------- Contenedores y secciones ---------- */
 .contenedor {
-  inline-size: min(100% - 2.5rem, var(--ancho-contenido));
+  inline-size: min(100% - clamp(1.5rem, 4.5vw, 2.5rem), var(--ancho-contenido));
   margin-inline: auto;
 }
 
@@ -60,6 +60,7 @@
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
+  max-inline-size: 100%;
   min-block-size: 48px;
   padding: 0.75rem 1.4rem;
   border: 2px solid transparent;
@@ -69,6 +70,7 @@
   line-height: 1.2;
   text-align: center;
   text-decoration: none;
+  white-space: normal;
   cursor: pointer;
   transition:
     background-color var(--duracion-rapida) ease,
@@ -188,17 +190,25 @@
 .site-logo {
   display: inline-flex;
   align-items: center;
-  gap: 0.6rem;
+  gap: 0.55rem;
   color: var(--text-on-dark);
   font-family: var(--font-display);
-  font-size: 1.3rem;
-  font-weight: 700;
-  letter-spacing: -0.02em;
+  font-size: clamp(1.1rem, 0.95rem + 0.6vw, 1.3rem);
+  font-weight: 800;
+  letter-spacing: 0.03em;
   text-decoration: none;
 }
 
 .site-logo:hover {
   color: var(--text-on-dark);
+}
+
+.site-logo-texto {
+  font-family: var(--font-display);
+  font-size: clamp(1.1rem, 0.95rem + 0.6vw, 1.3rem);
+  font-weight: 800;
+  letter-spacing: 0.03em;
+  line-height: 1;
 }
 
 .site-logo .acento {
@@ -353,7 +363,7 @@
   display: grid;
   align-items: center;
   min-block-size: min(88dvh, 52rem);
-  padding-block: clamp(4rem, 3rem + 6vw, 8rem);
+  padding-block: clamp(3.5rem, 2.5rem + 5vw, 7.5rem) clamp(4.75rem, 3.8rem + 4vw, 6.75rem);
   overflow: hidden;
 }
 
@@ -387,7 +397,7 @@
 
 .hero h1 {
   margin-block-end: 1.25rem;
-  font-size: clamp(2.25rem, 1.2rem + 4vw, 4.25rem);
+  font-size: clamp(2.15rem, 1.2rem + 4vw, 4.25rem);
   line-height: 0.98;
   letter-spacing: -0.03em;
 }
@@ -400,7 +410,7 @@
 .hero-lead {
   max-inline-size: 38rem;
   color: var(--text-muted-dark);
-  font-size: 1.125rem;
+  font-size: clamp(1rem, 0.95rem + 0.35vw, 1.125rem);
 }
 
 .hero-acciones {
@@ -618,13 +628,14 @@
   display: inline-flex;
   align-items: center;
   gap: 0.35rem;
+  max-inline-size: 100%;
   padding: 0.2rem 0.65rem;
   border: 1px solid;
   border-radius: var(--radio-pill);
   font-size: 0.8125rem;
   font-weight: 700;
   line-height: 1.4;
-  white-space: nowrap;
+  white-space: normal;
 }
 
 .insignia-exito {
@@ -795,14 +806,33 @@
   margin-block-start: 0.35rem;
 }
 
-.site-footer a {
+.site-footer a:not(.site-logo) {
   display: inline-block;
   padding-block: 0.3rem;
   color: var(--text-muted-dark);
   text-decoration: none;
 }
 
-.site-footer a:hover {
+.site-footer a.site-logo {
+  display: inline-flex;
+  padding-block: 0;
+  color: var(--text-on-dark);
+  text-decoration: none;
+}
+
+.site-footer a.site-logo:hover {
+  color: var(--text-on-dark);
+  text-decoration: none;
+}
+
+.site-footer .footer-enlaces a {
+  display: inline-flex;
+  align-items: center;
+  min-block-size: 44px;
+  padding-block: 0.45rem;
+}
+
+.site-footer a:not(.site-logo):hover {
   color: var(--accent-neon);
   text-decoration: underline;
 }
@@ -810,8 +840,9 @@
 .footer-legal {
   display: flex;
   flex-wrap: wrap;
+  align-items: baseline;
   justify-content: space-between;
-  gap: 0.5rem 1.5rem;
+  gap: 0.65rem 2rem;
   margin-block-start: 2.5rem;
   padding-block-start: 1.25rem;
   border-block-start: 1px solid var(--border-on-dark);
@@ -859,8 +890,10 @@
 
 /* ---------- Diálogo de confirmación ---------- */
 .dialogo {
-  inline-size: min(32rem, calc(100dvw - 2rem));
-  max-block-size: calc(100dvh - 2rem);
+  inline-size: min(32rem, calc(100dvw - 1.5rem));
+  max-inline-size: calc(100dvw - 1.5rem);
+  max-block-size: calc(100dvh - 1.5rem);
+  overflow-y: auto;
   padding: 1.75rem;
   border: 0;
   border-radius: var(--radio-lg);
@@ -1038,6 +1071,7 @@
 }
 
 .panel {
+  min-inline-size: 0;
   padding: clamp(1.25rem, 1rem + 1.2vw, 2rem);
   border: 1px solid var(--border-subtle);
   border-radius: var(--radio-lg);
@@ -1168,6 +1202,10 @@ input[type="checkbox"] {
   gap: 0 1rem;
 }
 
+.fila-dos-columnas > * {
+  min-inline-size: 0;
+}
+
 /* ---------- Barra de búsqueda y filtros (<search>) ---------- */
 .filtros-barra {
   display: flex;
@@ -1221,6 +1259,10 @@ input[type="checkbox"] {
   align-items: start;
 }
 
+.rejilla-asimetrica > * {
+  min-inline-size: 0;
+}
+
 @media (max-width: 52rem) {
   .rejilla-asimetrica {
     grid-template-columns: 1fr;
@@ -1232,6 +1274,10 @@ input[type="checkbox"] {
   grid-template-columns: repeat(auto-fit, minmax(min(100%, 20rem), 1fr));
   gap: 2rem;
   align-items: start;
+}
+
+.detalle-producto > * {
+  min-inline-size: 0;
 }
 
 .detalle-marco {
@@ -1265,12 +1311,20 @@ input[type="checkbox"] {
   background: var(--bg-surface);
 }
 
+.item-fila > * {
+  min-inline-size: 0;
+}
+
 .resumen-linea {
   display: flex;
   justify-content: space-between;
   gap: 1rem;
   padding-block: 0.45rem;
   border-block-end: 1px solid var(--border-subtle);
+}
+
+.resumen-linea > * {
+  min-inline-size: 0;
 }
 
 .resumen-total {

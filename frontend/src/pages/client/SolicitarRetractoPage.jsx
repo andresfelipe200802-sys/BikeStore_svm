@@ -9,7 +9,10 @@ import { formatearCOP } from '../../utils/formato.js';
 export function SolicitarRetractoPage({ onNotificar }) {
   const { id } = useParams();
   const navigate = useNavigate();
-  useTituloPagina(`Solicitar retracto pedido #${id}`);
+  useTituloPagina(`Solicitar retracto pedido #${id}`, {
+    descripcion: `Radicación de derecho de retracto para el pedido #${id}.`,
+    noIndex: true,
+  });
 
   const [pedido, setPedido] = useState(null);
   const [cantidades, setCantidades] = useState({});

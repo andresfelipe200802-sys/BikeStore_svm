@@ -10,8 +10,8 @@ import { agregarProductoAlCarrito } from '../../utils/carritoHelper.js';
 
 const BENEFICIOS_MARCA = [
   {
-    titulo: 'Precisión de taller',
-    descripcion: 'Especificaciones transparentes, inventario real en PostgreSQL y cero cargos ocultos.',
+    titulo: 'Precisión en cada detalle',
+    descripcion: 'Especificaciones transparentes, disponibilidad actualizada al instante y cero cargos ocultos.',
     icono: 'bicicleta',
   },
   {
@@ -21,7 +21,7 @@ const BENEFICIOS_MARCA = [
   },
   {
     titulo: 'Precios claros en COP',
-    descripcion: 'Valores verificados directamente en servidor antes de emitir cada orden de pago.',
+    descripcion: 'Valores verificados automáticamente antes de confirmar cada orden de pago.',
     icono: 'info',
   },
   {
@@ -32,7 +32,10 @@ const BENEFICIOS_MARCA = [
 ];
 
 export function InicioPage({ onNotificar }) {
-  useTituloPagina('Inicio');
+  useTituloPagina('Inicio', {
+    descripcion:
+      'Explora bicicletas de ruta, montaña, movilidad urbana, cascos y accesorios con inventario disponible en tiempo real en BikeStore Colombia.',
+  });
   const { estaAutenticado, esAdmin, setCantidadCarrito } = useAuth();
 
   const [categorias, setCategorias] = useState([]);
@@ -83,14 +86,14 @@ export function InicioPage({ onNotificar }) {
       <section className="hero zona-oscura">
         <HeroCanvas />
         <div className="contenedor hero-contenido">
-          <p className="antetitulo">Ingeniería sobre dos ruedas · BikeStore Colombia</p>
+          <p className="antetitulo">BikeStore Colombia · Ciclismo y equipamiento</p>
           <h1>
             Precisión mecánica para{' '}
             <em className="titular-corriente">cada kilómetro</em>
           </h1>
           <p className="hero-lead">
-            Bicicletas de ruta, montaña y ciudad seleccionadas con inventario verificado en tiempo
-            real, precios exactos en pesos colombianos y compra transparente.
+            Bicicletas de ruta, montaña y ciudad, cascos y accesorios con inventario disponible en
+            tiempo real, precios claros en pesos colombianos y compra transparente.
           </p>
 
           <div className="hero-acciones">
@@ -197,7 +200,7 @@ export function InicioPage({ onNotificar }) {
             <div className="estado-vacio">
               <p>
                 {errorCarga ||
-                  'Aún no hay productos publicados en la tienda. Un administrador puede crearlos desde el panel administrativo.'}
+                  'Aún no hay productos disponibles en esta selección. Explora el catálogo completo para ver otras opciones.'}
               </p>
               <Link className="btn btn-primario" to="/catalogo">
                 Ir al catálogo

@@ -30,6 +30,7 @@ export const loginLimiter = createAuthLimiter();
 export const registroLimiter = createAuthLimiter();
 export const recuperarLimiter = createAuthLimiter();
 export const restablecerLimiter = createAuthLimiter();
+export const refreshLimiter = createAuthLimiter();
 
 export function resetRateLimiters() {
   for (const store of stores) {
